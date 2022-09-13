@@ -1,0 +1,36 @@
+name: CampaingUI DEV and Stage CICD
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Release]
+    runs-on: self-hosted
+    env:
+      Solution_Name: Infogroup.IDMS.Web.sln
+      TargetFramework: netcoreapp2.2        # Replace with your solution name, i.e. MyWpfApp.sln.
+      AWS_REGION: us-east-1
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: action-yarn
+      run: |
+         node --version
+         npm --version
+    - name: install yarn
+      run: |
+         npm install --global yarn
+    - name: see the current heap mem
+      run: |
+        node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))'
+    - name: after adding mem temp
+      run: |
+        set NODE_OPTIONS=--max_old_space_size=8192
+        node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))'
+    - name: buid nodejs code
+      run: |
+         npm install -g @angular/cli
