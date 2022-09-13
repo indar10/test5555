@@ -1,0 +1,49 @@
+
+name: CampaingUI DEV and Stage CICD
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Release]
+    runs-on: windows-2016
+    env:
+      Solution_Name: Infogroup.IDMS.Web.sln
+      TargetFramework: netcoreapp2.2        # Replace with your solution name, i.e. MyWpfApp.sln.
+      AWS_REGION: us-east-1
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.16.0
+   
+    - name: NPM-Version
+      uses: Reedyuk/NPM-Version@1.1.1
+    
+    - name: Install Dependencies
+      run: npm install
+
+    - name: install yarn
+      run: |
+         npm install --global yarn
+    
+    
+    - name: buid nodejs code test 1211
+      run: |
+         npm i --location=global @angular/cli@8.3.24
+         cd "src\Infogroup.IDMS.Web.Host\"
+         yarn
+         node --max_old_space_size=8192
+         ng build --build-optimizer=false --aot=true --output-hashing=all
+         dir
+    - name: angular code artifact path
+      run: |
+         cd "src\Infogroup.IDMS.Web.Host\dist\assets\metronic\themes\theme2\css"
+         dir
