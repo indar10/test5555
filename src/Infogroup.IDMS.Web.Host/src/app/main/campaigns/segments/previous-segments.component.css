@@ -1,0 +1,67 @@
+.kt-portlet .kt-portlet__body {
+    padding: 0rem 0.1rem 0.1rem 0.1rem !important;
+}
+
+.portlet-body__grey {
+    background-color: #f4f4f4 !important;
+}
+
+.modal-header {
+    flex-direction: column !important;
+    padding-right: 0rem !important;
+    padding-left: 0rem !important;
+
+}
+
+.source-head {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.8rem 0.5rem 0 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #959cb6;
+}
+
+::ng-deep .segmentHistoryTable .ui-table-scrollable-view {
+    min-height: 1px;
+}
+::ng-deep .segmentHistoryTable .ui-table-scrollable-body {
+    min-height: 1px;
+}
+
+.segment-description {
+    padding-left: 0.5rem;
+}
+
+.page-title {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid #ebedf2;
+    padding: 0rem 1.25rem 1.25rem 1.25rem;
+}
+
+.kt-portlet__head {
+    padding-left: 0.8rem !important;
+    padding-right: 0rem !important;
+
+}
+
+.icons-edited-primary {
+    color: #2e40d4;
+}
+
+.icons-edited-danger {
+    color: #fc0758;
+}
+
+.search-margin {
+    margin-bottom: 0.25rem;
+}
+
+.fa-chevron-down:before, .fa-chevron-right:before {
+    color: #007ad9;
+}

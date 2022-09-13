@@ -1,0 +1,44 @@
+<div class="modal-content">
+    <form *ngIf="active" #databaseForm="ngForm" novalidate (ngSubmit)="moveSegment()" autocomplete="off">
+        <div class="modal-header">
+            <h1 class="modal-title">
+                <span>{{l('MoveSegmentLabel')}}</span>
+               
+            </h1>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+        </div>
+        <div class="modal-body">
+            <input class="form-control" type="text" hidden>
+
+            <div class="modal-body">
+
+
+
+
+                <div class="form-group">
+
+                    <label>{{l('FromLabel')}}</label>
+                    <p-dropdown [options]="segmentRangeDropdown"  [(ngModel)]="selectedSegmentFrom" name="segmentFrom" [style]="{'width':'100%'}"></p-dropdown>
+                </div>
+                <div class="form-group">
+                    <label>{{l('ToLabel')}}</label>
+                    <p-dropdown [options]="segmentRangeDropdown"  [(ngModel)]="selectedSegmentTo" name="segmentTo" [style]="{'width':'100%'}"></p-dropdown>
+                </div>
+                <div class="form-group">
+                    <label>{{l('LocationLabel')}}</label>
+                    <p-dropdown [options]="segmentRangeDropdown"  [(ngModel)]="selectedToLocation" name="segmentToLocation" [style]="{'width':'100%'}"></p-dropdown>
+
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="moving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button  class="btn btn-primary blue"  [disabled]="!databaseForm.form.valid || saveDisabled" [buttonBusy]="moving" [busyText]="l('MovingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("MoveSegment")}}</span></button>
+        </div>
+    </form>
+</div>

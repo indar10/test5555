@@ -1,0 +1,260 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="page-title">
+            <h1 class="modal-title">
+                <span>{{pageTitle}} </span>
+            </h1>
+            <button type="button" [disabled]="saving" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="kt-form" #databaseForm="ngForm" *ngIf="active" (ngSubmit)="searchResults(true)"
+                autocomplete="off">
+
+                <div class="input-group">
+                    <span class="input-group-btn" style="margin-right: 2px;">
+                        <button [disabled]="isHelpDisabled" class="btn btn-primary help-button"
+                            containerClass="notesTemplate" type="button" [popover]="notesTemplate" placement="right"
+                            [popoverTitle]="helpData.header" triggers="mouseenter:mouseleave">
+                            <i class="fa fa-question-circle"></i>
+                        </button>
+                    </span>
+                    <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input"
+                        [placeholder]="l('SearchWithThreeDot')" type="text">
+                    <span class="input-group-btn">
+                        <button (click)="searchResults(true)" class="btn btn-primary" type="button">
+                            <i class="flaticon-search-1"></i>
+                        </button>
+                    </span>
+                    <span style="margin-left: 2px;" class="input-group-btn">
+                        <button (click)="clearFilters()" class="btn btn-primary" [popover]="'Clear Search'"
+                            triggers="mouseenter:mouseleave" type="button">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                    </span>
+                    <ng-template #notesTemplate>
+                        <ol class="help-notes">
+                            <ol class="help-notes" type="1" style="padding:0px">
+                                <ul style="padding-left: 2px;">
+                                    <li *ngFor="let example of helpData.examples">{{example}}</li>
+                                </ul>
+                            </ol>
+                        </ol>
+                    </ng-template>
+                </div>
+                <div class="row margin-bottom-10">
+                    <button type="button" class="btn btn-sm btn-dangerous" style="float: right" placement="right"
+                        ngbTooltip="Delete" [disabled]="isDeleteHidden">
+                        <i class="fa fa-trash" (click)="deletePrevOrder(rowIndex)"></i>
+                    </button>
+                </div>
+
+            </form>
+            <div class="row align-items-center">
+                <!--<Primeng-Datatable-Start>-->
+                <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading"
+                    style=" overflow:auto;">
+                    <p-table #dataTable [value]="primengTableHelper.records"
+                        rows="{{primengTableHelper.defaultRecordsCountPerPageForPopUp}}" [scrollable]="true"
+                        ScrollWidth="50%" scrollHeight="300px" [responsive]="primengTableHelper.isResponsive"
+                        dataKey="orderID" [resizableColumns]="primengTableHelper.resizableColumns"
+                        [(selection)]="addRows" expandableRows="true" rowExpandMode="single"
+                        class="campaignHistoryTable" [expandedRowKeys]="expandedRows">
+                        <ng-template pTemplate="header">
+
+                            <tr>
+
+                                <th style="width:5%">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                                <th style="width:4%"></th>
+                                <th style="width: 14%;text-align:left" pSortableColumn="orderID">
+                                    {{l('ID')}}
+                                    <p-sortIcon field="orderID"></p-sortIcon>
+                                </th>
+                                <th style="width:1.5%"></th>
+                                <th style="width: 18%;text-align:left" pSortableColumn="cLVAOrderNo">
+                                    {{l('PO#')}}
+                                    <p-sortIcon field="cLVAOrderNo"></p-sortIcon>
+                                </th>
+                                <th style="width:1.5%"></th>
+                                <th style="width: 39%" pSortableColumn="description">
+                                    {{l('cDescription')}}
+                                    <p-sortIcon field="description"></p-sortIcon>
+                                </th>
+                                <th style="width: 14%">
+                                </th>
+
+
+                                <th style="width: 16%;text-align:center">
+                                    {{l('MatchLevel')}}
+
+                                </th>                                
+                                
+                                <th style="width:2%" [(hidden)]="toggleChcekd"> </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-record="$implicit" let-expanded="expanded"
+                            let-rowIndex="rowIndex">
+                            <tr [pSelectableRow]="record" *ngIf="record.action!=3">
+                                <td style="width: 5%">
+                                    <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                                </td>
+                                <td style="width:3%">
+                                    <a href="javascript:;" [pRowToggler]="record" (click)="setPToggler(record)">
+                                        <i
+                                            [ngClass]="expanded && pTogglerChecked ? 'fa  fa-chevron-down' : 'fa fa-chevron-right'"></i>
+                                    </a>
+                                </td>
+                                <td style="width:14%">
+                                    <span class="ui-column-title"> {{l('ID')}}</span>
+                                    {{record.orderID}}
+                                </td>
+                                <td style="width:18%">
+                                    <span class="ui-column-title"> {{l('PO#')}}</span>
+                                    {{record.cLVAOrderNo}}
+                                </td>
+                                <td style="width:39%">
+                                    <span class="ui-column-title"> {{l('cDescription')}}</span>
+                                    {{record.description}}
+                                </td>
+
+                                <td style="width:9%" pEditableColumn>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+
+                                            <div style="position:relative;">
+                                                <button [hidden]="rowData.cIncludeOrExclude=='Exclude'"
+                                                    [pRowToggler]="record" class="btn icons-edited-primary"
+                                                    (click)="changeIncludeExclude(0,rowIndex,record)" placement="left"
+                                                    ngbTooltip="Include">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                            <div style="position:relative;">
+                                                <button [hidden]="rowData.cIncludeOrExclude!='Exclude'"
+                                                    [pRowToggler]="record" class="btn icons-edited-danger"
+                                                    (click)="changeIncludeExclude(1,rowIndex,record)" placement="left"
+                                                    ngbTooltip="Exclude">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            <div id="container" style="position:relative;">
+                                                <button [hidden]="rowData.cIncludeOrExclude=='Exclude'"
+                                                    [pRowToggler]="record" class="btn icons-edited-primary"
+                                                    (click)="changeIncludeExclude(0,rowIndex,record)" placement="left"
+                                                    ngbTooltip="Include">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                            <div style="position:relative;">
+                                                <button [hidden]="rowData.cIncludeOrExclude!='Exclude'"
+                                                    [pRowToggler]="record" class="btn icons-edited-danger"
+                                                    (click)="changeIncludeExclude(1,rowIndex,record)" placement="left"
+                                                    ngbTooltip="Exclude">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td style="width:18%" pEditableColumn>
+                                    <span class="ui-column-title"> {{l('MatchLevel')}}</span>
+                                    <p-cellEditor>
+
+                                        <ng-template pTemplate="input">
+                                            <div style="position:relative;">
+                                                <button [hidden]="rowData.cIndividualOrCompany=='Company'"
+                                                    [pRowToggler]="record" class="btn icons-edited-primary"
+                                                    (click)="changeIndividualCompany(0,rowIndex,record)"
+                                                    style="float:left; padding-left:45%" placement="left"
+                                                    ngbTooltip="Individual">
+                                                    <i class="fa fa-user"></i>
+                                                </button>
+                                            </div>
+                                            <div style="position:relative;">
+                                                <button [hidden]="rowData.cIndividualOrCompany!='Company'"
+                                                    [pRowToggler]="record" class="btn icons-edited-danger"
+                                                    (click)="changeIndividualCompany(1,rowIndex,record)"
+                                                    style="float:left;padding-left:45%" placement="left"
+                                                    ngbTooltip="Company/Household">
+                                                    <i class="fa fa-building"></i>
+                                                </button>
+                                            </div>
+
+                                        </ng-template>
+
+                                        <ng-template pTemplate="output">
+                                            <div style="position:relative;">
+                                                <button [hidden]="rowData.cIndividualOrCompany=='Company'"
+                                                    [pRowToggler]="record" class="btn icons-edited-primary"
+                                                    (click)="changeIndividualCompany(0,rowIndex,record)"
+                                                    style="float:left;padding-left:45%" placement="left"
+                                                    ngbTooltip="Individual">
+                                                    <i class="fa fa-user"></i>
+                                                </button>
+                                            </div>
+                                            <div style="position:relative;">
+                                                <button [hidden]="rowData.cIndividualOrCompany!='Company'"
+                                                    [pRowToggler]="record" class="btn icons-edited-danger"
+                                                    (click)="changeIndividualCompany(1,rowIndex,record)"
+                                                    style="float:left;padding-left:45%" placement="left"
+                                                    ngbTooltip="Company/Household">
+                                                    <i class="fa fa-building"></i>
+                                                </button>
+                                            </div>
+                                        </ng-template>
+
+                                    </p-cellEditor>
+                                </td>                              
+
+
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="rowexpansion" let-record="$implicit" let-columns="columns">
+                            <tr *ngIf="record.action!=3" [hidden]="!pTogglerChecked">
+                                <td [attr.colspan]="15">
+                                    <previoussegments (segmentInfo)="openSelectionScreenSegmentLevel($event)"
+                                        (addSegment)="addSegmentRecordInList($event)"
+                                        (removeSegment)="removeSegmentRecordInList($event)"
+                                        [campaignDescription]="record.description" [orderId]="record.orderID"
+                                        [prevOrderId]="record.previousOrderID" [prevCampaignDto]="record">
+
+                                    </previoussegments>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                                {{l('NoData')}}
+                            </div>
+                        </ng-template>
+                    </p-table>
+
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="modal-footer">
+    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+    <button type="button" class="btn btn-primary blue" (click)="save()"
+        [disabled]="saving || saveDisabled || (!permission.isGranted('Pages.SegmentPrevOrderses.Edit')) || addRows.length<=0">
+        <i class="fa fa-spin fa-spinner" [hidden]="!saving"></i><span
+            [hidden]="!saving">{{l('SavingWithThreeDot')}}</span>
+        <i class="fa fa-save" [hidden]="saving"></i>
+        <span [hidden]="saving">{{l("Save")}}</span>
+    </button>
+</div>

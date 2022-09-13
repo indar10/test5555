@@ -1,0 +1,26 @@
+INSERT INTO [DW_Admin].[dbo].[tblConfiguration] 
+([DivisionID]   
+,[DatabaseID] 
+,[cItem]  
+,[cDescription] 
+,[cValue] 
+,[iValue] 
+,[dValue]  
+,[mValue]  
+,[iIsActive]
+,[cCreatedBy]
+,[dCreatedDate] 
+,[iIsEncrypted]) 
+VALUES
+(0  
+,0  
+,'ShowOnlyIdsOnEmailSummaryReport'  
+,'CountProcess' 
+,'0' 
+,0 
+,null 
+,''  
+,1  
+,'SYSTEM'
+,GETDATE()  
+,0)

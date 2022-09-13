@@ -1,0 +1,246 @@
+﻿<div [@routerTransition]>
+    <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+        <div class="kt-subheader kt-grid__item">
+            <div [class]="containerClass">
+                <div class="kt-subheader__main">
+                    <h3 class="kt-subheader__title">
+                        <span>{{l("ShippedReport")}}</span>
+                    </h3>
+
+                </div>
+
+            </div>
+            <div class="kt-subheader__toolbar">
+                <div class="kt-subheader__wrapper">
+                    <button (click)="downloadShippedReport()" style="width:140px; margin-right:20px;" class="btn btn-success" type="button"><i class="far fa-file-excel"></i> {{l('ExportToExcel')}}</button>
+                </div>
+            </div>
+        </div>
+
+        <div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid'">
+            <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__body">
+                    <form class="kt-form" autocomplete="off">
+                        <div>
+                            <div class="row align-items-center">
+                                <div class="col-xl-12">
+                                    <div class="form-group m-form__group align-items-center">
+                                        <div class="input-group">
+                                            <span class="input-group-btn" style="margin-right: 2px;">
+                                                <button [disabled]="isHelpDisabled" class="btn btn-primary help-button" containerClass="notesTemplate"
+                                                        type="button" [popover]="notesTemplate" placement="right" [popoverTitle]="helpData.header"
+                                                        triggers="mouseenter:mouseleave">
+                                                    <i class="fa fa-question-circle"></i>
+                                                </button>
+                                            </span>
+                                            <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                            <span class="input-group-btn">
+                                                <button (click)="getShippedReports()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                            </span>
+                                            <ng-template #notesTemplate>
+                                                <ol class="help-notes">
+                                                    <ol class="help-notes" type="1">
+                                                        <ul style="padding-left: 2px;">
+                                                            <li *ngFor="let example of helpData.examples">{{example}}</li>
+                                                        </ul>
+                                                    </ol>
+                                                </ol>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row align-items-center">
+                        <!--<Primeng-Datatable-Start>-->
+                        <div class="primeng-datatable-container col-12"
+                             [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable
+                                     (onLazyLoad)="getShippedReports($event)"
+                                     [value]="primengTableHelper.records"
+                                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                     [paginator]="false"
+                                     [lazy]="true"
+                                     [scrollable]="true"
+                                     ScrollWidth="100%"
+                                     [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns"
+                                     dataKey="id">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th pSortableColumn="ID" style="width:100px;">
+                                            {{l('SegmentID')}}
+                                            <p-sortIcon field="ID"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="OrderDescription" style="width:175px;">
+                                            {{l('Description')}}
+                                            <p-sortIcon field="OrderDescription"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="cDatabaseName" style="width:160px;">
+                                            {{l('Database')}}
+                                            <p-sortIcon field="cDatabaseName"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="cCompany" style="width:150px;">
+                                            {{l('DivisionMailer')}}
+                                            <p-sortIcon field="cCompany"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="Broker" style="width:150px;">
+                                            {{l('Broker')}}
+                                            <p-sortIcon field="Broker"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="cBrokerPONo" style="width:150px;">
+                                            {{l('BrokerPO')}}
+                                            <p-sortIcon field="cBrokerPONo"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="cLVAOrderNo" style="width:150px;">
+                                            {{l('PO#')}}
+                                            <p-sortIcon field="cLVAOrderNo"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="dShipDateShipped" style="width:150px;">
+                                            {{l('ShipDate')}}
+                                            <p-sortIcon field="dShipDateShipped"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="iProvidedCount" style="width:120px;">
+                                            {{l('iProvidedQty')}}
+                                            <p-sortIcon field="iProvidedCount"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="LK_OfferType" style="width:100px; text-align:center;">
+                                            {{l('Type')}}
+                                            <p-sortIcon field="LK_OfferType"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="NetOrder" style="width:100px; text-align:center;">
+                                            {{l('NetOrder')}}
+                                            <p-sortIcon field="NetOrder"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="NetUsage" style="width:100px; text-align:center;">
+                                            {{l('NoUsage')}}
+                                            <p-sortIcon field="NetUsage"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="cDecoyKey" style="width:150px; text-align:center;">
+                                            {{l('cSeedKeyLable')}}
+                                            <p-sortIcon field="cDecoyKey"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="cCreatedBy" style="width:150px;">
+                                            {{l('cCreatedBy')}}
+                                            <p-sortIcon field="cCreatedBy"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="ShippedBy" style="width:150px;">
+                                            {{l('ShippedBy')}}
+                                            <p-sortIcon field="ShippedBy"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="ExportLayoutName" style="width:150px;">
+                                            {{l('OutputLayoutName')}}
+                                            <p-sortIcon field="ExportLayoutName"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="iOESSInvoiceTotal" style="width:150px;">
+                                            {{l('Revenue')}}
+                                            <p-sortIcon field="iOESSInvoiceTotal"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="cOESSInvoiceNumber" style="width:150px;">
+                                            {{l('InvoiceNumber')}}
+                                            <p-sortIcon field="cOESSInvoiceNumber"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit" let-expanded="expanded">
+                                    <tr>
+                                        <td style="width:100px;">
+                                            <span class="ui-column-title"> {{l('StatusCampaignID')}}</span>
+                                            {{record.orderID}}
+                                        </td>
+                                        <td style="width:170px;">
+                                            <span class="ui-column-title"> {{l('CampaignDescription')}}</span>
+                                            {{record.orderDescription}}
+                                        </td>
+                                        <td style="width:160px;">
+                                            <span class="ui-column-title"> {{l('cDatabaseName')}}</span>
+                                            {{record.databaseName}}
+                                        </td>
+                                        <td style="width:150px;">
+                                            <span class="ui-column-title"> {{l('Mailer')}}</span>
+                                            {{record.mailer}}
+                                        </td>
+                                        <td style="width:150px;">
+                                            <span class="ui-column-title"> {{l('Broker')}}</span>
+                                            {{record.broker}}
+                                        </td>
+                                        <td style="width:150px;">
+                                            <span class="ui-column-title"> {{l('BrokerPO')}}</span>
+                                            {{record.brokerPONumber}}
+                                        </td>
+                                        <td style="width:150px;">
+                                            <span class="ui-column-title"> {{l('PO#')}}</span>
+                                            {{record.poNumber}}
+                                        </td>
+                                        <td style="width:150px;">
+                                            <span class="ui-column-title"> {{l('ShipDate')}}</span>
+                                            {{record.shippedDate}}
+                                        </td>
+                                        <td style="width:120px;">
+                                            <span class="ui-column-title"> {{l('iProvidedQty')}}</span>
+                                            {{record.providedQuantity | number}}
+                                        </td>
+                                        <td style="width:100px; text-align:center;">
+                                            <span class="ui-column-title"> {{l('Type')}}</span>
+                                            {{record.type}}
+                                        </td>
+                                        <td style="width:100px; text-align:center;">
+                                            <span class="ui-column-title"> {{l('NetOrder')}}</span>
+                                            {{record.netOrder}}
+                                        </td>
+                                        <td style="width:100px; text-align:center;">
+                                            <span class="ui-column-title"> {{l('NoUsage')}}</span>
+                                            {{record.netUsage}}
+                                        </td>
+                                        <td style="width:150px; text-align:center;">
+                                            <span class="ui-column-title"> {{l('cSeedKeyLable')}}</span>
+                                            {{record.decoyKey}}
+                                        </td>
+                                        <td style="width:150px;">
+                                            <span class="ui-column-title"> {{l('cCreatedBy')}}</span>
+                                            {{record.createdBy}}
+                                        </td>
+                                        <td style="width:150px;">
+                                            <span class="ui-column-title"> {{l('ShippedBy')}}</span>
+                                            {{record.shippedBy}}
+                                        </td>
+                                        <td style="width:150px;">
+                                            <span class="ui-column-title"> {{l('OutputLayoutName')}}</span>
+                                            {{record.exportLayoutName}}
+                                        </td>
+                                        <td style="width:150px;">
+                                            <span class="ui-column-title"> {{l('Revenue')}}</span>
+                                            {{record.oessInvoiceTotal}}
+                                        </td>
+                                        <td style="width:150px;">
+                                            <span class="ui-column-title"> {{l('InvoiceNumber')}}</span>
+                                            {{record.oessInvoiceNumber}}
+                                        </td>
+
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                                {{l('NoData')}}
+                            </div>
+                            <div class="primeng-paging-container">
+                                <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                                             #paginator
+                                             (onPageChange)="getShippedReports($event)"
+                                             [totalRecords]="primengTableHelper.totalRecordsCount"
+                                             [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                                </p-paginator>
+                                <span class="total-records-count">
+                                    {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                                </span>
+                            </div>
+                        </div>
+                        <!--<Primeng-Datatable-End>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,107 @@
+<div class="modal-content" [busyIf]="isLoading">
+    <form autocomplete="off" #countReportForm="ngForm" (ngSubmit)="save()">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span>Instant Breakdown</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="isLoading">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <fieldset ngModelGroup="mainForm">
+                <div class="primeng-datatable-container" style="height: 500px" *ngIf="!showDownLoad">
+                    <p-table #dataTable [value]="campaign.reportsData.xtabRecords"
+                        class="pivotReportsTable">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 30%">
+                                    {{ l("#") }}
+                                </th>
+                                <th style="width: 30%">
+                                    {{ l("Row") }}
+                                </th>
+                                <th style="width: 30%">
+                                    {{ l("Column") }}
+                                </th>
+                                <th style="width: 4%"></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record let-i="rowIndex">
+                            <tr *ngIf="record.action != 3">
+                                <td style="width: 10%">Report {{ i + 1 }}</td>
+                                 <td style="width:30%">
+                                            <p-dropdown [options]="fastCountConfigXFields" [filter]="true"
+                                                [(ngModel)]="record.cXField" [group]="true"
+                                                [style]="{'minWidth':'10px','width':'100%'}"
+                                                placeholder="Select..."
+                                                (onChange)="onXFieldChange(i,$event)" [ngModelOptions]="{standalone:true}">
+                                                >
+                                            </p-dropdown>
+                                </td>
+                                <td style="width: 30%">
+                                    <p-dropdown [options]="fastCountConfigYFields" [filter]="true"
+                                        [(ngModel)]="record.cYField" [group]="true" [style]="{ minWidth: '10px', width: '100%' }" placeholder="Select..."
+                                        (onChange)="onYFieldChange(i, $event)" [ngModelOptions]="{standalone:true}">
+                                    </p-dropdown>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-dangerous m-0 p-0"
+                                        [disabled]="campaign.currentStatus > 100"
+                                        (click)="deleteXtab(i)">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+                <div *ngIf="showDownLoad && this.reportDataToShowOnUI.length" style="overflow: auto; height: 500px">
+                    <p-accordion>
+                        <p-accordionTab header="{{ item.reportName }}: {{ item.description }}"
+                            *ngFor="let item of this.reportDataToShowOnUI" [selected]="true">
+                            <div *ngIf="item.rowCount > 15000" style="
+                  padding-bottom: 0.571em;
+                  font-weight: 400;
+                  color: #be791d;
+                ">
+                                <i class="far fa-info-circle mr-1"></i> We can only show results
+                                upto 15,000 rows.
+                            </div>
+                            <table class="table table-striped table-hover table-bordered">
+                                <tr>
+                                    <th style="text-transform: capitalize">
+                                        {{ item.labelHeader }}
+                                    </th>
+                                    <th style="text-transform: capitalize" *ngIf="!item.isSingleDimension">
+                                        {{ item.columnHeader }}
+                                    </th>
+                                    <th>Count</th>
+                                </tr>
+                                <tr *ngFor="let key of item.items">
+                                    <td>{{ key.label }}</td>
+                                    <td *ngIf="!item.isSingleDimension">{{ key.colLabel }}</td>
+                                    <td>{{ key.value }}</td>
+                                </tr>
+                            </table>
+                        </p-accordionTab>
+                    </p-accordion>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="isLoading" type="button" class="btn btn-default" (click)="close()">
+                {{ l("Cancel") }}
+            </button>
+            <button type="submit" class="btn btn-primary blue" [disabled]="
+          !campaign.reportsData.xtabRecords || !countReportForm.form.valid
+        " [buttonBusy]="isLoading" *ngIf="!showDownLoad" [busyText]="l('SavingWithThreeDot')">
+                <span>{{ l("Run Breakdown") }}</span>
+            </button>
+            <button class="btn btn-primary blue" *ngIf="showDownLoad" (click)="downloadDataReport()"
+                [buttonBusy]="isLoading" [busyText]="l('Downloading')">
+                <span>{{ l("Download Report") }}</span>
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,189 @@
+<div class="modal-header">
+  <h1 class="modal-title">
+    <span>Suppression</span>
+  </h1>
+  <button type="button" class="close" (click)="close()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body" style="min-height: 500px">
+  <div class="sup-header mb-4 align-items-center">
+    <h3 class="d-flex align-items-center mb-0 font-weight-bold">
+      {{ isPlaceOrder ? "Select orders placed" : "Select saved counts" }}
+    </h3>
+    <div class="btn-group text-right">
+      <button
+        class="btn btn-outline-primary"
+        (click)="clearSelections()"
+        [disabled]="selectedCampaigns.length == 0"
+      >
+        Clear All
+      </button>
+      <button class="btn btn-outline-success" (click)="save()">Save</button>
+    </div>
+  </div>
+  <form
+    #suppressionFilters="ngForm"
+    autocomplete="off"
+    (ngSubmit)="getFCCampaigns()"
+    class="sup-filters"
+  >
+    <div>
+      <label>Search</label>
+      <div class="ui-fluid">
+        <input
+          name="filterText"
+          autoFocus
+          class="form-control m-input"
+          placeholder="Search by ID..."
+          type="search"
+          #search="ngModel"
+          [(ngModel)]="searchText"
+        />
+      </div>
+    </div>
+    <div>
+      <label>User</label>
+      <div class="ui-fluid">
+        <p-autoComplete
+          [minLength]="3"
+          [suggestions]="users"
+          name="supUsers"
+          [dropdown]="true"
+          (completeMethod)="searchUsers($event)"
+          field="userName"
+          [placeholder]="'All Users'"
+          [multiple]="true"
+          [forceSelection]="true"
+          dropdownMode="current"
+          [(ngModel)]="selectedUsers"
+        >
+        </p-autoComplete>
+      </div>
+    </div>
+    <div class="top-margin">
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="!suppressionFilters.dirty"
+      >
+        <i class="flaticon-search-1 pr-0"></i>
+      </button>
+    </div>
+    <div class="top-margin">
+      <button
+        class="btn btn-primary"
+        type="button"
+        (click)="clearSuppressionFilters()"
+        [disabled]="!suppressionFilters.dirty"
+      >
+        <i class="fal fa-times-circle pr-0"></i>
+      </button>
+    </div>
+  </form>
+  <div
+    class="primeng-datatable-container mt-3"
+    style="height: 400px; overflow: auto"
+    [busyIf]="isLoading"
+  >
+    <p-table
+      #dataTable
+      (onLazyLoad)="getFCCampaigns()"
+      [value]="fcCampaigns"
+      [lazy]="true"
+      [(selection)]="selectedCampaigns"
+      [loading]="isLoading"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th style="width: 3em">
+            <p-checkbox
+              (onChange)="selectAllCampaign(e.checked)"
+              #e
+            ></p-checkbox>
+          </th>
+          <th>Order ID</th>
+          <th class="description__column">Description</th>
+          <th>User</th>
+          <th>Quantity</th>
+          <th>Saved date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-record>
+        <tr>
+          <td>
+            <p-checkbox
+              (onChange)="selectSingleCampaign(itemCheckbox.checked, record)"
+              [binary]="true"
+              [ngModel]="isChecked(record)"
+              #itemCheckbox
+              [disabled]="record.status <= 30 || record.status == 50"
+            ></p-checkbox>
+          </td>
+          <td>
+            {{ record.campaignId }}
+          </td>
+          <td class="description__column">
+            {{ record.campaignDescription }}
+          </td>
+          <td>
+            {{ record.createdBy }}
+          </td>
+          <td>
+            {{ record.iAvailableQty | number }}
+          </td>
+          <td>
+            {{ record.orderCreatedDate }}
+          </td>
+          <td>
+            {{ record.statusDescription }}
+          </td>
+          <td>
+            <button
+              (click)="executeCampaign(record)"
+              *ngIf="isShown(actionType.SubmitOrder, record.status)"
+              class="btn btn-sm"
+              [ngClass]="
+                !(
+                  record.status == statusType.CampaignCreated ||
+                  record.status == statusType.CampaignFailed ||
+                  record.status == statusType.CampaignCompleted
+                )
+                  ? 'btn-outline-danger'
+                  : 'btn-primary'
+              "
+              [disabled]="record['isExecuting']"
+            >
+              {{
+                record.status == statusType.CampaignCreated ||
+                record.status == statusType.CampaignFailed ||
+                record.status == statusType.CampaignCompleted
+                  ? l("Execute")
+                  : l("Cancel")
+              }}
+            </button>
+            <button
+              (click)="refreshCampaignStatus(record.campaignId)"
+              *ngIf="
+                record.status == statusType.CampaignSubmitted ||
+                record.status == statusType.CampaignRunning
+              "
+              [disabled]="record['isExecuting']"
+              class="btn btn-sm btn-outline-primary"
+            >
+              Refresh
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div
+      class="primeng-no-data"
+      *ngIf="this.fcCampaigns.length == 0 && !isLoading"
+    >
+      {{ l("NoData") }}
+    </div>
+  </div>
+</div>

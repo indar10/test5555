@@ -1,0 +1,56 @@
+#TenantDashboard input[type="radio"] {
+        display: true;
+    }
+    
+.content-box {
+    padding-top: 16px;
+}
+
+.select-report {
+    color: #212529;
+    font: 16.25px Poppins;
+    margin: 0px 8.125px 6.5px 0.5px;
+}
+
+.editorTitle {
+    font-weight: 620;
+    font-size: 15px;
+    height: 32px;
+    padding: 5px 0 0 8px;
+    color: #000000;
+}
+
+label {
+    display: initial;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: normal;
+}
+
+#showcaseContent {
+    display: table;
+    padding: 20px 10px 10px 10px; 
+    width: 100%;
+    background: #F1F1F1;
+    overflow: hidden;
+    border: none;
+}
+
+#showcaseEmbedArea {
+    display: table-cell;
+    width: 100%;
+    height: 100%;
+}
+
+
+#themes-embedded-view {
+    background: #FFFFFF;
+    height: calc(64vw*(9/16)*1.1);
+}
+.name-label{
+    font-size: 1.1rem;
+}
+.dashboard-title{
+    margin-left: 10px !important;
+}

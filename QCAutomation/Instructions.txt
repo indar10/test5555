@@ -1,0 +1,17 @@
+usp_QCBuildReport is created to keep track of count for each build. It receives Change Threshold % as parameter and it inserts records in tbl_QCBuildReport when data don't exceed Change Threshold. An error is thrown when there is a mismatch.
+
+Start with 5% Change Threshold as a baseline. If there are indeed valid data exceeding Change Threshold, increase the Change Threshold to higher value and execute the SP again. 
+
+Instructions:
+
+1. For Initial Check execute below Stored Procedure bypassing DatabaseID as a parameter :
+	EXEC usp_QCBuildReport @DatabaseID=1334
+2. If Change Percentage <= 5% then data will be loaded into below table:
+	common.dbo.tbl_QCBuildReport
+3. Else if Change Percentage > 5% then data will be loaded into below table:
+	tbl_QCBuildReport_<DatabaseID>_Error
+	For Example: tbl_QCBuildReport_1334_Error
+4. After Validating the data from error table (tbl_QCBuildReport_<DatabaseID>_Error), 
+	 if the Change Percentage is Valid, execute the below Query to load the QC build data into tbl_QCBuildReport:
+	 EXEC usp_QCBuildReport @DatabaseID=1334, @ChangePercentage = <Change Threshold %>
+	 For Example: EXEC usp_QCBuildReport @DatabaseID=1334, @ChangePercentage = 10, iF we have max Change Percentage =10

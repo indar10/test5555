@@ -1,0 +1,110 @@
+<div class="modal-content">
+    <form #lookupForm="ngForm" novalidate (ngSubmit)="save(lookupForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="ID">{{l("EditLookup")}}</span>
+                <span *ngIf="!ID">{{l("CreateNewLookup")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group m-form__group  col-xs-6 col-sm-6 col-md-6">
+                    <label for="lookup_cLookupValue">{{l("cLookupValue")}} *</label>
+                    <p-dropdown [options]="lookupValueList" [filter]="true" [(ngModel)]="lookup.cLookupValue"
+                        placeholder="Select Lookup Value" [style]="{'width':'100%'}" name="cLookupValue" required>
+                    </p-dropdown>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="lookup_cCode">{{l("cCode")}} *</label>
+                    <input type="text" id="lookup_cCode" #codeInput="ngModel" class="form-control"
+                        [(ngModel)]="lookup.cCode" noSpaceValidator="{{lookup.cCode}}" name="cCode" required />
+                    <div *ngIf="codeInput.errors && (codeInput.dirty || codeInput.touched)"
+                        class="form-control-feedback">
+                        <div [hidden]="!codeInput.errors.noSpaceValidator && !codeInput.errors.required">
+                            {{l('enterCode')}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="lookup_cDescription">{{l("cDescription")}} *</label>
+                    <input type="text" id="lookup_cDescription" #descriptionInput="ngModel" class="form-control"
+                        maxlength="100" [(ngModel)]="lookup.cDescription" noSpaceValidator="{{lookup.cDescription}}"
+                        name="cDescription" required />
+                    <div *ngIf="descriptionInput.errors && (descriptionInput.dirty || descriptionInput.touched)"
+                        class="form-control-feedback">
+                        <div [hidden]="!descriptionInput.errors.noSpaceValidator && !descriptionInput.errors.required">
+                            {{l('enterDescription')}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="lookup_iOrderBy">{{l('iOrderBy')}}</label>
+                    <input type="text" id="lookup_iOrderBy" #orderByInput="ngModel" class="form-control" maxlength="5"
+                        [(ngModel)]="lookup.iOrderBy" name="iOrderBy" />
+                    <div *ngIf="orderByInput.errors && (orderByInput.dirty || orderByInput.touched)"
+                        class="form-control-feedback">
+                            {{l("invalidOrder")}}
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="lookup_cField">{{l("cField")}}</label>
+                    <input type="text" id="lookup_cField" #cFieldInput="ngModel" class="form-control" maxlength="100"
+                        [(ngModel)]="lookup.cField" name="cField" />
+                    <div *ngIf="cFieldInput.errors && (cFieldInput.dirty || cFieldInput.touched)"
+                        class="form-control-feedback">
+                        {{l("invalidcField")}}
+                    </div>
+                </div>
+
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="lookup_mField">{{l("mField")}}</label>
+                    <textarea id="lookup_mField" #mFieldInput="ngModel" class="form-control" [(ngModel)]="lookup.mField"
+                        maxlength="4000" pattern="[\s\S]{1,4000}" name="mField"></textarea>
+                    <div *ngIf="mFieldInput.errors && (mFieldInput.dirty || mFieldInput.touched)"
+                        class="form-control-feedback">
+                        <div [hidden]="!mFieldInput.errors.pattern">
+                            {{l("invalidmField")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="lookup_iField">{{l("iField")}}</label>
+                    <input type="number" id="lookup_iField" #iFieldInput="ngModel" class="form-control" maxlength="6"
+                        [(ngModel)]="lookup.iField" name="iField" />
+                    <div *ngIf="iFieldInput.errors && (iFieldInput.dirty || iFieldInput.touched)"
+                        class="form-control-feedback">
+                        {{l("invalidiField")}}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label class="switchPopup">
+                    <input type="checkbox" id="lookup_iIsActive" [(ngModel)]="lookup.iIsActive" name="iIsActive"
+                        checked />
+                    <span class="slider round">
+                        <span class="on">Active</span><span class="off">Inactive</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button type="submit" class="btn btn-primary blue"
+                [disabled]="!lookupForm.form.valid  || (!permission.isGranted('Pages.Lookups.Edit') && ID)"
+                [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i>
+                <span>{{l("Save")}}</span></button>
+        </div>
+    </form>
+</div>

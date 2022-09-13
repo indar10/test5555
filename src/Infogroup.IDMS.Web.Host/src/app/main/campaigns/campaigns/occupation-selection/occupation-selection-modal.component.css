@@ -1,0 +1,35 @@
+.kt-portlet .kt-portlet__body {
+    padding: 0rem 0.1rem 0.1rem 0.1rem !important;
+    min-height: 328px !important;
+}
+
+.portlet-body__grey {
+    background-color: #f4f4f4 !important;
+}
+
+.kt-portlet__head {
+    padding-left: 10px !important;
+    padding-right: 0rem !important;
+}
+
+.primeng-datatable-container .primeng-no-data {
+    border-color: white !important;
+}
+
+.kt-portlet .kt-portlet__head {
+    min-height: 45px !important;
+}
+
+:host ::ng-deep .primeng-datatable-container .ui-table td {
+    font-family: "Poppins", "Roboto";
+    border: none !important;
+    padding: 5px 0px 5px 10px !important;
+    padding-top: 5px !important;
+    padding-right: 0px !important;
+    padding-bottom: 5px !important;
+    padding-left: 10px !important;
+}
+
+.column-filter {
+    width: 98%;
+}

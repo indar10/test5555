@@ -1,0 +1,35 @@
+.kt-portlet .kt-portlet__body {
+    padding: 0rem 0.1rem 0.1rem 0.1rem !important;
+    min-height: 242px !important;
+}
+
+.portlet-body__grey {
+    background-color: #f4f4f4 !important;
+}
+
+.kt-portlet__head {
+    padding-left: 10px !important;
+    padding-right: 0rem !important;
+}
+
+.icons-edited-primary {
+    color: #2e40d4;
+}
+
+.icons-edited-danger {
+    color: #fc0758;
+}
+
+.search-margin {
+    margin-bottom: 0.25rem;
+}
+
+.primeng-datatable-container .primeng-no-data {
+    border-color: white !important;
+}
+
+.source-count {
+    font-size: 1.1rem;
+    margin-top: 15px;
+    font-weight: 500;
+}

@@ -1,0 +1,74 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #SearchPreviousOrderHistorybyKeyForm="ngForm" novalidate (ngSubmit)="save(SearchPreviousOrderHistorybyKeyForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="taskId">{{l("SearchPreviousOrderHistorybyKeyForm")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <general-database-build (taskGeneral)="storeTaskGeneralFrom($event)" [taskID]="taskId"></general-database-build>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="searchKey">{{l("searchKey")}} *</label>
+                    <div class="ui-fluid">
+                        <input type="text" class="form-control" [(ngModel)]="task.searchKey" #searchKeyInput="ngModel" name="searchKey" noSpaceValidator="{{task.searchKey}}" required />
+                        <div *ngIf="searchKeyInput.errors && (searchKeyInput.dirty || searchKeyInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!searchKeyInput.errors.noSpaceValidator && !modelNameInput.errors.required">
+                                {{l('InvalidSearchKeyInput')}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="campaignId">{{l("StatusCampaignID")}}</label>
+                    <div class="ui-fluid">
+                        <input type="text" digitOnly #counIdInput="ngModel" class="form-control" [(ngModel)]="task.campaignId" name="campaignId" pattern="^[1-9][0-9]*$"/>
+                        <div *ngIf="counIdInput.errors && (counIdInput.dirty || counIdInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!counIdInput.errors.pattern">
+                                {{l('InvalidCountID')}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="startDate">{{l("StartDate")}} *</label>
+                    <div class="ui-fluid">
+                        <p-calendar [(ngModel)]="startDate" [minDate]="minDate" dateFormat="mm/dd/yy" name="startDate" [selectOtherMonths]="true">
+                            <ng-template pTemplate="date" let-date class="form-control">
+                                <span style="display:block">{{date.day}}</span>
+                            </ng-template>
+                        </p-calendar>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="endDate">{{l("endDate")}} *</label>
+                    <div class="ui-fluid">
+                        <p-calendar [(ngModel)]="endDate" dateFormat="mm/dd/yy" [selectOtherMonths]="true" name="endDate">
+                            <ng-template pTemplate="date" let-date class="form-control">
+                                <span style="display:block">{{date.day}}</span>
+                            </ng-template>
+                        </p-calendar>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                <button type="submit" class="btn btn-primary blue"
+                        [disabled]="!SearchPreviousOrderHistorybyKeyForm.form.valid" [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')">
+                    <i class="fa fa-save"></i>
+                    <span>{{l("Save")}}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,84 @@
+<div class="row align-items-center child">
+    <!--<Primeng-Datatable-Start>-->
+    <div class="primeng-datatable-container col-12"
+         [busyIf]="primengTableHelper.isLoading">
+        <p-table #dataTable
+                 (onLazyLoad)="getContacts($event)"
+                 [value]="primengTableHelper.records"
+                 rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                 [paginator]="false"
+                 [lazy]="true"
+                 [scrollable]="true"
+                 ScrollWidth="100%"
+                 [responsive]="primengTableHelper.isResponsive"
+                 [resizableColumns]="primengTableHelper.resizableColumns">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 7%" pSortableColumn="id">
+                        {{l('ID')}}
+                        <p-sortIcon field="id"></p-sortIcon>
+                    </th>
+                    <th style="width: 25%" pSortableColumn="cFirstName">
+                        {{l('cFirstName')}}
+                        <p-sortIcon field="cFirstName"></p-sortIcon>
+                    </th>
+                    <th style="width: 25%" pSortableColumn="cLastName">
+                        {{l('cLastName')}}
+                        <p-sortIcon field="cLastName"></p-sortIcon>
+                    </th>
+                    <th style="width: 30%" pSortableColumn="cEmailAddress">
+                        {{l('cEmailAddress')}}
+                        <p-sortIcon field="cEmailAddress"></p-sortIcon>
+                    </th>
+                    <th style="width: 13%" pSortableColumn="iIsActive">
+                        {{l('iIsActive')}}
+                        <p-sortIcon field="iIsActive"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-record="$implicit">
+                <tr>
+                    <td style="width:7%">
+                        <span class="ui-column-title"> {{l('ID')}}</span>
+                        {{record.id}}
+                    </td>
+                    <td style="width:25%">
+                        <span class="ui-column-title"> {{l('cFirstName')}}</span>
+                        <a href="javascript:;"
+                           (click)="createContact(record.id)">{{record.cFirstName}}</a>
+                    </td>
+                    <td style="width:25%">
+                        <span class="ui-column-title"> {{l('cLastName')}}</span>
+                        {{record.cLastName}}
+                    </td>
+                    <td style="width:30%">
+                        <span class="ui-column-title"> {{l('cEmailAddress')}}</span>
+                        {{record.cEmailAddress}}
+                    </td>
+                    <td style="width: 13%">
+                        <span class="ui-column-title"> {{l('iIsActive')}}</span>
+                        <span class="kt-badge kt-badge--success kt-badge--inline"
+                              *ngIf="record.iIsActive">{{'Yes' | localize}}</span>
+                        <span class="kt-badge kt-badge--dark kt-badge--inline"
+                              *ngIf="!record.iIsActive">{{'No' | localize}}</span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+            {{l('NoData')}}
+        </div>
+        <div class="primeng-paging-container">
+            <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                         #paginator
+                         (onPageChange)="getContacts($event)"
+                         [totalRecords]="primengTableHelper.totalRecordsCount"
+                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+            </p-paginator>
+            <span class="total-records-count">
+                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+            </span>
+        </div>
+    </div>
+    <!--<Primeng-Datatable-End>-->
+</div>

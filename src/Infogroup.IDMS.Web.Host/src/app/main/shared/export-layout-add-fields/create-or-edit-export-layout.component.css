@@ -1,0 +1,144 @@
+.custom-date {
+  height: 34px;
+  padding-left: 20px;
+
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 151px;
+    height: 34px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 18px;
+  left: 0;
+  right: 0;
+  bottom: -18px;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 2px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+
+
+input:focus+.slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(119px);
+  -ms-transform: translateX(119px);
+  transform: translateX(119px);
+}
+
+/*------ ADDED CSS ---------*/
+.on {
+  display: none;
+}
+
+.on,
+.off {
+  color: white;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 46%;
+  font-size: 11px;
+  font-family: Verdana, sans-serif;
+}
+
+input:checked+.slider .on {
+  display: block;
+}
+
+input:checked+.slider .off {
+  display: none;
+}
+
+/*--------- END --------*/
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.m-subheader {
+  padding: 5px 15px 10px 15px !important;
+}
+
+;
+
+.nav.nav-pills,
+.nav.nav-tabs {
+  margin-bottom: 0px !important;
+}
+
+.pane {
+  padding: 0 !important;
+}
+
+/* #kt_wrapper {
+  padding-top: 65px
+} */
+
+.icon-calender {
+  padding-left: 8px;
+  padding-right: 4px;
+  padding-top: 8.45;
+  padding-bottom: 8.45;
+}
+
+.m-subheader__daterange {
+  border-radius: 3.5px;
+}
+
+.m-subheader__daterange.dashboard-report-range {
+  margin-left: 10px;
+}
+
+.m-subheader .m-subheader__daterange {
+  display: inline-block;
+  padding: 2px;
+  cursor: pointer;
+  background: #fff;
+}
+
+.m-subheader .m-subheader__daterange .m-subheader__daterange-label {
+  padding: 0.7rem 0.75rem 0.7rem 0.75rem;
+}
+
+.m-subheader .m-subheader__daterange .m-subheader__daterange-label .m-subheader__daterange-date {
+  display: inline-block;
+  font-weight: 500;
+}
+
+.dropdown-menu>li>a,
+.dropdown-menu>.dropdown-item {
+  color: #575962;
+}

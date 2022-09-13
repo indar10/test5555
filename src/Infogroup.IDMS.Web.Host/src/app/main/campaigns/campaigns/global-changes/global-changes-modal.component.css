@@ -1,0 +1,99 @@
+.search-controls {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.search-margin {
+  margin-bottom: 0.25rem;
+}
+
+.primeng-datatable-container .primeng-no-data {
+  border-color: white !important;
+}
+
+.search-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.search-container__input {
+  display: flex;
+  flex-grow: 11;
+}
+
+.find-replace-container {
+  display: flex;
+  justify-content: space-between;
+  flex: 0 0 auto;
+}
+
+.control-title {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #48465b;
+  margin-right: 10px;
+}
+
+.global-error {
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+}
+
+.help-notes {
+  padding: 1px;
+  font-size: 0.95rem;
+}
+
+li {
+  padding: 0;
+}
+
+.help-button {
+  margin-right: 2px;
+  width: 44px;
+  border-bottom-right-radius: 0 !important;
+  border-bottom-left-radius: 3.5px !important;
+  border-top-right-radius: 0 !important;
+  border-top-left-radius: 3.5px !important;
+}
+
+.history-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 3px;
+  margin-right: 3px;
+  margin-top: 2px;
+}
+
+.action-container {
+  margin: 0px;
+}
+
+.switch {
+  margin-top: 0;
+  height: 40px;
+}
+
+.slider {
+  top: 0;
+  bottom: 0;
+  background-color: #ccc;
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(119px);
+  transform: translateX(118px);
+}
+
+.slider:before {
+  height: 30px;
+  width: 30px;
+}
+
+.on,
+.off {
+  padding-left: 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+}

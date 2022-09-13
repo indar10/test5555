@@ -1,0 +1,171 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h1 class="modal-title">
+      <span>Geo Mapping</span>
+    </h1>
+    <button type="button" class="close" (click)="close()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div
+    id="geoMapping"
+    class="modal-body"
+    [busyIf]="primengTableHelper.isLoading"
+  >
+    <div class="form-group">
+      <div class="input-group">
+        <input
+          type="search"
+          class="form-control"
+          id="mSearch"
+          name="mSearch"
+          placeholder="Search Location"
+          [disabled]="isDisabled"
+        />
+        <div class="input-group-append">
+          <span class="input-group-text">
+            <i class="flaticon-search-1"></i
+          ></span>
+        </div>
+      </div>
+    </div>
+    <div class="map-wrapper">
+      <div id="map" [ngClass]="isDisabled ? 'disable-maps-ui' : ''"></div>
+      <div class="map-filters">
+        <div>
+          <button
+            class="btn btn-outline-secondary"
+            [ngClass]="selectedTab === 1 ? 'active' : ''"
+            (click)="changeTab(1)"
+            [disabled]="isDisabled"
+            [popover]="
+              'Click on different points on the map and create a polygon to mark out your desired location'
+            "
+            triggers="mouseenter:mouseleave"
+          >
+            <i class="far fa-draw-polygon pr-0"></i>
+          </button>
+          <button
+            class="btn btn-outline-secondary"
+            [ngClass]="selectedTab === 2 ? 'active' : ''"
+            (click)="changeTab(2)"
+            [disabled]="isDisabled"
+            [popover]="
+              'Zoom into your desired location and select a radius in miles'
+            "
+            triggers="mouseenter:mouseleave"
+          >
+            <i class="far fa-circle pr-0"></i>
+          </button>
+        </div>
+        <form class="mt-4" autocomplete="off" #geoMapp="ngForm">
+          <div class="form-group">
+            <label for="mLattitude">Lattitude</label>
+            <input
+              type="search"
+              class="form-control"
+              id="mLattitude"
+              name="mLattitude"
+              placeholder="Lattitude"
+              #mapLattitude="ngModel"
+              [(ngModel)]="latitude"
+              [disabled]="isDisabled"
+              (blur)="addMarker()"
+              (keydown.enter)="addMarker()"
+              pattern="^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,15})?))$"
+            />
+            <validation-messages
+              [formCtrl]="mapLattitude"
+            ></validation-messages>
+          </div>
+          <div class="form-group">
+            <label for="mLongitude">Longitude</label>
+            <input
+              type="search"
+              class="form-control"
+              id="mLongitude"
+              name="mLongitude"
+              placeholder="Longitude"
+              #mapLongitude="ngModel"
+              [(ngModel)]="longitude"
+              (blur)="addMarker()"
+              (keydown.enter)="addMarker()"
+              [disabled]="isDisabled"
+              pattern="^(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,15})?))$"
+            />
+            <validation-messages
+              [formCtrl]="mapLongitude"
+            ></validation-messages>
+          </div>
+          <div class="form-group" *ngIf="selectedTab === 2">
+            <label for="mRadius">Radius (In Miles)</label>
+            <input
+              id="mRadius"
+              type="search"
+              class="form-control"
+              name="mRadius"
+              placeholder="Radius"
+              #mapRadius="ngModel"
+              (blur)="setRadius(+$event.target.value)"
+              (keydown.enter)="setRadius(+$event.target.value)"
+              required
+              maxNumber="10000"
+              [(ngModel)]="radius"
+              [disabled]="isDisabled"
+            />
+            <validation-messages [formCtrl]="mapRadius"></validation-messages>
+            <div
+              *ngIf="
+                mapRadius.errors &&
+                (mapRadius.dirty || mapRadius.touched) &&
+                !mapRadius.errors.maxNumber
+              "
+              class="form-control-feedback"
+            >
+              <div [hidden]="!mapRadius.errors.maxNumber">
+                Radius cannot be greater then 10000 miles
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="mName">Custom Location Name *</label>
+            <input
+              type="search"
+              class="form-control"
+              id="mName"
+              name="mName"
+              placeholder="Name"
+              #mapName="ngModel"
+              required
+              [(ngModel)]="name"
+              [disabled]="isDisabled"
+            />
+            <validation-messages [formCtrl]="mapName"></validation-messages>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      [disabled]="saving"
+      type="button"
+      class="btn btn-default"
+      (click)="close()"
+    >
+      {{ l("Cancel") }}
+    </button>
+    <button
+      [disabled]="
+        !geoMapp.form.valid || saving || shapeDrawn == null || isDisabled
+      "
+      [buttonBusy]="saving"
+      class="btn btn-primary blue"
+      type="button"
+      (click)="save()"
+    >
+      <i class="fa fa-save"></i>
+      <span>{{ l("Save") }}</span>
+    </button>
+  </div>
+</div>

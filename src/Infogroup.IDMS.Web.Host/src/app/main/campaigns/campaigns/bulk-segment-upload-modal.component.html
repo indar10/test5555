@@ -1,0 +1,68 @@
+<div class="modal-content">
+    <form *ngIf="active" #bulkSegmentUploadForm="ngForm" novalidate (ngSubmit)="save(bulkSegmentUploadForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span>{{l("BulkSegmentLinkText")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" style="padding-top:0% !important">  
+                <div class="form-group">
+                    <label>{{l('SelectFormatLabel')}}</label>
+                    &nbsp;
+                    <label class="switchPopup">
+                        <input type="checkbox" id="isDefaultFormat" [(ngModel)]="isDefaultFormatHidden" (click)="clearCheckBoxes()"name="isDefault" checked />
+                        <span class="slider round">
+                            <span class="on">Default</span><span class="off">Radio & TV</span>
+                        </span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <p-checkbox name="isGroupByKeyCode1CheckBoxChecked"
+                                label="Group By Key Code 1"
+                                [hidden]="!isDefaultFormatHidden"
+                                [(ngModel)]="isGroupByKeycode1"
+                                binary="true"
+                                inputId="isGroupByKeycode1">
+                    </p-checkbox>
+                    <p-checkbox name="isPopulateKeycode1"
+                                label="Populate Key Code"
+                                [hidden]="isDefaultFormatHidden"
+                                [(ngModel)]="isPopulateKeyCode1"
+                                binary="true"
+                                inputId="isPopulateOnly">
+                    </p-checkbox>
+                </div>
+                <div class="row m--margin-bottom-10">
+                    <div style="padding-left:10px;padding-right:10px; margin-top:25px;">
+                        <div class="form-group">
+                            <div>
+                                <label for="file">{{l('BulkSegmentFileLabel')}}</label>
+                            </div>
+                            <div class="row" style="margin-left:1px;">
+                                <input type="file"
+                                       id="file"
+                                       accept=".xls,.xlsx"
+                                       (change)="handleFileInput($event.target.files)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">                    
+                    <a href="javascript:;" style="cursor:pointer"
+                       (click)="onDownloadTemplate()">{{l('downloadTooltip')}}</a>
+                </div>
+           
+            </div>
+            <div class="modal-footer">
+                <button type="button" [disabled]="saving" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                <button type="submit" [busyText]="l('SavingWithThreeDot')" [buttonBusy]="saving" [disabled]="isDisabled" (click)="onSave()" class="btn btn-primary blue">
+                    <i class="fa fa-save"></i>
+                    <span>{{l("Save")}}</span>
+                </button>
+            </div>
+
+</form>
+</div>

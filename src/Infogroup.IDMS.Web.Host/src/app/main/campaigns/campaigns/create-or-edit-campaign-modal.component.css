@@ -1,0 +1,100 @@
+select {
+    color: rgb(87, 89, 98);
+    display: block;
+    height: 37.1875px;
+    text-decoration: none solid rgb(87, 89, 98);
+    width: 750px;
+    column-rule-color: rgb(87, 89, 98);
+    perspective-origin: 375px 18.5938px;
+    transform-origin: 375px 18.5938px;
+    caret-color: rgb(87, 89, 98);
+    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box padding-box;
+    border: 1px solid rgb(235, 237, 242);
+    border-radius: 3.5px 3.5px 3.5px 3.5px;
+    font: normal normal 400 normal 14px / 17.5px sans-serif, Arial;
+    outline: rgb(87, 89, 98) none 0px;
+    padding: 9.1px 14px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
+
+/*#INPUT_1*/
+select option {
+    font-size: 16px;
+
+}
+
+.actions-menu {
+    z-index: auto !important;
+}
+
+/* #builder  {
+    border: 1px solid black;
+}
+btn .btn-xs .btn-success{
+    width: 45%
+} */
+/* #builder_group_0 {
+    width: 100%
+} */
+.centreButton {
+    text-align: center;
+}
+
+.modal-lg1 {
+    max-width: 90%;
+}
+
+.app-modal-window .modal-dialog {
+    width: 900px;
+}
+
+.modal-body {
+    color: #212529 !important;
+}
+
+.download-btn {
+    position: relative;
+    width: 100%;
+    text-align: right;
+    margin-bottom: 0.5rem;
+    margin-right: 10px;
+}
+
+.chk-margin {
+    margin-top: 2.5rem;
+}
+
+.btn-margin {
+    margin-top: 2rem;
+}
+.decoy-control {
+    display: flex;
+    justify-content: flex-end;
+}
+
+::ng-deep .pivotReportsTable .ui-table-scrollable-view {
+    min-height: 400px;
+}
+
+::ng-deep .pivotReportsTable .ui-table-scrollable-body {
+    min-height: 400px;
+}
+
+::ng-deep .multiDimensionalReportsTable .ui-table-scrollable-view {
+    min-height: 400px;
+}
+
+::ng-deep .multiDimensionalReportsTable .ui-table-scrollable-body {
+    min-height: 400px;
+}
+
+@media (max-width: 767px) {
+    .chk-margin {
+        margin-top: 0rem;
+    }
+
+    .btn-margin {
+        margin-top: 0rem;
+    }
+}
+

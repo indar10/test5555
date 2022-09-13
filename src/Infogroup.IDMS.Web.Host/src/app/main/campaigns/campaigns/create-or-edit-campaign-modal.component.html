@@ -1,0 +1,1280 @@
+<div class="modal-content">
+    <form *ngIf="active" #databaseForm="ngForm" novalidate (ngSubmit)="save(databaseForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="campaignId">{{l("EditCampaignTitle")}}</span>
+                <span *ngIf="!campaignId">{{l("NewCampaign")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body typeName  level xfield yfield">
+
+            <tabset>
+                <tab heading="General">
+                    <!--<general-tab-all [campaignId]="campaignId"></general-tab-all>-->
+                    <fieldset ngModelGroup="mainForm">
+                        <div class="form-group mt-3">
+                            <label>{{l("Database")}} *</label>
+                            <div class="ui-fluid">
+                                <p-dropdown [required]="true" (onChange)="onDatabaseChange($event)" [options]="databases"
+                                            [disabled]="campaignId" [filter]="true" [(ngModel)]="campaign.databaseID" name="databaseID">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Description">{{l("Description")}} *</label>
+                            <input id="Description" maxlength="50" #descriptionInput="ngModel" type="text" class="form-control"
+                                   [(ngModel)]="campaign.cDescription" name="cDescription" required />
+                            <validation-messages [formCtrl]="descriptionInput"></validation-messages>
+                        </div>
+
+                        <div class="form-group" *ngIf="customerVisible">
+                            <label for="Mailer">{{l("Customer")}} {{!campaign.divisionalDatabase ? '*' : ''}}</label>
+                            <div class="ui-fluid">
+                                <p-autoComplete #mailerInput="ngModel" [required]="!campaign.divisionalDatabase && customerVisible" [delay]="500" [minLength]="2"
+                                                [(ngModel)]="campaign.mailer" field="label" [suggestions]="mailers" name="mailer" [dropdown]="true"
+                                                (completeMethod)="searchMailers($event)" [forceSelection]="true" (onSelect)="onMailerSelect($event)">
+                                </p-autoComplete>
+                            </div>
+                        </div>
+                        <div *ngIf="brokerVisible && brokerVisibleOnCount" class="form-group">
+                            <label for="Broker">{{l("Broker")}}</label>
+                            <div class="ui-fluid">
+                                <p-autoComplete #brokerInput="ngModel" [required]="!campaign.divisionalDatabase && brokerVisible" name="broker" [delay]="500" [minLength]="2"
+                                                [(ngModel)]="campaign.broker" [suggestions]="brokers" field="label" [dropdown]="true"
+                                                (completeMethod)="searchBrokers($event)" [forceSelection]="true">
+                                </p-autoComplete>
+                            </div>
+                        </div>
+                        <div class="form-group" *ngIf="offerVisibleOnCount">
+                            <label for="Offer">{{l("Offer")}} {{!campaign.divisionalDatabase && !campaignId ? '*' : ''}}</label>
+                            <div *ngIf="offerDDVisible && !campaignId;else offerTextBox" class="ui-fluid">
+                                <p-dropdown #offerDDInput="ngModel" [required]="!campaign.divisionalDatabase && offerVisibleOnCount" [options]="offers" #offerDDInput="ngModel"
+                                            placeholder="Select Offer" [filter]="true" [(ngModel)]="campaign.offerID"
+                                            name="offerDD"></p-dropdown>
+                            </div>
+                            <ng-template #offerTextBox>
+                                <div class="ui-fluid">
+                                    <input id="Offer" maxlength="50" type="text" #offerTxtInput="ngModel" class="form-control"
+                                           [(ngModel)]="campaign.cOfferName" name="cOffer" />
+                                </div>
+                            </ng-template>
+                        </div>
+                        <div class="form-group" *ngIf="!campaignId">
+                            <label for="Build">{{l("Build")}} *</label>
+                            <div class="ui-fluid">
+                                <p-dropdown #buildInput="ngModel" [required]="true" [options]="builds" [disabled]="campaignId"
+                                            [filter]="true" [(ngModel)]="campaign.buildID" name="buildID" (onChange)="onBuildChange($event)"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="Channel">{{l("Channel")}} *</label>
+                                    <div>
+                                        <p-radioButton name="cChannelType" value="P" label="Postal" [(ngModel)]="campaign.cChannelType"
+                                                       [style]="{'margin':'8px'}" inputId="cChannelType1" [disabled]="!channelTypeEnable">
+                                        </p-radioButton>
+                                        <p-radioButton name="cChannelType" [style]="{'margin':'8px'}" value="T" label="Tele-marketing"
+                                                       [(ngModel)]="campaign.cChannelType" inputId="cChannelType2" [disabled]="!channelTypeEnable">
+                                        </p-radioButton>
+                                        <p-radioButton name="cChannelType" [style]="{'margin':'8px'}" value="E" label="Email "
+                                                       [(ngModel)]="campaign.cChannelType" inputId="cChannelType3" [disabled]="!channelTypeEnable">
+                                        </p-radioButton>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="Type">{{l("Type")}} *</label>
+                                    <div>
+                                        <p-radioButton name="cOrderType" [style]="{'margin':'8px'}" value="N" label=" Net"
+                                                       [(ngModel)]="campaign.cOrderType" inputId="opt1">
+                                        </p-radioButton>
+                                        <p-radioButton name="cOrderType" [style]="{'margin':'8px'}" value="G" label=" Gross"
+                                                       [(ngModel)]="campaign.cOrderType" inputId="opt2">
+                                        </p-radioButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" *ngIf="permission.isGranted('Pages.CampaignMaxPers') && !campaignId">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label>{{l("Max Per Field")}}</label>
+                                    <div class="ui-fluid">
+
+                                        <p-dropdown [options]="maxPerFieldsCampaignlevel" [filter]="true" [(ngModel)]="CampaignLevelMaxPerField" name="CampaignLevelMaxPerField" [style]="{'width':'100%'}" (onChange)="onMaxPerFieldCampaignLevelChange($event)"></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>{{l("Max Per Quantity")}}</label>
+                                    <input type="text" [(readonly)]="IsMaxFieldEmpty" digitOnly
+                                           maxlength="6" class="form-control"
+                                           [(ngModel)]="MaximumMaxPerQuantity" name="ToQty"
+                                           (ngModelChange)="onMaxPerQuantityChange()"
+                                           style="width:100%; height:50%" />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </tab>
+                <tab *ngIf="campaignId && isGrantedAny('Pages.CampaignXTabReports','Pages.CampaignMultiColumnReports')"
+                     heading="Reports ">
+                    <fieldset ngModelGroup="mainForm">
+                        <p-accordion>
+                            <p-accordionTab [selected]="true" *ngIf="permission.isGranted('Pages.CampaignXTabReports')">
+                                <p-header>
+                                    Pivot
+                                    <link (click)="downloadXtabReport(campaignId,$event)" class="fa fa-download"
+                                          [style.float]="getOutputLayoutFloatStyle()" [(hidden)]="isDownloadXtabEnabled"
+                                          style="padding-top:3px" />
+
+                                </p-header>
+                                <div class="primeng-datatable-container">
+                                    <p-table #dataTable [value]="primengTableHelper.records"
+                                             [busyIf]="primengTableHelper.isLoading" [scrollable]="true" scrollHeight="200px"
+                                             [responsive]="primengTableHelper.isResponsive" dataKey="id"
+                                             [resizableColumns]="primengTableHelper.resizableColumns" class="pivotReportsTable">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th style="width: 30%">
+                                                    {{l('Row')}}
+                                                </th>
+                                                <th style="width: 30%">
+                                                    {{l('Column')}}
+                                                </th>
+                                                <th style="width:15%">
+                                                    {{l('Level')}}
+                                                </th>
+                                                <th style="width:12%">
+                                                    {{l('Type')}}
+                                                </th>
+                                                <th style="width:5%"></th>
+                                                <th style="width:4%"></th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                                            <tr *ngIf="record.action!=3">
+                                                <td style="width:30%" pEditableColumn>
+                                                    <p-cellEditor>
+                                                        <ng-template pTemplate="input">
+                                                            <p-dropdown [options]="XFields" [filter]="true"
+                                                                        [(ngModel)]="record.cXField"
+                                                                        [style]="{'minWidth':'10px','width':'100%'}"
+                                                                        (onChange)="onXFieldChange(i,$event)" name="dbX">
+                                                                >
+                                                            </p-dropdown>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="output">
+                                                            {{record.cXDesc}}
+                                                        </ng-template>
+                                                    </p-cellEditor>
+                                                </td>
+                                                <td style="width:30%" pEditableColumn>
+                                                    <p-cellEditor>
+                                                        <ng-template pTemplate="input">
+                                                            <p-dropdown [options]="YFields" [filter]="true"
+                                                                        [(ngModel)]="record.cYField"
+                                                                        [style]="{'minWidth':'10px','width':'100%'}"
+                                                                        (onChange)="onYFieldChange(i,$event)" name="dbY">
+                                                            </p-dropdown>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="output">
+                                                            {{record.cYDesc}}
+                                                        </ng-template>
+                                                    </p-cellEditor>
+                                                </td>
+                                                <td style="width:15%" pEditableColumn>
+                                                    <p-cellEditor>
+                                                        <ng-template pTemplate="input">
+                                                            <p-dropdown [options]="Levels"
+                                                                        [(ngModel)]="record.iXTabBySegment"
+                                                                        (onChange)="onLevelChange(i,$event)"
+                                                                        [style]="{'minWidth':'10px','width':'100%'}" name="dbL"></p-dropdown>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="output">
+                                                            {{record.isXTab}}
+                                                        </ng-template>
+                                                    </p-cellEditor>
+                                                </td>
+                                                <td pEditableColumn style="width:12%">
+                                                    <p-cellEditor>
+                                                        <ng-template pTemplate="input">
+                                                            <p-dropdown [options]="Types" [(ngModel)]="record.cType"
+                                                                        (onChange)="onTypeChange(i,$event)"
+                                                                        [style]="{'minWidth':'10px','width':'100%'}" name="dbType"></p-dropdown>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="output">
+                                                            {{record.cTypeName}}
+                                                        </ng-template>
+                                                    </p-cellEditor>
+                                                </td>
+                                                <td style="width:5%">
+                                                    <button type="button" class="btn btn-sm btn-dangerous" [popover]="popoverXTab"
+                                                            popoverTitle="{{l('segmentNumberPopoverTitle')}}" container="body" placement="left"
+                                                            data-toggle="tooltip" title="{{l('segmentNumberTooltip')}}"
+                                                            [outsideClick]="true" style="float: right;">
+                                                        <i class="fa fa-plus" *ngIf="!record.cSegmentNumbers"></i>
+                                                        <i class="fa fa-plus" style="color:limegreen" *ngIf="record.cSegmentNumbers"></i>
+                                                    </button>
+                                                    <ng-template #popoverXTab placement="left">
+                                                        <div>
+                                                            <textarea rows="2" cols="42" name="cSegmentNumbersXTab" [(ngModel)]="record.cSegmentNumbers" (blur)="onXTabSegmentNumberChange(i,$event)"> </textarea>
+                                                            <p>{{l('segmentNumberExample')}}</p>
+                                                        </div>
+                                                    </ng-template>
+                                                </td>
+                                                <td style="width:4%">
+                                                    <button type="button" class="btn btn-sm btn-dangerous"
+                                                            [disabled]="CampaignStatus > 100" style="float: right;" (click)="deleteXtab(i)">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </p-accordionTab>
+                            <p-accordionTab header="Multi Dimensional"
+                                            *ngIf="permission.isGranted('Pages.CampaignMultiColumnReports')">
+                                <p-header>
+                                    Multi Dimensional
+                                    <link (click)="downloadMultiColumnReport(campaignId,$event)" class="fa fa-download"
+                                          [style.float]="getOutputLayoutFloatStyle()"
+                                          [(hidden)]="isDownloadMulticolumnEnabled" style="padding-top:3px" />
+
+                                </p-header>
+                                <div class="primeng-datatable-container">
+                                    <p-table #dataTable [value]="primengTableHelperMultiDimension.records"
+                                             [busyIf]="primengTableHelperMultiDimension.isLoading" [scrollable]="true"
+                                             scrollHeight="200px"
+                                             [responsive]="primengTableHelperMultiDimension.isResponsive" dataKey="id"
+                                             [resizableColumns]="primengTableHelperMultiDimension.resizableColumns" class="multiDimensionalReportsTable">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th style="width: 58%">
+                                                    {{l('Fields')}}
+                                                </th>
+                                                <th style="width:1%"></th>
+                                                <th style="width:15%">
+                                                    {{l('Level')}}
+                                                </th>
+                                                <th style="width:12%">
+                                                    {{l('Type')}}
+                                                </th>
+                                                <th style="width:5%"></th>
+                                                <th style="width:4%"></th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                                            <tr *ngIf="record.action!=3">
+                                                <td style="width:58%" pEditableColumn>
+                                                    <p-cellEditor>
+                                                        <ng-template pTemplate="input">
+                                                            <p-multiSelect [showToggleAll]="false"
+                                                                           [style]="{'width':'100%'}" [options]="multiColumnFields"
+                                                                           [(ngModel)]="record.cFields"
+                                                                           (onChange)="onMultiFieldChange(i,$event)" name="fields">
+                                                            </p-multiSelect>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="output">
+                                                            {{record.cFieldDescription}}
+                                                        </ng-template>
+                                                    </p-cellEditor>
+                                                </td>
+                                                <td style="width:1%"></td>
+                                                <td style="width:15%" pEditableColumn>
+                                                    <p-cellEditor>
+                                                        <ng-template pTemplate="input">
+                                                            <p-dropdown [options]="Levels"
+                                                                        [(ngModel)]="record.iMultiBySegment"
+                                                                        (onChange)="onMultiLevelChange(i,$event)"
+                                                                        [style]="{'minWidth':'10px','width':'100%'}" name="dbLevelMulti">
+                                                            </p-dropdown>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="output">
+                                                            {{record.isMulti}}
+                                                        </ng-template>
+                                                    </p-cellEditor>
+                                                </td>
+                                                <td pEditableColumn style="width:12%" class="">
+                                                    <p-cellEditor>
+                                                        <ng-template pTemplate="input">
+                                                            <p-dropdown [options]="Types" [(ngModel)]="record.cType"
+                                                                        (onChange)="onMultiTypeChange(i,$event)"
+                                                                        [style]="{'minWidth':'10px','width':'100%'}" name="dbTypeMulti">
+                                                            </p-dropdown>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="output">
+                                                            {{record.cTypeName}}
+                                                        </ng-template>
+                                                    </p-cellEditor>
+                                                </td>
+                                                <td style="width:5%">
+                                                    <button type="button" class="btn btn-sm btn-dangerous" [popover]="popoverMulti"
+                                                            popoverTitle="{{l('segmentNumberPopoverTitle')}}" container="body" placement="left"
+                                                            data-toggle="tooltip" title="{{l('segmentNumberTooltip')}}" [outsideClick]="true" style="float: right;">
+                                                        <i class="fa fa-plus" *ngIf="!record.cSegmentNumbers"></i>
+                                                        <i class="fa fa-plus" style="color:limegreen" *ngIf="record.cSegmentNumbers"></i>
+                                                    </button>
+                                                    <ng-template #popoverMulti placement="left">
+                                                        <div>
+                                                            <textarea rows="2" cols="42" name="cSegmentNumbersMulti" [(ngModel)]="record.cSegmentNumbers" (blur)="onMultiSegmentNumberChange(i,$event)"></textarea>
+                                                            <p>{{l('segmentNumberExample')}}</p>
+                                                        </div>
+                                                    </ng-template>
+                                                </td>
+                                                <td style="width:4%">
+                                                    <button type="button" class="btn btn-sm btn-dangerous"
+                                                            style="float: right" [disabled]="CampaignStatus > 100" (click)="deleteMulti(i)">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </p-accordionTab>
+                        </p-accordion>
+                    </fieldset>
+                </tab>
+                <tab *ngIf="campaignId && permission.isGranted('Pages.CampaignMaxPers')" heading="Max Per">
+                    <fieldset ngModelGroup="mainForm">
+
+                        <p-accordion>
+                            <p-accordionTab [selected]="true" header="Segment Level">
+                                <div class="primeng-datatable-container">
+                                    <p-table #dataTable [value]="primengTableHelperMaxPer.records"
+                                             [busyIf]="primengTableHelper.isLoading" [scrollable]="true" scrollHeight="200px"
+                                             [responsive]="primengTableHelper.isResponsive" dataKey="id"
+                                             [resizableColumns]="primengTableHelper.resizableColumns" class="maxPerTable">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th style="width: 20%;">
+                                                    {{l('Group')}}
+                                                </th>
+                                                <th style="width: 30%;text-align: center;">
+                                                    {{l('Quantity')}}
+                                                </th>
+                                                <th style="width: 50%;text-align: center;">
+                                                    {{l('Field')}}
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                                            <tr>
+                                                <td style="width:20%;">
+                                                    {{record.cGroup}}
+                                                </td>
+                                                <td style="width:30%; text-align: center;" pEditableColumn>
+                                                    <p-cellEditor>
+                                                        <ng-template pTemplate="input">
+                                                            <input pInputText #maxPerQuantity="ngModel"
+                                                                   maxNumber="999999" digitOnly type="text"
+                                                                   (blur)="onMaxPerTextQuantityChange(i)"
+                                                                   [(ngModel)]="record.iMaxPerQuantity"
+                                                                   name="maxPerQuantity">
+                                                        </ng-template>
+                                                        <ng-template pTemplate="output">
+                                                            {{record.iMaxPerQuantity}}
+                                                        </ng-template>
+                                                    </p-cellEditor>
+                                                </td>
+                                                <td style="width:50%; text-align: center;" pEditableColumn>
+                                                    <p-cellEditor>
+                                                        <ng-template pTemplate="input">
+                                                            <p-dropdown [options]="MaxPerFieldsSegmentlevel"
+                                                                        [filter]="true"
+                                                                        (onChange)="onMaxPerFieldSegmentLevelChange(i,$event)"
+                                                                        [(ngModel)]="record.cMaxPerField"
+                                                                        [style]="{'width':'345px'}" name="segmentLevelDrop">
+                                                            </p-dropdown>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="output">
+                                                            {{record.cMaxPerFieldDescription}}
+                                                        </ng-template>
+                                                    </p-cellEditor>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </p-accordionTab>
+                            <p-accordionTab header="Campaign Level">
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-6">
+                                            <label>{{l("Field")}}</label>
+                                            <p-dropdown [options]="MaxPerFieldsSegmentlevel" [filter]="true"
+                                                        (onChange)="onMaxPerFieldCampaignLevelChange($event)"
+                                                        [(ngModel)]="CampaignLevelMaxPerField"
+                                                        [style]="{'width':'100%','height':'55%'}" name="campaignLevelDrop">
+                                            </p-dropdown>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>{{l("MinimumQuantity")}}</label>
+                                                    <input type="text" [(readonly)]="IsMaxFieldEmpty" digitOnly
+                                                           class="form-control" maxlength="3"
+                                                           [(ngModel)]="MinimumMaxPerQuantity" name="FromQty"
+                                                           style="width:100%;height:55%" />
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>{{l("MaximumQuantity")}}</label>
+                                                    <input type="text" [(readonly)]="IsMaxFieldEmpty" digitOnly
+                                                           maxlength="6" class="form-control"
+                                                           [(ngModel)]="MaximumMaxPerQuantity" name="ToQty"
+                                                           style="width:100%; height:55%" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </p-accordionTab>
+                        </p-accordion>
+                    </fieldset>
+                </tab>
+                <tab *ngIf="campaignId && permission.isGranted('Pages.Campaigns.Output')" heading="Output">
+                    <fieldset ngModelGroup="mainForm">
+                        <p-accordion>
+                            <p-accordionTab header="Format" [selected]="true">
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-6">
+                                            <label>{{l('MediaLabel')}}</label><br />
+                                            <p-dropdown [filter]="true" name="outputMedia" [options]="outputMediaList"
+                                                        [(ngModel)]="selectedMedia" [style]="{'width':'100%'}"></p-dropdown>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>{{l('TypeLabel')}}</label><br />
+                                            <p-dropdown [filter]="true" #outputType name="outputType" [options]="outputTypes"
+                                                        [(ngModel)]="selectedOutputType" [style]="{'width':'100%'}"
+                                                        placeholder="Select Type" (onChange)="onTypeDropdownChange(false,outputType)">
+                                            </p-dropdown>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-auto">
+                                            <p-checkbox name="headerRow" label="Header Row" binary="true"
+                                                        [(ngModel)]="headerRowCheck" inputId="headerRow"
+                                                        [disabled]="headerRowdisabled" (onChange)="onHeaderRowChecked($event)">
+                                            </p-checkbox>
+
+                                        </div>
+                                        <div class="col-md-auto">
+                                            <p-checkbox name="dataFileOnly" label="Data File Only"
+                                                        [(ngModel)]="dataFileOnlyChecked" binary="true" inputId="dataFileOnly"
+                                                        [disabled]="datafileOnlydisabled"
+                                                        (onChange)="onDatafileonlyCheckBoxChecked($event)"></p-checkbox>
+                                        </div>
+                                        <div class="col-md-auto">
+                                            <p-checkbox name="unzipped" label="Unzipped" [(ngModel)]="unzippedChecked"
+                                                        binary="true" inputId="unzipped" [disabled]="unzippeddisabled"
+                                                        (onChange)="onUnzippedCheckBoxChecked($event)"></p-checkbox>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-6">
+                                            <div class="row m--margin-bottom-10">
+                                                <div class="col-md-12">
+                                                    <label>{{l('LayoutLabel')}}</label>
+                                                    <link (click)="DownloadExcel()" class="fa fa-download"
+                                                          [style.float]="getOutputLayoutFloatStyle()"
+                                                          [tooltip]="toolTipLayoutDownloadLink"
+                                                          [(hidden)]="isLayoutDownloadEnabled" />
+                                                </div>
+
+                                            </div>
+                                            <p-dropdown [filter]="true" #Layout="ngModel" name="outputLayout"
+                                                        [options]="outputLayouts" [(ngModel)]="selectedOutputLayout"
+                                                        [style]="{'width':'100%'}" placeholder="Select Layout"
+                                                        (onChange)="onLayoutDropdownChange()" [disabled]="isLayoutFieldDisabled"></p-dropdown>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>{{l('SortLabel')}}</label><br />
+                                            <p-dropdown [filter]="true" name="outputSort" [style]="{'width':'100%'}"
+                                                        [options]="outputSortValues" [(ngModel)]="selectedoutputSort"
+                                                        placeholder="Select Sort Field"
+                                                        (onChange)="onSortDropdownChange($event)">
+                                            </p-dropdown>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-6">
+                                            <label>{{l('FileNameLabel')}}</label><br />
+                                            <input type="text" #fileLabelId="ngModel" class="form-control"
+                                                   name="fileLabel" style="width:100%;height:50%" [(ngModel)]="fileLabel"
+                                                   maxlength="50" pattern="^[a-zA-Z0-9_.]+$" />
+                                            <div *ngIf="fileLabelId.errors && (fileLabelId.dirty || fileLabelId.touched)"
+                                                 class="form-control-feedback">
+                                                <div [hidden]="!fileLabelId.errors.pattern">
+                                                    {{l("InvalidFileName")}}
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label>{{l('PGPLabel')}}</label><br />
+                                            <p-dropdown [filter]="true" name="outputPgpKey" [style]="{'width':'100%'}"
+                                                        [options]="outputPgpKeyValues" [(ngModel)]="selectedPgpKey"
+                                                        placeholder="Select PGP Key"
+                                                        (onChange)="onPGPKeyDropdownChange($event)">
+                                            </p-dropdown>
+                                        </div>
+                                    </div>
+                                </div>
+                            </p-accordionTab>
+                            <p-accordionTab header="Notes">
+                                <div class="form-group">
+                                    <label>{{l('FileNotesLabel')}}</label><br />
+                                    <textarea name="fileNotes" class="form-control" [style]="{'width':'100%'}"
+                                              [(ngModel)]="fileNotes"></textarea>
+                                </div>
+                            </p-accordionTab>
+                            <p-accordionTab header="Split">
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div [class]="classType">
+                                            <label>{{l('SplitLabel')}}</label><br />
+                                            <p-dropdown [filter]="true" name="outputSplit" [options]="splitOptionList"
+                                                        [disabled]="isSplitDisabled" [(ngModel)]="selectedSplitOption"
+                                                        [style]="{'width':'100%'}" (onChange)="onSplitDropdownChange($event)">
+                                            </p-dropdown>
+                                        </div>
+                                        <div class="col-md-6" [hidden]="isPartsVisible">
+                                            <label>{{l('PartsLabel')}}</label><br />
+                                            <p-dropdown [filter]="true" name="outputPart" [options]="partsList"
+                                                        [disabled]="isSplitDisabled" [(ngModel)]="selectedPart"
+                                                        [style]="{'width':'100%'}" (onChange)="onPartDropdownChange($event)">
+                                            </p-dropdown>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <fieldset [hidden]="selectedSplitOption!=4 || isShowTable"
+                                              [disabled]="isSplitDisabled">
+                                        <div class="primeng-datatable-container"
+                                             [hidden]="selectedSplitOption!=4 || isShowTable">
+                                            <p-table #dataTable [value]="primengTableHelperExportPart.records"
+                                                     [busyIf]="primengTableHelperExportPart.isLoading" [scrollable]="true"
+                                                     scrollHeight="200px"
+                                                     [responsive]="primengTableHelperExportPart.isResponsive"
+                                                     [columns]="cols"
+                                                     [resizableColumns]="primengTableHelperExportPart.resizableColumns" class="splitTable">
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+                                                        <th style="width: 9%;text-align:center">
+                                                            {{l('iDedupeOrderSpecified')}}
+                                                        </th>
+                                                        <th style="width: 20%;text-align: center;">
+                                                            {{l('OutputQuantityLabel')}}
+                                                        </th>
+                                                        <th style="width:15%;text-align: center;"
+                                                            *ngFor="let col of columns">
+                                                            {{col.header}}
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex"
+                                                             let-columns="columns">
+                                                    <tr>
+                                                        <td style="width:10%;text-align:center">
+                                                            {{record.iDedupeOrderSpecified}}
+                                                        </td>
+                                                        <td style="width:20%; text-align: center;">
+
+                                                            {{record.outputQuantity | number}}
+
+                                                        </td>
+                                                        <td style="width:1%"></td>
+                                                        <td style="width:15%;text-align: center;"
+                                                            *ngFor="let col of columns" pEditableColumn>
+
+                                                            <p-cellEditor>
+                                                                <ng-template pTemplate="input">
+                                                                    <input pInputText name="quantity" type="text"
+                                                                           digitOnly
+                                                                           [(ngModel)]="record.iQuantity[col.field]"
+                                                                           [disabled]="isSplitDisabled"
+                                                                           (keydown)="quantityValueChanged()">
+                                                                </ng-template>
+                                                                <ng-template pTemplate="output">
+                                                                    <label>{{record.iQuantity[col.field] | number}}</label>
+                                                                </ng-template>
+                                                            </p-cellEditor>
+
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </p-accordionTab>
+                            <p-accordionTab header="Shipping">
+                                <div class="form-group">
+                                    <label>{{l('ShipToLabel')}}</label>
+                                    <p-dropdown #shipToInput="ngModel" [filter]="true" [style]="{'width':'100%'}"
+                                                [options]="outputShipToValues" [(ngModel)]="selectedOutputShipTo"
+                                                editable="true" name="outputShipTo" (keydown)="shipToKeyDown($event)"
+                                                (onChange)="onShipToDropdownChange($event)"
+                                                emailValidator="(([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)(\s*;\s*|\s*$))*">
+                                    </p-dropdown>
+                                    <div *ngIf="shipToInput.errors && (shipToInput.dirty || shipToInput.touched)"
+                                         class="form-control-feedback">
+                                        <div [hidden]="!shipToInput.errors.emailValidator">
+                                            {{l("InvalidEmailAddress")}}
+                                        </div>
+                                    </div>
+                                    <validation-messages [formCtrl]="shipToInput"></validation-messages>
+                                </div>
+                                <div class="form-group">
+                                    <label>{{l('ShipToCC')}}</label>
+                                    <input type="text" class="form-control" #shipCC="ngModel" [style]="{'width':'100%'}"
+                                           [(ngModel)]="shipToCC" name="shipCC"
+                                           emailValidator="(([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)(\s*;\s*|\s*$))*">
+                                    <div *ngIf="shipCC.errors && (shipCC.dirty || shipCC.touched)"
+                                         class="form-control-feedback">
+                                        <div [hidden]="!shipCC.errors.emailValidator">
+                                            {{l("InvalidEmailAddress")}}
+                                        </div>
+                                    </div>
+                                    <validation-messages [formCtrl]="shipToCC"></validation-messages>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-6">
+                                            <label>{{l('ShipToSubject')}}</label>
+                                            <input type="text" class="form-control" [style]="{'width':'100%'}"
+                                                   [(ngModel)]="shipToSubject" name="shipSubject" maxlength="70">
+
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>{{l('ShipToNotes')}}</label>
+                                            <textarea class="form-control" [style]="{'width':'100%'}"
+                                                      [(ngModel)]="shipToNotes" name="shipNotes"></textarea>
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-6">
+                                            <label>{{l('FTPSiteLabel')}}</label>
+                                            &nbsp;
+                                            <input type="text" class="form-control" [(ngModel)]="ftpSite" name="ftpSite"
+                                                   style="width:100%" readonly />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>{{l('UserNameLabel')}}</label>
+                                            &nbsp;
+                                            <input type="text" class="form-control" [(ngModel)]="userName"
+                                                   name="userName" style="width:100%" readonly />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="form-group" [hidden]="!isShipped">
+                                    <label>{{l('ShippedLabel')}}</label>
+                                    &nbsp;
+                                    <label>{{shippedDate}}</label>
+
+
+                                </div>
+                            </p-accordionTab>
+                        </p-accordion>
+                    </fieldset>
+                </tab>
+                <tab *ngIf="campaignId>0 && permission.isGranted('Pages.Campaigns.Billing')" heading="Billing">
+                    <fieldset ngModelGroup="mainForm">
+                        <div class="form-group mt-3">
+                            <label for="PO">{{l('PO#')}}</label>
+                            <input id="lvaOrderNo" #lvaOrderNo="ngModel" type="text" class="form-control"
+                                   [(ngModel)]="billing.lvaOrderNo" name="lvaOrderNo" />
+                        </div>
+                        <div class="row chk-margin">
+                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                <div class="form-group">
+                                    <p-checkbox name="isNetUse" label="Bill Net Order" [(ngModel)]="billing.isNetUse"
+                                                binary="true" inputId="isNetUse"></p-checkbox>
+                                </div>
+                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                <div class="form-group">
+                                    <p-checkbox name="isNoUsage" label="No Usage" [(ngModel)]="billing.isNoUsage"
+                                                binary="true" inputId="isNoUsage"></p-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="nextMarkOrderNo">{{l('NextMarkOrder')}}</label>
+                            <input id="nextMarkOrderNo" #nextMarkOrderNo="ngModel" type="text" class="form-control"
+                                   [(ngModel)]="billing.nextMarkOrderNo" name="nextMarkOrderNo" />
+                        </div>
+                        <div class="form-group">
+                            <label for="brokerPONo">{{l('CustomerPO')}}</label>
+                            <input id="brokerPONo" #brokerPONo="ngModel" type="text" class="form-control"
+                                   [(ngModel)]="billing.brokerPONo" name="brokerPONo" />
+                        </div>
+                        <div class="form-group">
+                            <label for="sanNumber">{{l('SAN#')}}</label>
+                            <input id="sanNumber" #sanNumber="ngModel" type="text" class="form-control"
+                                   [(ngModel)]="billing.sanNumber" name="sanNumber" />
+                        </div>
+                    </fieldset>
+                </tab>
+                <tab *ngIf="campaignId>0 && permission.isGranted('Pages.CampaignAttachments')" heading="Documents">
+                    <fieldset ngModelGroup="mainForm">
+                        <p-accordion>
+                            <div class="primeng-datatable-container">
+                                <p-table #dataTable [value]="documentsData" [busyIf]="primengTableHelper.isLoading"
+                                         [scrollable]="true" scrollHeight="200px"
+                                         [responsive]="primengTableHelper.isResponsive" dataKey="id"
+                                         [resizableColumns]="primengTableHelper.resizableColumns" class="documentsTable">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th style="width: 30%">
+                                                {{l('DocumentType')}}
+                                            </th>
+                                            <th style="width: 20%">
+                                                {{l('File')}}
+                                            </th>
+                                            <th style="width:10%">
+                                                {{l('')}}
+                                            </th>
+                                            <th style="width:5%"></th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                                        <tr *ngIf="record.action!=3">
+                                            <td style="width:30%">
+                                                {{record.formType}}
+                                            </td>
+                                            <td style="width:20%">
+                                                <a href="javascript:;"
+                                                   (click)="downloadAttachment(record.code)">{{record.cFileName}}</a>
+
+                                            </td>
+                                            <td style="width:10%" class="dropdown-excel-operations">
+
+                                                <p-fileUpload name="PDFFileUpload" #PDFFileUpload customUpload="true"
+                                                              mode="basic" accept="application/pdf,image/png,image/gif,image/jpeg,application/msword,.gzip,.zip,application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
+                                                              (uploadHandler)="uploadFile($event,i,PDFFileUpload,record.isDisabled)" 
+                                                              (onError)="onUploadExcelError()" [auto]="true" 
+                                                              [disabled]="CampaignStatus > 100 || record.isDisabled"></p-fileUpload>
+                                                
+                                            </td>
+                                            <td style="width:5%">
+                                                <button type="button" class="btn btn-sm btn-dangerous"
+                                                        style="float: right" [hidden]="CampaignStatus > 100">
+                                                    <i class="fa fa-trash fa-lg"
+                                                       (click)="deleteOrderAttachment(record.id)"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </p-accordion>
+                    </fieldset>
+                </tab>
+                <tab *ngIf="campaignId>0 && permission.isGranted('Pages.CampaignSeed')" heading="Seeds">
+
+                    <p-accordion [activeIndex]="lastIndex" (onOpen)="onTabOpen($event)">
+                        <p-accordionTab header="View">
+                            <fieldset ngModelGroup="mainForm">
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-4">
+                                            <label>{{l('cSeedKeyMethodLable')}}</label>
+                                            <p-dropdown [options]="SeedKeyMethodList" [(ngModel)]="decoyKeyMethod"
+                                                        [style]="{'width':'100%'}" (onChange)="onSeedKeyChange($event)"
+                                                        name="seedKey"></p-dropdown>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>{{l('cSeedKeyLable')}}</label>
+                                            <input type="text" [disabled]="isAuto" #seedKey="ngModel"
+                                                   class="form-control" maxlength="10" name="seedKeyLable"
+                                                   style="height:50%" [(ngModel)]="decoyKeyText" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>{{l('cSeedKey1Lable')}}</label>
+                                            <input type="text" #seedKey1="ngModel" class="form-control"
+                                                   name="seedKey1Lable" maxlength="25" style="height:50%"
+                                                   [(ngModel)]="decoyKey1Text" />
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn icons-edited-primary"
+                                                    (click)="openAddEditSeed(false)" style="float:right; padding-top:30px;"
+                                                    placement="right" ngbTooltip="Add Seed">
+                                                <i class="fa fa-plus fa-lg"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="primeng-datatable-container" [hidden]="isDecoyRecords">
+
+                                    <p-table #dataTable [value]="primengTableHelperDecoy.records"
+                                             [busyIf]="primengTableHelperDecoy.isLoading" [scrollable]="true"
+                                             scrollHeight="200px" [responsive]="primengTableHelperDecoy.isResponsive"
+                                             dataKey="id" [resizableColumns]="primengTableHelperDecoy.resizableColumns" class="decoyTable">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th style="width: 9%">
+                                                    {{l('Group')}}
+                                                </th>
+                                                <th style="width:21%">
+                                                    {{l('Name')}}
+                                                </th>
+                                                <th style="width:30%">
+                                                    {{l('Address1Decoy')}}
+                                                </th>
+                                                <th style="width:30%">
+                                                    {{l('CityStateZipDecoy')}}
+                                                </th>
+                                                <th style="width:10%">
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                                            <tr *ngIf="record.action!=3">
+                                                <td style="width:9%">
+                                                    {{record.cDecoyGroup}}
+                                                </td>
+                                                <td style="width:21%">
+                                                    <a href="javascript:;"
+                                                       (click)="openAddEditSeed(true,i,!permission.isGranted('Pages.CampaignLevelSeeds.Delete') && record.isDecoyGroupType)">
+                                                        {{record.cName}}
+                                                    </a>
+                                                </td>
+                                                <td style="width:30%">
+                                                    {{record.cAddress1}}
+                                                </td>
+                                                <td style="width:30%">
+                                                    {{record.cAddress}}
+                                                </td>
+                                                <td style="width:10%">
+                                                    <button type="button" class="btn btn-sm btn-dangerous"
+                                                            (click)="deleteSeed(i,!permission.isGranted('Pages.CampaignLevelSeeds.Delete') && record.isDecoyGroupType)"
+                                                            [disabled]="!permission.isGranted('Pages.CampaignLevelSeeds.Delete') && record.isDecoyGroupType || CampaignStatus > 100"
+                                                            style="float: right">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+
+                                </div>
+                            </fieldset>
+                        </p-accordionTab>
+                        <p-accordionTab header="Add/Edit">
+                            <fieldset ngModelGroup="seedForm">
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-4">
+                                            <label>{{l('Group')}}</label><br />
+                                            <p-dropdown [filter]="true" [options]="decoyGroupByForEdit"
+                                                        [(ngModel)]="seed.cDecoyGroup" [disabled]="isDecoyGroup"
+                                                        name="decoyGroup" [style]="{'width':'100%'}">
+                                            </p-dropdown>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>{{l('cTitle')}}</label><br />
+                                            <input type="text" #Title="ngModel" class="form-control" maxlength="50"
+                                                   name="titleLabel" style="width:100%;height:50%"
+                                                   [(ngModel)]="seed.cTitle" />
+
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>{{l('cCompany')}}</label><br />
+                                            <input type="text" #company="ngModel" class="form-control" maxlength="50"
+                                                   name="companyLabel" style="width:100%;height:50%"
+                                                   [(ngModel)]="seed.cCompany" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-6">
+                                            <label>{{l('cFirstName')}} *</label><br />
+                                            <input type="text" #firstName="ngModel" class="form-control"
+                                                   name="firstNameLable" maxlength="30" style="width:100%;height:50%"
+                                                   [(ngModel)]="seed.cFirstName" required />
+                                            <div *ngIf="firstName.errors && (firstName.dirty || firstName.touched)"
+                                                 class="form-control-feedback">
+                                                <div [hidden]="!firstName.errors.required">
+                                                    {{l("EnterFirstName")}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label>{{l('LastNameLabel')}} *</label><br />
+                                            <input type="text" #lastName="ngModel" class="form-control"
+                                                   name="lastNameLable" maxlength="30" style="width:100%;height:50%"
+                                                   [(ngModel)]="seed.cLastName" required />
+                                            <div *ngIf="lastName.errors && (lastName.dirty || lastName.touched)"
+                                                 class="form-control-feedback">
+                                                <div [hidden]="!lastName.errors.required">
+                                                    {{l("EnterLastName")}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-6">
+                                            <label>{{l('AddressLine1Label')}} *</label><br />
+                                            <input type="text" #addressline1="ngModel" class="form-control"
+                                                   name="AddressLine1Label" maxlength="50" style="width:100%;height:50%"
+                                                   [(ngModel)]="seed.cAddress1" required />
+                                            <div *ngIf="addressline1.errors && (addressline1.dirty || addressline1.touched)"
+                                                 class="form-control-feedback">
+                                                <div [hidden]="!addressline1.errors.required">
+                                                    {{l("AddressLine1ReuiredMsg")}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>{{l('AddressLine2Label')}}</label><br />
+                                            <input type="text" #addressline2="ngModel" class="form-control"
+                                                   name="AddressLine2label" maxlength="50" style="width:100%;height:50%"
+                                                   [(ngModel)]="seed.cAddress2" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-3">
+                                            <label>{{l('CityLabel')}} *</label><br />
+                                            <input type="text" #city="ngModel" class="form-control" name="cityLabel"
+                                                   style="width:100%;height:50%" maxlength="30" [(ngModel)]="seed.cCity"
+                                                   required />
+                                            <div *ngIf="city.errors && (city.dirty || city.touched)"
+                                                 class="form-control-feedback">
+                                                <div [hidden]="!city.errors.required">
+                                                    {{l("CityReuiredMsg")}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label>{{l('StateLabel')}} *</label><br />
+                                            <input type="text" #state="ngModel" class="form-control" maxlength="2"
+                                                   name="stateLabel" style="width:100%;height:50%"
+                                                   [(ngModel)]="seed.cState" required />
+                                            <div *ngIf="state.errors && (state.dirty || state.touched)"
+                                                 class="form-control-feedback">
+                                                <div [hidden]="!state.errors.required">
+                                                    {{l("StateReuiredMsg")}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>{{l('PhoneLabel')}}</label><br />
+                                            <input type="text" #phone="ngModel" class="form-control" maxlength="20"
+                                                   name="phoneLabel" style="width:100%;height:50%"
+                                                   [(ngModel)]="seed.cPhone" pattern="\d{3}\-\d{3}\-\d{4}" />
+                                            <div *ngIf="phone.errors && (phone.dirty || phone.touched)"
+                                                 class="form-control-feedback">
+                                                <div [hidden]="!phone.errors.pattern">
+                                                    {{l("InvalidPhone")}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>{{l('ZipLabel')}} *</label><br />
+                                            <div class="row m--margin-bottom-10" style="height:100%">
+                                                <input type="text" #zip="ngModel" class="form-control" maxlength="10"
+                                                       name="zipLabel" style="width:62%;height:50%" [(ngModel)]="seed.cZip"
+                                                       required
+                                                       pattern="^\d{5}(?:-\d{4})?$|^[a-zA-Z]\d[a-zA-Z]\s?\d[a-zA-Z]\d$" />
+
+                                                &nbsp;
+                                                <label>{{('-')}}</label>
+                                                &nbsp;
+                                                <input type="text" #zip4="ngModel" maxlength="10" class="form-control"
+                                                       name="zip4Label" style="width:30%;height:50%"
+                                                       [(ngModel)]="seed.cZip4"
+                                                       pattern="^\d{4}(?:-\d{4})?$|^[a-zA-Z]\d[a-zA-Z]\s?\d[a-zA-Z]\d$" />
+                                                <div *ngIf="zip.errors && (zip.dirty || zip.touched)"
+                                                     class="form-control-feedback">
+                                                    <div [hidden]="!zip.errors.required">
+                                                        {{l("ZipReuiredMsg")}}
+                                                    </div>
+                                                    <div [hidden]="!zip.errors.pattern">
+                                                        {{l("InvalidZip")}}
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="zip4.errors && (zip4.dirty || zip4.touched)"
+                                                     class="form-control-feedback">
+                                                    <div [hidden]="!zip4.errors.pattern">
+                                                        {{l("InvalidZip4")}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row m--margin-bottom-10">
+                                        <div class="col-md-4">
+                                            <label>{{l('KeyCode1Label')}}</label><br />
+                                            <input type="text" #keyCode="ngModel" maxlength="50" class="form-control"
+                                                   name="keyCode1Label" style="width:100%;height:50%"
+                                                   [(ngModel)]="seed.cKeyCode1" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>{{l('cFax')}}</label><br />
+                                            <input type="text" #fax="ngModel" maxlength="20" class="form-control"
+                                                   name="faxLabel" style="width:100%;height:50%" [(ngModel)]="seed.cFax"
+                                                   pattern="\d{3}\-\d{3}\-\d{4}" />
+                                            <div *ngIf="fax.errors && (fax.dirty || fax.touched)"
+                                                 class="form-control-feedback">
+                                                <div [hidden]="!fax.errors.pattern">
+                                                    {{l("InvalidFax")}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>{{l('cEmail')}}</label><br />
+                                            <input type="text" #emailTest="ngModel" class="form-control" maxlength="80"
+                                                   name="emailLabel" style="width:100%;height:50%"
+                                                   [(ngModel)]="seed.cEmail"
+                                                   pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$">
+                                            <div *ngIf="emailTest.errors && (emailTest.dirty || emailTest.touched)"
+                                                 class="form-control-feedback">
+                                                <div [hidden]="!emailTest.errors.pattern">
+                                                    {{l("InvalidEmailAddress")}}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="decoy-control">
+                                    <button typeof="button" type="button" class="btn btn-primary blue"
+                                            style="width:75px;" (click)="validateSeed(databaseForm.form.controls.seedForm)"
+                                            [disabled]="databaseForm.form.controls.seedForm?.invalid">
+                                        {{decoyAddEditText}}
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </p-accordionTab>
+                        <p-accordionTab header="Add Group">
+                            <fieldset ngModelGroup="mainForm">
+                                <div class="row m--margin-bottom-10">
+                                    <div class="col-md-6">
+                                        <p-dropdown [options]="decoyGroupList" [style]="{'width':'100%'}"
+                                                    [(ngModel)]="decoyGroupText" name="decoyGroupKey">
+                                        </p-dropdown>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button typeof="button" type="button" class="btn btn-primary blue"
+                                                style="padding:7px; width:98px;"
+                                                (click)="onSaveGroup()">
+                                            {{l('AddGroup')}}
+                                        </button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </p-accordionTab>
+                    </p-accordion>
+
+                </tab>
+                <tab *ngIf="campaignId && permission.isGranted('Pages.Campaigns.OESS')" heading="OESS">
+                    <fieldset ngModelGroup="oessForm">
+                        <p-accordion>
+                            <p-accordionTab header="Billing" [selected]="true">
+                                <div class="row">
+                                    <div class="form-group col-md-6" style="margin-top:18px">
+                                        <label>{{l('OESSStatus')}}</label>&nbsp;
+                                        <label>{{oessData.oessStatus}}</label>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>{{l('SalesRep')}} *</label>
+                                        <p-dropdown #shipToInput="ngModel" [filter]="true" [style]="{'width':'100%'}"
+                                                    [options]="salesRep" [(ngModel)]="oessData.cSalesRepID"
+                                                    name="cSalesRepID" placeholder="Select Sales Rep" required>
+                                        </p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6" style="margin-top:4px;">
+                                        <label>{{l('UOM')}} *</label>
+                                        <p-dropdown #shipToInput="ngModel" [filter]="true" [style]="{'width':'100%'}"
+                                                    [options]="uomData" [(ngModel)]="oessData.lK_BillingUOM"
+                                                    (onChange)="updateTotal()" name="lK_BillingUOM" required>
+                                        </p-dropdown>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>{{l('Quantity')}} *</label>
+                                        <input type="text" class="form-control" digitOnly #QuantityInput="ngModel" maxlength="20" (ngModelChange)="onQuantityChange($event)" pattern="^\d{1,}(\.\d{1,})?$"
+                                               [(ngModel)]="oessData.iBillingQty" name="iBillingQty" required>
+                                        <div *ngIf="QuantityInput.errors && (QuantityInput.dirty || QuantityInput.touched)"
+                                             class="form-control-feedback">
+                                            <div [hidden]="!QuantityInput.errors.pattern">
+                                                {{l("DecimalvalidValue")}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label>{{l('UnitPrice')}} *</label>
+                                        <input type="text" #UPInput="ngModel" class="form-control" maxlength="20" (ngModelChange)="onUnitPriceChange($event)"
+                                               [(ngModel)]="oessData.nUnitPrice" name="nUnitPrice" pattern="^\d{1,}(\.\d{1,})?$" required>
+                                        <div *ngIf="UPInput.errors && (UPInput.dirty || UPInput.touched)"
+                                             class="form-control-feedback">
+                                            <div [hidden]="!UPInput.errors.pattern">
+                                                {{l("DecimalvalidValue")}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>{{l('Discount')}}</label>
+                                        <input type="text" #DiscountInput="ngModel" class="form-control" maxlength="20" (ngModelChange)="onDiscountChange($event)"
+                                               [(ngModel)]="oessData.nDiscountPercentage" name="nDiscountPercentage" pattern="^\d{1,}(\.\d{1,})?$">
+                                        <div *ngIf="DiscountInput.errors && (DiscountInput.dirty || DiscountInput.touched)"
+                                             class="form-control-feedback">
+                                            <div [hidden]="!DiscountInput.errors.pattern">
+                                                {{l("DecimalNumber")}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>{{l('EffectiveUnitPrice')}} *</label>
+                                        <input type="text" #EUPInput="ngModel" class="form-control" maxlength="20" pattern="^\d{1,}(\.\d{1,})?$"
+                                               [(ngModel)]="oessData.nEffectiveUnitPrice" name="nEffectiveUnitPrice" (ngModelChange)="onEffectiveUnitPriceChange($event)" required>
+                                        <div *ngIf="EUPInput.errors && (EUPInput.dirty || EUPInput.touched)"
+                                             class="form-control-feedback">
+                                            <div [hidden]="!EUPInput.errors.pattern">
+                                                {{l("DecimalNumber")}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label>{{l('ShippingCharge')}}</label>
+                                        <input type="text" #SCInput="ngModel" class="form-control" maxlength="20" (ngModelChange)="onShippingChargeChange($event)"
+                                               [(ngModel)]="oessData.nShippingCharge" name="nShippingCharge" pattern="^\d{1,}(\.\d{1,})?$">
+                                        <div *ngIf="SCInput.errors && (SCInput.dirty || SCInput.touched)"
+                                             class="form-control-feedback">
+                                            <div [hidden]="!SCInput.errors.pattern">
+                                                {{l("DecimalNumber")}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>{{l('Total')}} *</label>
+                                        <input type="text" class="form-control" maxlength="20" required
+                                               [(ngModel)]="oessData.iTotalPrice" name="iTotalPrice" disabled>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div style="margin-left:122px; margin-top: 25px;">
+                                            <button type="button" (click)="setLaunchOESSFlag(databaseForm)" class="btn btn-primary blue"
+                                                    [disabled]="databaseForm.form.controls.oessForm?.invalid">
+                                                {{l("launchOESS")}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </p-accordionTab>
+                            <p-accordionTab header="Customer">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{l('OESSOrder#')}}</label>
+                                            <input type="text" class="form-control"
+                                                   [(ngModel)]="oessData.oessOrderID" name="oessOrderID" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{l('cFirstName')}}</label>
+                                            <input type="text" class="form-control"
+                                                   [(ngModel)]="oessData.cFirstName" name="cFirstName" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{l('Phone#')}}</label>
+                                            <input type="text" class="form-control"
+                                                   [(ngModel)]="oessData.cPhone" name="cPhone" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{l('OESSAccount')}}</label>
+                                            <input type="text" class="form-control"
+                                                   [(ngModel)]="oessData.cOESSAccountNumber" name="cOESSAccountNumber" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{l('OESSInvoieTotal')}}</label>
+                                            <input type="text" class="form-control"
+                                                   [(ngModel)]="oessData.iOESSInvoiceTotal" name="iOESSInvoiceTotal" disabled>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{l('cCompany')}}</label>
+                                            <input type="text" class="form-control"
+                                                   [(ngModel)]="oessData.cCompany" name="cCompany" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{l('cLastName')}}</label>
+                                            <input type="text" class="form-control"
+                                                   [(ngModel)]="oessData.cLastName" name="cLastName" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{l('OESSInvoice')}}</label>
+                                            <input type="text" class="form-control"
+                                                   [(ngModel)]="oessData.cOESSInvoiceNumber" name="cOESSInvoiceNumber" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{l('OracleAccount')}}</label>
+                                            <input type="text" class="form-control"
+                                                   [(ngModel)]="oessData.cOracleAccountNumber" name="cOracleAccountNumber" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </p-accordionTab>
+                        </p-accordion>
+                    </fieldset>
+                </tab>
+            </tabset>
+        </div>
+        <div class="modal-footer justify-content-between">
+            <div>
+                <span *ngIf="campaignId && infoFetched">
+                    <i class="far fa-heart fa-2x float-left" *ngIf="!isFavourite" (click)="addOrRemoveFavourites()"></i>
+                    <i style="color: #e00942;" class="fas fa-heart fa-2x float-left" *ngIf="isFavourite" (click)="addOrRemoveFavourites()"></i>
+                </span>
+            </div>
+            <div>
+                <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                <button type="submit" class="btn btn-primary blue"
+                        [disabled]="databaseForm.form.controls.mainForm?.invalid || saveDisabled" [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')">
+                    <i class="fa fa-save"></i>
+                    <span>{{l("Save")}}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

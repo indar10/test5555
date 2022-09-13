@@ -1,0 +1,163 @@
+<div [@routerTransition]>
+    <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+        <div class="kt-subheader kt-grid__item">
+            <div [class]="containerClass">
+                <div class="kt-subheader__main">
+                    <h3 class="kt-subheader__title">
+                        <span>{{l("SelectionFieldCountReport")}}</span>
+                    </h3>
+                    <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                    <span class="kt-subheader__desc">
+                        &nbsp;
+                        &nbsp;
+                        <label>Select Database </label>
+                        &nbsp;
+                        <div class="btn-group" dropdown>
+                            <p-dropdown [options]="databaseList" [filter]="true"
+                                        [style]="{'width':'200%'}" name="selectedDatabase"
+                                        id="selectedDatabase"
+                                        [(ngModel)]="selectedDatabase">
+                            </p-dropdown>
+                        </div>
+                    </span>
+                </div>
+
+            </div>
+            <div class="kt-subheader__toolbar">
+                <div class="kt-subheader__wrapper">                    
+                    <button (click)="downloadSelectionFieldCountReport(0)" style="width:140px; margin-right:20px;" class="btn btn-success" type="button">
+                        <i class="far fa-file-excel"></i> {{l('ExportToExcel')}}</button>
+                </div>
+            </div>
+        </div>
+        <div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid'">
+            <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__body">
+                    <form class="kt-form" autocomplete="off">
+                        <div>
+                            <div class="row align-items-center">
+                                <div class="col-xl-12">
+                                    <div class="form-group m-form__group align-items-center">
+                                        <div class="input-group">
+                                            <span class="input-group-btn" style="margin-right: 2px;">
+                                                <button [disabled]="isHelpDisabled" class="btn btn-primary help-button" containerClass="notesTemplate"
+                                                        type="button" [popover]="notesTemplate" placement="right" [popoverTitle]="helpData.header"
+                                                        triggers="mouseenter:mouseleave">
+                                                    <i class="fa fa-question-circle"></i>
+                                                </button>
+                                            </span>
+                                            <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                            <span class="input-group-btn">
+                                                <button (click)="getSelectionFieldCountReports()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                            </span>
+                                            <ng-template #notesTemplate>
+                                                <ol class="help-notes">
+                                                    <ol class="help-notes" type="1">
+                                                        <ul style="padding-left: 2px;">
+                                                            <li *ngFor="let example of helpData.examples">{{example}}</li>
+                                                        </ul>
+                                                    </ol>
+                                                </ol>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row align-items-center">
+                        <!--<Primeng-Datatable-Start>-->
+                        <div class="primeng-datatable-container col-12"
+                             [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable       
+                                    (onLazyLoad)="getSelectionFieldCountReports($event)"                                 
+                                     [value]="primengTableHelper.records"
+                                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                     [paginator]="false"
+                                     [lazy]="true"
+                                     [scrollable]="true"
+                                     ScrollWidth="100%"
+                                     [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns"
+                                     [dataKey]="getFieldNameDescription"
+                                     >
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width:2%"></th>
+                                        <th style="width: 45%" pSortableColumn="cQuestionFieldName">
+                                            {{l('FieldName')}}
+                                            <p-sortIcon field="cQuestionFieldName"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 40%" pSortableColumn="cDescription">
+                                            {{l('status')}}
+                                            <p-sortIcon field="cDescription"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 35%" pSortableColumn="count">
+                                            {{l('Count')}}
+                                            <p-sortIcon field="count"></p-sortIcon>
+                                        </th>      
+                                        <th style="width: 10%" pSortableColumn="Action">
+                                            {{l('Action')}}                                                                                        
+                                        </th>                                    
+                                    </tr>
+                                </ng-template>
+                                 <ng-template pTemplate="body" let-record="$implicit" let-expanded="expanded">
+                                    <tr>
+                                        <td style="width:2%">
+                                            <a href="javascript:;" [pRowToggler]="record">
+                                                <i [ngClass]="expanded ? 'fa  fa-chevron-down' : 'fa fa-chevron-right'"
+                                                   style="font-size: 1.25em"></i>
+                                            </a>
+                                        </td>
+                                        <td style="width:45%">
+                                            <span class="ui-column-title"> {{l('FieldName')}}</span>
+                                             {{record.cQuestionFieldName}} 
+                                           
+                                        </td>
+                                        <td style="width:40%">
+                                            <span class="ui-column-title"> {{l('Status')}}</span>                                            
+                                                {{record.cDescription}}                                                                                          
+                                        </td>
+                                        <td style="width:35%">
+                                            <span class="ui-column-title"> {{l('Count')}}</span>
+                                              {{record.count}}
+                                        </td>
+                                        <td style="width:10%">
+                                            <span class="ui-column-title"> Action</span>                                            
+                                            <button (click)="ExportToExcelRecord(record)" class="btn btn-success" type="button">
+                                                <i class="far fa-file-excel" ngbTooltip="Export To Excel" placement="left"></i> </button>                                                                                    
+                                        </td>
+                                       
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="rowexpansion" let-record="$implicit" let-columns="columns">
+                                    <tr>
+                                        <td [attr.colspan]="10">
+                                            <order-detail [cQuestionFieldName]="record.cQuestionFieldName" [iStatus]="record.iStatus" [selectedDatabase]=selectedDatabase [filterText]=filterText></order-detail>
+                                        </td>
+                                    </tr>
+                                </ng-template> 
+                            </p-table>
+                            <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                                {{l('NoData')}}
+                            </div>
+                            <div class="primeng-paging-container">
+                                <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                                             #paginator   
+                                             (onPageChange)="getSelectionFieldCountReports($event)"                                          
+                                             [totalRecords]="primengTableHelper.totalRecordsCount"
+                                             [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                                </p-paginator>
+                                <span class="total-records-count">
+                                    {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                                </span>
+                            </div>
+                        </div>
+                        <!--<Primeng-Datatable-End>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+</div>

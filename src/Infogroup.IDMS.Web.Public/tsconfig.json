@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "noEmit": true,
+        "target": "es5",
+        "disableSizeLimit": true
+    },
+    "include": [
+        "**/*", "../Infogroup.IDMS.Application/Segment/SegmentSelectionsAppService.cs", "../Infogroup.IDMS.EntityFrameworkCore/CampaignCASApprovals/CampaignCASApprovalRepository.cs", "../Infogroup.IDMS.Application/CampaignMaxPers/CampaignMaxPersAppService.cs", "../Infogroup.IDMS.Application.Shared/CampaignMaxPers/ICampaignMaxPersAppService.cs", "../Infogroup.IDMS.Application.Shared/CampaignMaxPers/Dtos/GetAllCampaignMaxPersInput.cs", "../Infogroup.IDMS.Application.Shared/CampaignMaxPers/Dtos/CreateOrEditCampaignMaxPerDto.cs", "../Infogroup.IDMS.EntityFrameworkCore/CampaignAttachment", "../Infogroup.IDMS.Core/ExportLayouts/IExportLayoutsRepository.cs", "../Infogroup.IDMS.EntityFrameworkCore/ExportLayouts/ExportLayoutsRepository.cs", "../Infogroup.IDMS.Application/BatchQueues", "../Infogroup.IDMS.Application.Shared/BatchQueues", "../Infogroup.IDMS.Core.Shared/BatchQueues", "../Infogroup.IDMS.Core/BatchQueues"
+    ],
+    "exclude": [
+        "bin",
+        "node_modules",
+        "obj",
+        "wwwroot/assets",
+        "wwwroot/lib",
+        "wwwroot/metronic",
+        "wwwroot/**/_Bundles"
+    ],
+    "typeAcquisition": {
+        "enable": false,
+        "exclude": [ "node" ]
+    }
+}

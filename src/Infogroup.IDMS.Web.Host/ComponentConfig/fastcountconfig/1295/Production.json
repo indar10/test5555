@@ -1,0 +1,461 @@
+{
+  "campaign-reference": {
+    "comment": "E: Email, P: Postal, T: Telemarketing",
+    "E": "1451710",
+    "P": "1451709",
+    "T": "1455759"
+  },
+  "broker": {
+    "value": 1500,
+    "label": "Exact Data : 1500"
+  },
+  "default-output-layout": "11159",
+  "groups": [
+    "Geography",
+    "Firmographics",
+    "Suppression",
+    "Output Options"
+  ],
+  "selection-fields": {
+    "ADDRESSTYPE": {
+      "field": "ADDRESSTYPE",
+      "fc-description": "Address Type",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.ADDRESSTYPE"
+    },
+    "CBSALEVEL": {
+      "field": "CBSALEVEL",
+      "fc-description": "CBSA Level",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.CBSALEVEL"
+    },
+    "CENSUSBLOCK": {
+      "field": "CENSUSBLOCK",
+      "fc-description": "Census Block Group",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.CENSUSBLOCK"
+    },
+    "EMPLOYEESIZECODE2": {
+      "field": "EMPLOYEESIZECODE2",
+      "fc-description": "Employee Size",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.EMPLOYEESIZECODE2"
+    },
+    "NUMBEREMPLOYEES": {
+      "field": "NUMBEREMPLOYEES",
+      "fc-description": "Employee Count",
+      "group": "Firmographics",
+      "default-input": "textarea",
+      "xtab-report": "MainTable.NUMBEREMPLOYEES"
+    },
+    "GENDER": {
+      "field": "GENDER",
+      "fc-description": "Gender",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.GENDER",
+      "exclude-bulk-input": true
+    },
+    "CREDITRATINGCODE": {
+      "field": "CREDITRATINGCODE",
+      "fc-description": "Business Credit Score",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.CREDITRATINGCODE"
+    },
+    "ECOMMERCEPRESENT": {
+      "field": "ECOMMERCEPRESENT",
+      "fc-description": "Has Ecommerce",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.ECOMMERCEPRESENT",
+      "exclude-bulk-input": true
+    },
+    "FUNCTIONAL_AREA_CODE": {
+      "field": "FUNCTIONAL_AREA_CODE",
+      "fc-description": "Job Title",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.FUNCTIONAL_AREA_CODE"
+    },
+    "TITLE_DESCRIPTION_Email": {
+      "field": "TITLE_DESCRIPTION_Email",
+      "fc-description": "Job Function",
+      "group": "Firmographics",
+      "default-input": "textarea",
+      "xtab-report": "MainTable.TITLE_DESCRIPTION_Email"
+    },
+    "VENDOR_LANGUAGE": {
+      "field": "VENDOR_LANGUAGE",
+      "fc-description": "Language Spoken",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.VENDOR_LANGUAGE"
+    },
+    "OUTPUTVOLUMECODE2": {
+      "field": "OUTPUTVOLUMECODE2",
+      "fc-description": "Location Sales Volume",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.OUTPUTVOLUMECODE2"
+    },
+    "LEVEL_CODE": {
+      "field": "LEVEL_CODE",
+      "fc-description": "Management Level",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.LEVEL_CODE"
+    },
+    "BUSINESSSTATUSCODE": {
+      "field": "BUSINESSSTATUSCODE",
+      "fc-description": "Place Type",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.BUSINESSSTATUSCODE"
+    },
+    "PROFTITLE": {
+      "field": "PROFTITLE",
+      "fc-description": "Professional Title",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.PROFTITLE"
+    },
+    "VENDOR_RELIGION": {
+      "field": "VENDOR_RELIGION",
+      "fc-description": "Religious Denominations",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.VENDOR_RELIGION"
+    },
+    "AMI_primaryspecialty": {
+      "field": "AMI_primaryspecialty",
+      "fc-description": "Medical - Primary Speciality",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.AMI_primaryspecialty"
+    },
+    "SQUAREFOOTAGE8": {
+      "field": "SQUAREFOOTAGE8",
+      "fc-description": "Square Footage",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.SQUAREFOOTAGE8"
+    },
+    "COTTAGECODE": {
+      "field": "COTTAGECODE",
+      "fc-description": "Work At Home",
+      "group": "Firmographics",
+      "default-input": "select",
+      "xtab-report": "MainTable.COTTAGECODE",
+      "exclude-bulk-input": true
+    },
+    "CSACODE": {
+      "field": "CSACODE",
+      "fc-description": "CSA Codes",
+      "group": "Geography",
+      "default-input": "select",
+      "xtab-report": "MainTable.CSACODE"
+    },
+    "CBSACODE": {
+      "field": "CBSACODE",
+      "fc-description": "Core Based Statistical Area CBSA",
+      "group": "Geography",
+      "default-input": "select",
+      "xtab-report": "MainTable.CBSACODE"
+    },
+    "DMAcode": {
+      "field": "DMAcode",
+      "fc-description": "DMA Codes",
+      "group": "Geography",
+      "default-input": "select",
+      "xtab-report": "MainTable.DMAcode"
+    },
+    "STATE": {
+      "field": "STATE",
+      "fc-description": "State",
+      "group": "Geography",
+      "default-input": "select",
+      "xtab-report": "MainTable.STATE"
+    },
+    "GeoMapping": {
+      "field": "GeoMapping",
+      "comment": "Value missing from parent config",
+      "fc-description": "Geo Mapping",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "modal-popup": true,
+      "xtab-report": "MainTable.GeoMapping",
+      "exclude-not-in-operator": true,
+      "exclude-add-omit-option": true,
+      "readonly": true
+    },
+    "FULFILLMENTFLAG": {
+      "field": "FULFILLMENTFLAG",
+      "fc-description": "Fullfillment Flag",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": false
+    },
+    "InfogroupContact": {
+      "field": "InfogroupContact",
+      "fc-description": "Data Axle/Royalty Contact",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": false
+    },
+    "Email_Deliverable": {
+      "field": "Email_Deliverable",
+      "fc-description": "Email Deliverable",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": false
+    },
+    "AddressLine1": {
+      "field": "AddressLine1",
+      "fc-description": "Custom Suppression - Address Line",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "Address_MC": {
+      "field": "Address_MC",
+      "fc-description": "Custom Suppression - Address MC",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "Company_MC": {
+      "field": "Company_MC",
+      "fc-description": "Custom Suppression - Household MC",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "FirstName": {
+      "field": "FirstName",
+      "fc-description": "Custom Suppression - First Name",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "EmailAddress": {
+      "field": "EmailAddress",
+      "fc-description": "Custom Suppression - Email",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "Individual_MC": {
+      "field": "Individual_MC",
+      "fc-description": "Custom Suppression - Individual MC",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "LastName": {
+      "field": "LastName",
+      "fc-description": "Custom Suppression - Last Name",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "CITY": {
+      "field": "CITY",
+      "fc-description": "City",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "xtab-report": "MainTable.CITY",
+      "modal-popup": true
+    },
+    "CITYBYSTATE": {
+      "field": "CITYBYSTATE",
+      "fc-description": "Fips - State City",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "StateCountyCode": {
+      "field": "StateCountyCode",
+      "fc-description": "Fips - State County",
+      "group": "Geography",
+      "default-input": "textarea"
+    },
+    "StateCountyName": {
+      "field": "StateCountyName",
+      "fc-description": "County Code FIPS",
+      "comment": "Check if lookup can be provided",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "modal-popup": true,
+      "readonly": true
+    },
+    "SCF": {
+      "field": "SCF",
+      "fc-description": "SCF Code",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "xtab-report": "MainTable.SCF",
+      "add-override-operator": "LIKE",
+      "omit-override-operator": "NOT LIKE"
+    },
+    "MINORINDUSTRYGROUP": {
+      "field": "MINORINDUSTRYGROUP",
+      "fc-description": "SIC - 4 Digits",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "SICCODE": {
+      "field": "SICCODE",
+      "fc-description": "SIC - 6 Digits",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "MAJORINDUSTRYGROUP": {
+      "field": "MAJORINDUSTRYGROUP",
+      "fc-description": "SIC - 2 Digits",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "FRANCHISEBYSIC": {
+      "field": "FRANCHISEBYSIC",
+      "fc-description": "SIC - Franchise By State",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "INDUSTRYSPECIFICBYSIC": {
+      "field": "INDUSTRYSPECIFICBYSIC",
+      "fc-description": "SIC - Industry Specific",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "NAICS2": {
+      "field": "NAICS2",
+      "fc-description": "Primary NAICS (2 Digit)",
+      "group": "Firmographics",
+      "default-input": "select"
+    },
+    "NAICS4": {
+      "field": "NAICS4",
+      "fc-description": "Primary NAICS (4 Digit)",
+      "group": "Firmographics",
+      "default-input": "textarea"
+    },
+    "NAICS6": {
+      "field": "NAICS6",
+      "fc-description": "Primary NAICS (6 Digit)",
+      "group": "Firmographics",
+      "default-input": "textarea"
+    },
+    "NAICSCODE": {
+      "field": "NAICSCODE",
+      "fc-description": "Primary NAICS (8 Digit)",
+      "group": "Firmographics",
+      "default-input": "textarea"
+    },
+    "PRIMARYSICFLAG": {
+      "field": "PRIMARYSICFLAG",
+      "fc-description": "Primary SIC Flag",
+      "group": "Geography",
+      "default-input": "select",
+      "exclude-selection": true
+    },
+    "Phone_Number_Available": {
+      "field": "Phone_Number_Available",
+      "fc-description": "Phone Available",
+      "group": "Output Options",
+      "default-input": "select",
+      "mask-options": {
+        "YES": "Phone Available"
+      }
+    },
+    "MAILCONFIDENCE_MAILING": {
+      "field": "MAILCONFIDENCE_MAILING",
+      "fc-description": "Mail Confidence",
+      "group": "Output Options",
+      "default-input": "select",
+      "skip-option-sorting": true
+    },
+    "Email_Marketable": {
+      "field": "Email_Marketable",
+      "fc-description": "Email Marketable",
+      "group": "Output Options",
+      "default-input": "select",
+      "skip-option-sorting": true
+    },
+    "Inferred_Corporate_Sales_Volume_Range": {
+      "field": "Inferred_Corporate_Sales_Volume_Range",
+      "fc-description": "Corporate Sales Volume",
+      "group": "Firmographics",
+      "default-input": "select",
+      "skip-option-sorting": true
+    },
+    "ZIP": {
+      "field": "ZIP",
+      "fc-description": "ZIP Code",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "xtab-report": "MainTable.ZIP"
+    }
+  },
+  "additional-fields": {
+    "Custom_Suppression": {
+      "field": "Custom_Suppression",
+      "fc-description": "Custom List",
+      "group": "Suppression",
+      "default-input": "none",
+      "group-values": false,
+      "modal-popup": true
+    },
+    "Placed_Order": {
+      "field": "Placed_Order",
+      "fc-description": "Orders Placed",
+      "group": "Suppression",
+      "default-input": "none",
+      "group-values": false,
+      "modal-popup": true
+    },
+    "Maxper": {
+      "field": "Maxper",
+      "fc-description": "Max Contacts Per",
+      "group": "Output Options",
+      "default-input": "none",
+      "group-values": false,
+      "modal-popup": true
+    },
+    "INDUSTRY_POPUP": {
+      "field": "INDUSTRY_POPUP",
+      "fc-description": "SIC Codes",
+      "group": "Firmographics",
+      "default-input": "none",
+      "group-values": false,
+      "modal-popup": true
+    }
+  }
+}

@@ -1,0 +1,13 @@
+td{
+    border : 0;
+}
+.cache-label{
+    width: 77%;
+}
+.cache-count{
+    width: 13%;
+    text-align: center;
+}
+.cache-action{
+    width: 10%;
+}

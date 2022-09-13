@@ -1,0 +1,232 @@
+<div id="SICControls" class="modal-content">
+    <div class="modal-header">
+        <h1 class="modal-title">
+            <span> {{l("OccupationSelectionTitle")}}</span>
+        </h1>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" style="padding-top:0px">
+        <form class="kt-form">
+            <div class="row">
+                <div class="col-md-4 col-sm-12 table-card">
+                    <div class="kt-portlet kt-portlet--height-fluid ">
+                        <div class="kt-portlet__body" [ngClass]="{'portlet-body__grey': industries.length > 0 }">
+                            <div class="primeng-datatable-container">
+                                <p-table #industryTable [value]="industries" [scrollable]="true" scrollHeight="280px"
+                                    [busyIf]="isIndustryLoading" [responsive]="primengTableHelper.isResponsive"
+                                    [resizableColumns]="primengTableHelper.resizableColumns"
+                                    (onRowSelect)="onIndustrySelectionChange()"
+                                    (onRowUnselect)=" onIndustrySelectionChange()" [(selection)]="selectedIndustries">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th style="width: 9%">
+                                                <p-tableHeaderCheckbox (click)="onIndustrySelectionChange()">
+                                                </p-tableHeaderCheckbox>
+                                            </th>
+                                            <th style="width: 82%" pSortableColumn="label">
+                                                {{'IndustryHeader' | localize}}
+                                                <p-sortIcon field="label"></p-sortIcon>
+                                            </th>
+                                            <th style="width: 9%">
+                                                <span class="filter-toggle" *ngIf="!showIndustryFilters"
+                                                    [hidden]="industries.length == 0"
+                                                    (click)="showIndustryFilters=!showIndustryFilters">
+                                                    <i class="fa fa-search-plus fa-lg" style="color:black"
+                                                        ngbTooltip="Show search"></i>
+
+                                                </span>
+                                                <span class="filter-toggle" *ngIf="showIndustryFilters"
+                                                    [hidden]="industries.length == 0"
+                                                    (click)="showIndustryFilters=!showIndustryFilters">
+                                                    <i class="fa fa-search-minus fa-lg" style="color:black"
+                                                        ngbTooltip="Hide search"></i>
+                                                </span>
+                                            </th>
+                                        </tr>
+                                        <tr [hidden]="!showIndustryFilters">
+                                            <th style="width: 9%">
+                                            </th>
+                                            <th colspan="2" style="width: 91%">
+                                                <input pInputText type="text" class="column-filter"
+                                                    (input)="industryTable.filter($event.target.value, 'label', 'contains')"
+                                                    [value]="industryTable.filters['label'] ? industryTable.filters['label'].value : ''">
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-record="$implicit">
+                                        <tr [pSelectableRow]="rowData">
+                                            <td style="width: 9%">
+                                                <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                                            </td>
+                                            <td colspan="2" style="width: 91%">
+                                                <span class="ui-column-title"> {{'Description' | localize}}</span>
+                                                {{record.label}}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                                <div class="primeng-no-data" *ngIf="industries.length == 0">
+                                    {{'NoData' | localize}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12 table-card">
+                    <div class="kt-portlet kt-portlet--height-fluid ">
+                        <div class="kt-portlet__body" [ngClass]="{'portlet-body__grey': occupations.length > 0 }">
+                            <div class="primeng-datatable-container">
+                                <p-table #occupationTable [value]="occupations" [scrollable]="true" scrollHeight="280px"
+                                    [busyIf]="isOccupationLoading" [responsive]="primengTableHelper.isResponsive"
+                                    [resizableColumns]="primengTableHelper.resizableColumns"
+                                    (onRowSelect)="onOccupationSelectionChange()"
+                                    (onRowUnselect)=" onOccupationSelectionChange()"
+                                    [(selection)]="selectedOccupations">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th style="width: 9%">
+                                                <p-tableHeaderCheckbox (click)="onOccupationSelectionChange()">
+                                                </p-tableHeaderCheckbox>
+                                            </th>
+
+                                            <th style="width: 80%" pSortableColumn="label">
+                                                {{'OccupationHeader' | localize}}
+                                                <p-sortIcon field="label"></p-sortIcon>
+                                            </th>
+                                            <th style="width: 11%">
+                                                <span class="filter-toggle" *ngIf="!showOccupationFilters"
+                                                    [hidden]="occupations.length == 0"
+                                                    (click)="showOccupationFilters=!showOccupationFilters">
+                                                    <i class="fa fa-search-plus fa-lg" style="color:black"
+                                                        ngbTooltip="Show search"></i>
+
+                                                </span>
+                                                <span class="filter-toggle" *ngIf="showOccupationFilters"
+                                                    [hidden]="occupations.length == 0"
+                                                    (click)="showOccupationFilters=!showOccupationFilters">
+                                                    <i class="fa fa-search-minus fa-lg" style="color:black"
+                                                        ngbTooltip="Hide search"></i>
+                                                </span>
+                                            </th>
+                                        </tr>
+                                        <tr [hidden]="!showOccupationFilters">
+                                            <th style="width: 9%">
+                                            </th>
+                                            <th colspan="2" style="width: 91%">
+                                                <input pInputText type="text" class="column-filter"
+                                                    (input)="occupationTable.filter($event.target.value, 'label', 'contains')"
+                                                    [value]="occupationTable.filters['label'] ? occupationTable.filters['label'].value : ''">
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-record="$implicit">
+                                        <tr [pSelectableRow]="rowData">
+                                            <td style="width: 9%">
+                                                <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                                            </td>
+                                            <td colspan="2" style="width: 91%">
+                                                <span class="ui-column-title"> {{'Description' | localize}}</span>
+                                                {{record.label}}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                                <div class="primeng-no-data" *ngIf="occupations.length == 0">
+                                    {{'NoData' | localize}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12 table-card">
+                    <div class="kt-portlet kt-portlet--height-fluid ">
+                        <div class="kt-portlet__body" [ngClass]="{'portlet-body__grey': specialities.length > 0 }">
+                            <div class="primeng-datatable-container">
+                                <p-table #specialityTable [value]="specialities" [scrollable]="true"
+                                    scrollHeight="280px" [busyIf]="isSpecialityLoading"
+                                    [responsive]="primengTableHelper.isResponsive"
+                                    [resizableColumns]="primengTableHelper.resizableColumns"
+                                    [(selection)]="selectedSpecialities">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th style="width: 9%">
+                                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                            </th>
+                                            <th style="width: 80%" pSortableColumn="label">
+                                                {{'SpecialityHeader' | localize}}
+                                                <p-sortIcon field="label"></p-sortIcon>
+                                            </th>
+                                            <th style="width: 11%">
+                                                <span class="filter-toggle" *ngIf="!showSpecialityFilters"
+                                                    [hidden]="specialities.length == 0"
+                                                    (click)="showSpecialityFilters=!showSpecialityFilters">
+                                                    <i class="fa fa-search-plus fa-lg" style="color:black"
+                                                        ngbTooltip="Show search"></i>
+                                                </span>
+                                                <span class="filter-toggle" *ngIf="showSpecialityFilters"
+                                                    [hidden]="specialities.length == 0"
+                                                    (click)="showSpecialityFilters=!showSpecialityFilters">
+                                                    <i class="fa fa-search-minus fa-lg" style="color:black"
+                                                        ngbTooltip="Hide search"></i>
+                                                </span>
+                                            </th>
+                                        </tr>
+                                        <tr [hidden]="!showSpecialityFilters">
+                                            <th style="width: 9%">
+                                            </th>
+                                            <th colspan="2" style="width: 91%">
+                                                <input pInputText type="text" class="column-filter"
+                                                    (input)="specialityTable.filter($event.target.value, 'label', 'contains')"
+                                                    [value]="specialityTable.filters['label'] ? specialityTable.filters['label'].value : ''">
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-record="$implicit">
+                                        <tr [pSelectableRow]="rowData">
+                                            <td style="width: 9%">
+                                                <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                                            </td>
+                                            <td colspan="2" style="width: 91%">
+                                                <span class="ui-column-title"> {{'Description' | localize}}</span>
+                                                {{record.label}}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                                <div class="primeng-no-data" *ngIf="specialities.length == 0">
+                                    {{'NoData' | localize}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="AddControls" class="row">
+                <div class="col-md-4 col-sm-12">
+                    <p-selectButton [options]="operatorTypes" name="industryOperator" [(ngModel)]="industryOperator">
+                    </p-selectButton>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <p-selectButton [options]="operatorTypes" name="occupationOperator"
+                        [(ngModel)]="occupationOperator">
+                    </p-selectButton>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <p-selectButton [options]="operatorTypes" name="specialityOperator"
+                        [(ngModel)]="specialityOperator">
+                    </p-selectButton>
+                </div>
+
+            </div>
+        </form>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button class="btn btn-primary blue" [disabled]="saving || selectedIndustries.length == 0"
+                [buttonBusy]="saving" (click)="save()" [busyText]="l('SavingWithThreeDot')">
+                <i class="fa fa-save"></i>
+                <span>{{l("Save")}}</span>
+            </button>
+        </div>
+    </div>

@@ -1,0 +1,143 @@
+<div class="modal-content">
+    <form *ngIf="!isCopyConfig" #idmsConfigForm="ngForm" novalidate (ngSubmit)="save(idmsConfigForm)" autocomplete="off">
+    <div class="modal-header">
+        <h4 class="modal-title">
+             <span *ngIf="idmsConfigurationDto.id">{{l("EditConfiguration")}}</span>
+            <span *ngIf="!idmsConfigurationDto.id">{{l("CreateNewConfiguration")}}</span>
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    
+    <div class="modal-body">
+        <div class="row">
+            <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label for="id">{{l("ID")}} </label>
+                <input type="text" id="idmsConfig_id" class="form-control" [(ngModel)]="idmsConfigurationDto.id" name="id" [disabled]="idmsConfigurationDto.id || !idmsConfigurationDto.id" />
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label> Database *</label>
+               
+                    <p-dropdown [options]="databaseList" [filter]="true"
+                                [style]="{'width':'100%'}" name="selectedDatabase"
+                                [(ngModel)]="selectedDatabase" editable="true">
+                    </p-dropdown>
+                    
+            </div>
+           
+            <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label> Description *</label>
+                <p-dropdown [filter]="true" [options]="cDescriptionList"
+                            [style]="{'width':'100%'}" name="cDescription"   
+                            [(ngModel)]="idmsConfigurationDto.cDescription" editable="true" 
+                        ></p-dropdown>
+                          
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label> Item *</label>
+                <p-dropdown [filter]="true" [options]="cItems"
+                            [style]="{'width':'100%'}" name="cItem" [required]="true"  
+                            [(ngModel)]="idmsConfigurationDto.cItem" editable="true" 
+                            [required]="true"></p-dropdown>
+                          
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label for="CharacterField">{{l("cField")}} </label>
+                <input id="CharacterField" type="text" class="form-control" 
+                name="cValue" [(ngModel)]="idmsConfigurationDto.cValue"
+                      required />
+            </div>
+    
+            <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label for="integerField">{{l("iField")}} </label>
+                <input id="integerField" maxlength="50" type="text" class="form-control" 
+                name="iValue" [(ngModel)]="idmsConfigurationDto.iValue"
+                      required />
+            </div>
+    
+            <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label for="memoField">Memo Field </label>
+                <textarea id="memoField" type="text" class="form-control" (click)="memoClick($event)"
+                name="mValue" [(ngModel)]="idmsConfigurationDto.mValue"
+                      required></textarea>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label for="date">Date Field</label>
+                        <div class="ui-fluid">
+                            <p-calendar  dateFormat="mm/dd/yy" [(ngModel)]="currentDate" name="currentDate" 
+                            [selectOtherMonths]="true"  [required]="true">
+                                <ng-template pTemplate="date" let-date class="form-control">
+                                    <span style="display:block">{{date.day}}</span>
+                                </ng-template>
+                            </p-calendar>
+                        </div>
+            </div>
+            
+            
+            <div class="form-group col-xs-6 col-sm-6 col-md-6" style="margin-top:30px">
+                    <label class="switch">
+                        <input  name="isEncrypted"  [(ngModel)]="encryptCheck" type="checkbox" id="iIsEncryptFilterSelect" checked />
+                         <span class="slider round">
+                            <span class="on">Encrypted</span><span class="off">Not Encrypted</span>
+                        </span>
+                    </label>
+                </div>
+
+                <div class="form-group col-xs-6 col-sm-6 col-md-6" style="margin-top:30px">
+                    <label class="switch">
+                        <input  name="iIsActiveFilter"  [(ngModel)]="activeCheck" type="checkbox" id="iIsActiveFilterSelect" checked />
+                         <span class="slider round">
+                            <span class="on">Active</span><span class="off">Inactive</span>
+                        </span>
+                    </label>
+                </div>
+    
+    
+           <div class="overlay" *ngIf = "popup">
+            <div class="popup">
+                <div>
+                    <button type="submit" style = "float: right;margin-right: 10px;" class="btn btn-outline-primary"  (click)="saveMemoValue(false)" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Modify")}}</span></button>
+                    <button type="submit" style="float: right;margin-bottom: 10px; margin-right: 10px;" class="btn btn-outline-warning"  (click)="popup = false" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Cancel")}}</span></button>            
+               </div>
+                <div class="content">
+                    <label for="memoField">Memo Field </label>
+                    <textarea  id="memoField" type="text" rows="10" class="form-control" 
+                    name="mValue"  [(ngModel)]="popmValue"
+                          required></textarea>
+                </div>
+            </div>
+           </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+        <button type="submit" class="btn btn-primary blue"  [buttonBusy]="saving" 
+        [busyText]="l('SavingWithThreeDot')" [disabled]="!permission.isGranted('Pages.IDMSConfiguration.Create')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>            
+        
+    </div>
+    </form>
+    <form *ngIf="isCopyConfig" #idmsCopyConfigForm="ngForm" novalidate (ngSubmit)="save(idmsCopyConfigForm)" autocomplete="off">
+        <div class="modal-header">
+            Copy Config
+        </div>
+        <div class="modal-body">
+    
+          <div class="form-group col-xs-6 col-sm-6 col-md-6">
+            <label> Database *</label>
+           
+                <p-dropdown [options]="databaseList" [filter]="true"
+                            [style]="{'width':'100%'}" name="selectedDatabase"
+                            [(ngModel)]="selectedDatabase" >
+                </p-dropdown>
+                          
+        </div>
+      </div>  
+      <div class="modal-footer">
+        <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+        <button type="submit" class="btn btn-primary blue"  [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')" 
+        [disabled]="!permission.isGranted('Pages.IDMSConfiguration.Create')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>            
+    </div>
+    </form>
+    </div>
+    

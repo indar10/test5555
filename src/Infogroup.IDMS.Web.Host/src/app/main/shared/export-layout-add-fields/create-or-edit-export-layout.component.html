@@ -1,0 +1,318 @@
+<div class="modal-content">
+    <form *ngIf="active" #databaseForm="ngForm" novalidate autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+
+                <span>{{layoutDescription}}</span>
+            </h4>
+            <div class="kt-subheader__toolbar" *ngIf="!isCampaign">
+                <div class="kt-subheader__wrapper">
+                    <button class="btn btn-primary" (click)="importLayout()" style="margin-right: 5px;">
+                        <i class="fa fa-file-import fa-lg"></i> {{l("ImportLayout")}}
+                    </button>                    
+                </div>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <div class="row margin-bottom-10" style="padding-left:0.7em;">
+                    <div class="col-md-3">
+
+                        <label>{{l('TableLabel')}}</label>
+                        <p-dropdown [options]="tableDropDownValues" [filter]="true" placeholder="Select Table"
+                            [style]="{'width':'100%','padding':'0.15em'}" name="tableDescription"
+                            (onChange)="setFieldsDropDown($event)" [(ngModel)]="selectedTableValue">
+                        </p-dropdown>
+                    </div>
+
+
+                    <div class="col-md-5">
+                        <label>{{l('AvailableFieldLabel')}}</label>
+                        <p-multiSelect [showToggleAll]="false" [style]="{'width':'100%'}"
+                            style="width:100%;padding:0.300em" [options]="availableFields"
+                            [(ngModel)]="selectedAvailableFields" (onChange)="onAddFieldChange($event)" name="fields">
+                        </p-multiSelect>
+                    </div>
+
+                    <button class="btn icons-edited-primary" (click)="AddFields(dataTable)" [disabled]="isAdd"
+                        style="float:right;padding-top:25px" placement="right" ngbTooltip="Add Fields">
+                        <i class="fa fa-plus fa-lg"></i>
+                    </button>
+
+
+
+                    <div class="col-md-1" *ngIf="isCampaign">
+
+                        <label>{{l("CaseHeader")}}</label>
+                        <p-dropdown [options]="oututCaseValues" [filter]="true" placeholder="Select Case"
+                            [style]="{'width':'100%','padding':'0.15em'}" name="outputCase"
+                            (onChange)="saveOutputCaseLayout()" [(ngModel)]="selectedOutputCase">
+                        </p-dropdown>
+
+                    </div>
+                    <div class="col-md-1" [hidden]="isCampaign">
+                    </div>
+                    <div style="width:15%"></div>
+                    <div>
+                        <button type="button" class="btn icons-edited-primary" style="padding-top:50%"
+                            [disabled]="isDelete" placement="top" ngbTooltip="Delete">
+                            <i class="fa fa-trash fa-lg" (click)="deleteSelectedItem()"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <br />
+
+            <div class="primeng-datatable-container">
+                <p-table #dataTable (onLazyLoad)="getSelectedFields($event)"
+                    [totalRecords]="primengTableHelper.totalRecordsCount" [value]="primengTableHelper.records"
+                    [busyIf]="primengTableHelper.isLoading" [scrollable]="true" scrollHeight="400px"
+                    [responsive]="primengTableHelper.isResponsive" dataKey="id" [(selection)]="addRows"
+                    [resizableColumns]="primengTableHelper.resizableColumns" stateStorage="local"
+                    [style]="{'overflow':'visible'}">
+
+                    <ng-template pTemplate="header">
+
+
+                        <tr>
+                            <th style="width:2%;align-content:flex-start">
+
+
+                                <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown"
+                                    [hidden]="campaignQueueGridShown"
+                                    (click)="advancedFiltersAreShown=!advancedFiltersAreShown">
+                                    <i class="fa fa-search-plus fa-lg" style="color:black" placement="right"
+                                        ngbTooltip="Show search"></i>
+
+                                </span>
+                                <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown"
+                                    [hidden]="campaignQueueGridShown"
+                                    (click)="advancedFiltersAreShown=!advancedFiltersAreShown">
+                                    <i class="fa fa-search-minus fa-lg" style="color:black" placement="right"
+                                        ngbTooltip="Hide search"></i>
+
+                                </span>
+                            </th>
+                            <th style="width:1%"></th>
+                            <th style="width:5%;" pSortableColumn="order">
+                                {{l('ExportLayoutOrderHeader')}}
+                                <p-sortIcon field="order"></p-sortIcon>
+                            </th>
+                            <th style="width: 9%" pSortableColumn="outputFieldName">
+                                {{l('FieldDescriptionHeader')}}
+                                <p-sortIcon field="outputFieldName"></p-sortIcon>
+                            </th>
+                            <th style="width:29%">
+                                {{l('FormulaHeader')}}
+                            </th>
+
+                            <th style="width:5.5%;" pSortableColumn="width">
+                                {{l('WidthHeader')}}
+                                <p-sortIcon field="width"></p-sortIcon>
+                            </th>
+
+                            <th style="width:9.5%;" pSortableColumn="tableDescription">
+                                {{l('TableNameHeader')}}
+                                <p-sortIcon field="tableDescription"></p-sortIcon>
+                            </th>
+
+                            <th style="width:5%"></th>
+                            <th style="width:2.80%">
+                                <p-tableHeaderCheckbox [style]="{'padding-right':'10px'}"
+                                    (click)="onGridCheckBoxChange()"></p-tableHeaderCheckbox>
+                            </th>
+                        </tr>
+                        <tr [hidden]="!advancedFiltersAreShown">
+                            <th style="width:2%">
+                            </th>
+                            <th style="width:1%">
+                            </th>
+                            <th valign="top">
+                                <input style="width: 100%" pInputText type="text"
+                                    (input)="dataTable.filter($event.target.value, 'order', 'equals')">
+                            </th>
+                            <th valign="top">
+                                <input style="width: 100%" pInputText type="text"
+                                    (input)="dataTable.filter($event.target.value, 'outputFieldName', 'contains')">
+                            </th>
+                            <th valign="top">
+                                <input style="width: 100%" pInputText type="text"
+                                    (input)="dataTable.filter($event.target.value, 'formula', 'contains')">
+                            </th>
+                            <th valign="top">
+                                <input style="width: 100%" pInputText type="text"
+                                    (input)="dataTable.filter($event.target.value, 'width', 'equals')">
+                            </th>
+                            <th valign="top">
+                                <input style="width: 100%" pInputText type="text"
+                                    (input)="dataTable.filter($event.target.value, 'tableDescription', 'contains')">
+                            </th>
+
+                            <th style="width:3%"></th>
+                            <th style="width:3%"></th>
+                        </tr>
+
+                    </ng-template>
+                    <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                        <tr [pSelectableRow]="record" *ngIf="record.action!=3">
+                            <td style="width:2%"></td>
+                            <td style="width:1%"></td>
+                            <td style="width:5%;text-align:center" pEditableColumn [pSelectableRow]="record"
+                                [pEditableColumn]="record" [pEditableColumnField]="'order'">
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText #orderID="ngModel" type="text" [(ngModel)]="record.order"
+                                            name="order"
+                                            (keydown)="reorderOrderIdOnEnterKey($event,record.id,record.order,databaseForm.form.valid,orderID.dirty)"
+                                            (blur)="reorderOrderId(record.id,record.order,databaseForm.form.valid,orderID.dirty)"
+                                            numberRangeValidator="{{maxOrder}}" noSpaceValidator="{{record.order}}">
+                                        <div *ngIf="orderID.errors && (orderID.dirty || orderID.touched)"
+                                            class="form-control-feedback">
+                                            <div
+                                                [hidden]="!orderID.errors.numberRangeValidator && !orderID.errors.noSpaceValidator">
+                                                {{l("InvalidOrder")}}
+                                            </div>
+                                        </div>
+                                        <validation-messages [formCtrl]="orderID"></validation-messages>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{record.order}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td style="width:0.5%"></td>
+                            <td style="width:10%" pEditableColumn>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText #outputfield="ngModel" type="text"
+                                            [(ngModel)]="record.outputFieldName" name="outputFieldName"
+                                            (blur)="updateOrderExportLayoutTableFields(record,databaseForm.form.valid,outputfield.dirty)"
+                                            noSpaceValidator="{{record.outputFieldName}}">
+                                        <div *ngIf="outputfield.errors && (outputfield.dirty || outputfield.touched)"
+                                            class="form-control-feedback">
+                                            <div [hidden]="!outputfield.errors.noSpaceValidator">
+                                                {{l("FieldDescriptionMandatory")}}
+                                            </div>
+                                        </div>
+                                        <validation-messages [formCtrl]="outputfield"></validation-messages>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        <span *ngIf="record?.fieldName;else noTooltipTemplete"
+                                            tooltip="{{record.fieldName.trim()}}">
+                                            {{record.outputFieldName}}
+                                        </span>
+                                        <ng-template #noTooltipTemplete>
+                                            <span>
+                                                {{record.outputFieldName}}
+                                            </span>
+                                        </ng-template>
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td style="width:29%" pEditableColumn>
+                                <p-cellEditor
+                                    *ngIf="record.iIsCalculatedField || record.isFormulaEnabled || record.fieldDescription=='';else fieldName">
+                                    <ng-template pTemplate="input">
+                                        <textarea pInputText #formulaField="ngModel" [(ngModel)]="record.formula"
+                                            name="formula"
+                                            (blur)="updateOrderExportLayoutTableFields(record,databaseForm.form.valid,formulaField.dirty)"
+                                            requiredFieldValidator="{{record.fieldName}}"></textarea>
+                                        <div *ngIf="formulaField.errors && (formulaField.dirty || formulaField.touched)"
+                                            class="form-control-feedback">
+                                            <div [hidden]="!formulaField.errors.requiredFieldValidator">
+                                                {{l("FieldDescriptionMandatory")}}
+                                            </div>
+                                        </div>
+                                        <validation-messages [formCtrl]="formulaField"></validation-messages>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        <label name="formulaField">{{record.formula}}</label>
+                                    </ng-template>
+                                </p-cellEditor>
+                                <ng-template pTemplate="output" #fieldName>
+                                    <label name="fieldDescription">{{record.fieldDescription}}</label>
+                                </ng-template>
+                            </td>
+                            <td style="width:2%"></td>
+                            <td pEditableColumn style="width:5.5%;text-align:center">
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText #width="ngModel" type="text" [(ngModel)]="record.width"
+                                            name="width"
+                                            (blur)="updateOrderExportLayoutTableFields(record,databaseForm.form.valid,width.dirty)"
+                                            exportWidthFieldValidator noSpaceValidator="{{record.width}}">
+                                        <div *ngIf="width.errors && (width.dirty || width.touched)"
+                                            class="form-control-feedback">
+                                            <div
+                                                [hidden]="!width.errors.exportWidthFieldValidator && !width.errors.noSpaceValidator">
+                                                {{l("InvalidOrder")}}
+                                            </div>
+                                        </div>
+                                        <validation-messages [formCtrl]="width"></validation-messages>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{record.width}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+
+                            <td pEditableColumn style="width:9.5%;">
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown #tableGridDescription [options]="gridTableDropDownValues"
+                                            [filter]="true" placeholder="Select Table" [style]="{'width':'100%'}"
+                                            name="tableGridDescription" appendTo="body" [(ngModel)]="record.tableId"
+                                            [hidden]="!record.iIsCalculatedField"
+                                            (onChange)="updateOrderExportLayoutForTableDescription(record,$event,true)">
+                                        </p-dropdown>
+                                        <label name="tableDescriptionIp"
+                                            [hidden]="record.iIsCalculatedField">{{record.tableDescription}}</label>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+
+                                        <label name="tableDescription">{{record.tableDescription}}</label>
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td style="width:3%"></td>
+                            <td style="width:3%" pEditableColumn>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <button type="button" class="btn btn-sm btn-dangerous"
+                                            (click)="editSelectedItem(i)" style="float: right">
+                                            <i class="fa fa-calculator fa-lg"></i>
+                                        </button>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        <button type="button" class="btn btn-sm btn-dangerous"
+                                            (click)="editSelectedItem(i)" placement="left" data-toggle="tooltip"
+                                            title="Convert To Filler">
+                                            <i class="fa fa-calculator fa-lg"></i>
+                                        </button>
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td style="width:3%" pEditableColumn>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-tableCheckbox [style]="{'padding-right':'10px'}"
+                                            (click)="onGridCheckBoxChange()" [value]="record"></p-tableCheckbox>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        <p-tableCheckbox [style]="{'padding-right':'10px'}"
+                                            (click)="onGridCheckBoxChange()" [value]="record"></p-tableCheckbox>
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                    {{l('NoData')}}
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>

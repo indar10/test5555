@@ -1,0 +1,58 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #offerSampleForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="offerSample.id">{{l("EditOfferSample")}}</span>
+                <span *ngIf="!offerSample.id">{{l("CreateNewOfferSample")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="OfferSample_MailercCompany">{{l("MailercCompany")}}</label>
+                <input type="text" id="OfferSample_MailercCompany" maxlength="50" class="form-control" [(ngModel)]="offerSample.mailerCompany" name="mailercCompany" [disabled]="true" />
+            </div>
+            <div class="form-group">
+                <label for="OfferSample_id">{{l("ID")}} </label>
+                <input type="text" id="OfferSample_id" class="form-control" [(ngModel)]="offerSample.id" name="id" [disabled]="true" />
+            </div>
+            <div class="form-group">
+                <label for="OfferSample_cDescription">{{l("SampleDescription")}} </label>
+                <input type="text" id="OfferSample_cDescription" class="form-control" [(ngModel)]="offerSample.cDescription" name="cDescription" />
+            </div>
+            <div class="form-group" style="margin-top: 30px">
+                <div>
+                    <label *ngIf="offerSample.id && !showUploadFile"
+                           for="OfferSample_cFileName">{{l("cFilePath")}}*</label>
+                    <label *ngIf="!offerSample.id || showUploadFile" for="OfferSample_cFileName">{{l("cFile")}} *</label>
+                </div>
+                <div class="row">
+                    <div class="col-xs-10 col-sm-10 col-md-10">
+                        <div *ngIf="offerSample.id && !showUploadFile" style="margin-top: 10px;">
+                            <a href="javascript:;" (click)="downloadOfferSample(offerSample.id)" style="padding-top:3px"
+                               [(hidden)]="!offerSample.id">{{offerSample.cFileName}}</a>
+                        </div>
+                        <div *ngIf="!offerSample.id || showUploadFile" style="margin-top: 7px;">
+                            <span class="fileinput-button">
+                                <input #fileInput type="file" maxFileSize="10000000" [(ngModel)]="offerSample.cFileName" accept=".csv,.xls,.xlsx" name="cFileName" id="cFileName" required>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2">
+                        <div *ngIf="offerSample.id && !showUploadFile" class="btn-group pull-right rule-actions btnFile ml-1" data-file="rule" style="display: block; float:left">
+                            <button id="uploadOfferSample" type="button" (click)="showUpload()" class="btn btn-xs btn-primary">
+                                <i class="fa fa-upload"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button type="submit" class="btn btn-primary blue" [disabled]="!offerSampleForm.form.valid|| (!permission.isGranted('Pages.OfferSamples.Edit') && offerSample.id)" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,313 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h1 class="modal-title">
+            <span>{{l('CountyCityTitle')}}</span>
+        </h1>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div id="AdvanceSelectionGrids" class="modal-body" style="padding-top:0px">
+        <form class="kt-form">
+            <div class="select-container mb-2 mt-2">
+                <div>
+                    <span
+                        style="font-size: 1.2rem; font-weight: 500;color: #48465b;margin-right: 10px;">{{l("SelectState")}}
+                    </span>
+                    <div class="btn-group" dropdown>
+                        <p-dropdown [options]="selectionBuilder.states" [filter]="true" [style]="{'width':'100%'}"
+                            (onChange)="onStateChange()" name="State" [(ngModel)]="selectionBuilder.selectedState">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="get-container_button">
+                    <button class="btn btn-primary blue get-button" [disabled]="getDisabled" (click)="getCounty()">
+                        <span>{{l("GetCounty")}}</span>
+                    </button>
+                    <button class="btn btn-primary blue get-button" [disabled]="getDisabled" (click)="getCity()">
+                        <span>{{l("GetCity")}}</span>
+                    </button>
+                    <button class="btn btn-primary blue get-button" [disabled]="getDisabled" (click)="getNeighborhood()" hidden>
+                        <span>{{l("GetNeighborhood")}}</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-md-4 col-sm-12 city-container">
+                <div class="kt-portlet kt-portlet--height-fluid ">
+                    <div class="kt-portlet__head">
+                        <div class="kt-portlet__head-label">
+                            <h3 class="kt-portlet__head-title">
+                                {{l("County")}}
+                            </h3>
+                        </div>
+                        <div class="kt-portlet__head-toolbar">
+                            <span class="filter-toggle" *ngIf="!showCountyFilters" [hidden]="counties.length == 0"
+                                  (click)="showCountyFilters=!showCountyFilters">
+                                <i class="fa fa-search-plus fa-lg" style="color:black" ngbTooltip="Show search"></i>
+                            </span>
+                            <span class="filter-toggle" *ngIf="showCountyFilters" [hidden]="counties.length == 0"
+                                  (click)="showCountyFilters=!showCountyFilters">
+                                <i class="fa fa-search-minus fa-lg" style="color:black" ngbTooltip="Hide search"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="kt-portlet__body" [ngClass]="{'portlet-body__grey': counties.length > 0 }">
+                        <div class="primeng-datatable-container">
+                            <p-table #countyTable [value]="counties" [scrollable]="true" scrollHeight="200px"
+                                     [busyIf]="primengTableHelper.isLoading" [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns"
+                                     (onRowSelect)="onCountySelectionChange()" (onRowUnselect)=" onCountySelectionChange()"
+                                     [(selection)]="selectionBuilder.selectedCounties">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 12%">
+                                            <p-tableHeaderCheckbox (click)="clearCities()">
+                                            </p-tableHeaderCheckbox>
+                                        </th>
+                                        <th style="width: 28%" pSortableColumn="value">
+                                            {{'Code' | localize}}
+                                            <p-sortIcon field="value"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 60%" pSortableColumn="label">
+                                            {{'Description' | localize}}
+                                            <p-sortIcon field="label"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                    <tr [hidden]="!showCountyFilters">
+                                        <th style="width: 12%">
+                                        </th>
+                                        <th style="width: 28%">
+                                            <input pInputText type="text" class="column-filter"
+                                                   (input)="countyTable.filter($event.target.value, 'value', 'contains')"
+                                                   [value]="countyTable.filters['value'] ? countyTable.filters['value'].value : ''">
+                                        </th>
+                                        <th style="width: 60%">
+                                            <input pInputText type="text" class="column-filter"
+                                                   (input)="countyTable.filter($event.target.value, 'label', 'contains')"
+                                                   [value]="countyTable.filters['label'] ? countyTable.filters['label'].value : ''">
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr [pSelectableRow]="rowData">
+                                        <td style="width: 12%">
+                                            <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                                        </td>
+                                        <td style="width: 28%">
+                                            <span class="ui-column-title"> {{'Code' | localize}}</span>
+                                            {{record.value}}
+                                        </td>
+                                        <td style="width: 60%">
+                                            <span class="ui-column-title"> {{'Description' | localize}}</span>
+                                            {{record.label}}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="primeng-no-data" *ngIf="counties.length == 0">
+                                {{'NoData' | localize}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12 city-container">
+                <div class="kt-portlet kt-portlet--height-fluid ">
+                    <div class="kt-portlet__head">
+                        <div class="kt-portlet__head-label">
+                            <h3 class="kt-portlet__head-title">
+                                {{l("City")}}
+                            </h3>
+                        </div>
+                        <div class="kt-portlet__head-toolbar">
+                            <span class="filter-toggle" *ngIf="!showCityFilters" [hidden]="cities.length == 0"
+                                  (click)="showCityFilters=!showCityFilters">
+                                <i class="fa fa-search-plus fa-lg" style="color:black" ngbTooltip="Show search"></i>
+
+                            </span>
+                            <span class="filter-toggle" *ngIf="showCityFilters" [hidden]="cities.length == 0"
+                                  (click)="showCityFilters=!showCityFilters">
+                                <i class="fa fa-search-minus fa-lg" style="color:black" ngbTooltip="Hide search"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="kt-portlet__body" [ngClass]="{'portlet-body__grey': cities.length > 0 }">
+                        <div class="primeng-datatable-container">
+                            <p-table #cityTable [value]="cities" [scrollable]="true" scrollHeight="200px"
+                                     [busyIf]="isCityLoading" [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns"
+                                     (onRowSelect)="onCitySelectionChange()" (onRowUnselect)=" onCitySelectionChange()"
+                                     [(selection)]="selectionBuilder.selectedCities">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 15%">
+                                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                        </th>
+                                        <th style="width: 85%" pSortableColumn="label">
+                                            {{'City' | localize}}
+                                            <p-sortIcon field="label"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                    <tr [hidden]="!showCityFilters">
+                                        <th style="width: 15%">
+                                        </th>
+                                        <th style="width: 85%">
+                                            <input class="column-filter" pInputText type="text"
+                                                   (input)="cityTable.filter($event.target.value,'label','contains')"
+                                                   [value]="cityTable.filters['label'] ? cityTable.filters['label'].value : ''">
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr [pSelectableRow]="rowData">
+                                        <td style="width: 15%">
+                                            <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                                        </td>
+                                        <td style="width: 85%">
+                                            <span class="ui-column-title"> {{'Cities' | localize}}</span>
+                                            {{record.label}}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="primeng-no-data" *ngIf="cities.length == 0">
+                                {{'NoData' | localize}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12 city-container">
+                <div class="kt-portlet kt-portlet--height-fluid ">
+                    <div class="kt-portlet__head">
+                        <div class="kt-portlet__head-label">
+                            <h3 class="kt-portlet__head-title">
+                                {{l("Neighborhood")}}
+                            </h3>
+                        </div>
+                        <div class="kt-portlet__head-toolbar">
+                            <span class="filter-toggle" *ngIf="!showNeighborhoodFilters" [hidden]="neighborhoods.length == 0"
+                                  (click)="showNeighborhoodFilters=!showNeighborhoodFilters">
+                                <i class="fa fa-search-plus fa-lg" style="color:black" ngbTooltip="Show search"></i>
+                            </span>
+                            <span class="filter-toggle" *ngIf="showNeighborhoodFilters" [hidden]="neighborhoods.length == 0"
+                                  (click)="showNeighborhoodFilters=!showNeighborhoodFilters">
+                                <i class="fa fa-search-minus fa-lg" style="color:black" ngbTooltip="Hide search"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="kt-portlet__body" [ngClass]="{'portlet-body__grey': neighborhoods.length > 0 }">
+                        <div class="primeng-datatable-container">
+                            <p-table #neighborhoodTable [value]="neighborhoods" [scrollable]="true" scrollHeight="200px"
+                                     [busyIf]="isNeighborhoodLoading" [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns"                                     
+                                     [(selection)]="selectionBuilder.selectedNeighborhood">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 12%">
+                                            <p-tableHeaderCheckbox>
+                                            </p-tableHeaderCheckbox>
+                                        </th>
+                                        
+                                        <th style="width: 60%" pSortableColumn="label">
+                                            {{'Neighborhood' | localize}}
+                                            <p-sortIcon field="label"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                    <tr [hidden]="!showNeighborhoodFilters">
+                                        <th style="width: 12%">
+                                        </th>
+                                        
+                                        <th style="width: 60%">
+                                            <input pInputText type="text" class="column-filter"
+                                                   (input)="neighborhoodTable.filter($event.target.value, 'label', 'contains')"
+                                                   [value]="neighborhoodTable.filters['label'] ? neighborhoodTable.filters['label'].value : ''">
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr [pSelectableRow]="rowData">
+                                        <td style="width: 12%">
+                                            <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                                        </td>
+                                        
+                                        <td style="width: 60%">
+                                            <span class="ui-column-title"> {{'Neighborhood' | localize}}</span>
+                                            {{record.label}}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="primeng-no-data" *ngIf="neighborhoods.length == 0">
+                                {{'NoData' | localize}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="AddControls" class="add-container">
+            <div class="add-container__controls">
+                <div class="add-button">
+                    <button (click)="addSelection()" [disabled]="getDisabled" style="padding-top: 5.02px;
+                            padding-bottom: 5px;" class="btn btn-primary blue">
+                        <i class="fa fa-plus"></i>
+                        <span>{{l("Add")}}</span>
+                    </button>
+                </div>
+            </div>
+            <div class="type-container">
+                <div class="city-container">
+                    <p-selectButton [options]="operatorTypes" [(ngModel)]="selectedOperator">
+                    </p-selectButton>
+                </div>
+            </div>
+        </div>
+        <div class="primeng-datatable-container">
+            <p-table #SelectionTable [value]="selectionBuilder.selections" [scrollable]="true" scrollHeight="200px"
+                [resizableColumns]="primengTableHelper.resizableColumns">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 29%" pSortableColumn="field.cQuestionDescription">
+                            {{'Field' | localize}}
+                            <p-sortIcon field="listID"></p-sortIcon>
+                        </th>
+                        <th style="width: 52%">
+                            {{'Value' | localize}}
+                        </th>
+                        <th style="width:2%"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                    <tr>
+                        <td style="width: 35%">
+                            <span class="ui-column-title"> </span>
+                            {{record.field.cQuestionDescription}}
+                        </td>
+                        <td style="width: 52%">
+                            <span class="ui-column-title"> </span>
+                            {{record.value}}
+                        </td>
+                        <td style="width:2%" style="text-align:right">
+                            <button type="button" class="btn btn-sm btn-dangerous">
+                                <i class="fa fa-trash fa-lg" (click)="delete(i)"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <div class="primeng-no-data" *ngIf="selectionBuilder.selections.length == 0">
+                {{'NoData' | localize}}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button class="btn btn-primary blue" [disabled]="saving || selectionBuilder.selections.length == 0"
+                [buttonBusy]="saving" (click)="save()" [busyText]="l('SavingWithThreeDot')">
+                <i class="fa fa-save"></i>
+                <span>{{l("Save")}}</span>
+            </button>
+        </div>
+    </div>

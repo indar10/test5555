@@ -1,0 +1,409 @@
+.heading {
+  height: 77px;
+  padding-left: 24px;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+}
+
+.groupedButton {
+  display: flex;
+  margin-left: 3rem;
+}
+
+.btn-outline-primary {
+  background: #f3f4fc !important;
+}
+
+.btn-outline-primary:hover {
+  color: #5a6ad6 !important;
+}
+
+.filters {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 3fr 1.5fr 2fr 3fr auto auto;
+  padding: 30px;
+  gap: 1rem;
+}
+
+.top-margin {
+  margin-top: calc(18px + 0.5rem) !important;
+}
+
+::ng-deep .ui-autocomplete-token-label {
+  white-space: normal !important;
+}
+
+::ng-deep .ui-autocomplete-multiple-container {
+  border: 1px solid #a6a6a6 !important;
+  max-height: 100px !important;
+  overflow-y: auto !important;
+}
+
+::ng-deep .ui-autocomplete-token + .ui-autocomplete-token {
+  margin-top: 0.286em !important;
+}
+
+::ng-deep .ui-paginator {
+  border: none !important;
+}
+
+.m-input {
+  padding: 0.45em !important;
+  height: auto;
+}
+
+.custom-date {
+  height: 37.875px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 151px;
+  height: 43px;
+  margin-left: 10px;
+  margin-top: 10px;
+  top: 8.25px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 19.5px;
+  left: 0;
+  right: 0;
+  bottom: -15px;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 29px;
+  width: 29px;
+  left: 2px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(119px);
+  -ms-transform: translateX(119px);
+  transform: translateX(119px);
+}
+
+/*------ ADDED CSS ---------*/
+.on {
+  display: none;
+}
+
+.on,
+.off {
+  color: white;
+  position: absolute;
+  transform: translate(-47%, -50%);
+  top: 50%;
+  left: 46%;
+  font-size: 11px;
+  font-family: Verdana, sans-serif;
+}
+
+input:checked + .slider .on {
+  display: block;
+}
+
+input:checked + .slider .off {
+  display: none;
+}
+
+#statusHover {
+  cursor: pointer;
+}
+
+/*--------- END --------*/
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.m-subheader {
+  padding: 5px 15px 10px 0px !important;
+}
+
+.nav.nav-pills,
+.nav.nav-tabs {
+  margin-bottom: 0px !important;
+}
+
+.pane {
+  padding: 0 !important;
+}
+
+/* #kt_wrapper {
+  padding-top: 65px
+} */
+
+.icon-calender {
+  padding-left: 8px;
+  padding-right: 4px;
+  padding-top: 8.45;
+  padding-bottom: 8.45;
+}
+
+.m-subheader__daterange {
+  border-radius: 3.5px;
+}
+
+.m-subheader__daterange.dashboard-report-range {
+  margin-left: 10px;
+}
+
+.m-subheader .m-subheader__daterange {
+  display: inline-block;
+  padding: 2px;
+  cursor: pointer;
+  background: #fff;
+}
+
+.m-subheader .m-subheader__daterange .m-subheader__daterange-label {
+  padding: 0.7rem 0.75rem 0.7rem 0.75rem;
+}
+
+.m-subheader
+  .m-subheader__daterange
+  .m-subheader__daterange-label
+  .m-subheader__daterange-date {
+  display: inline-block;
+  font-weight: 500;
+}
+
+.dropdown-menu > li > a,
+.dropdown-menu > .dropdown-item {
+  color: #575962;
+}
+
+.date-range-filter {
+  width: 5px;
+  padding: 0;
+  visibility: hidden;
+}
+
+.top-portlet {
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  position: relative;
+  top: -30px;
+}
+
+.new-campaign__container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 36px;
+  margin-bottom: -12px;
+}
+
+.new-campaign__wrapper {
+  display: flex;
+}
+
+.customer-input {
+  width: 215.813px !important;
+}
+
+.grid-content {
+  position: relative;
+  top: -25px;
+}
+
+.fav-row {
+  display: flex;
+}
+
+.fav-column {
+  flex: 50%;
+  border: 1px black;
+}
+
+/* campaign grid styles */
+.expander_column {
+  width: 2% !important;
+}
+
+.expander_record {
+  width: 2% !important;
+}
+
+.id__column {
+  width: 10% !important;
+}
+.user__column {
+  width: 10% !important;
+}
+
+.description__column {
+  width: 17% !important;
+}
+
+.customer__column {
+  width: 10% !important;
+}
+
+.database__column {
+  width: 10% !important;
+}
+
+.quantity__header {
+  width: 8% !important;
+  text-align: right !important;
+  padding-right: 8px !important;
+}
+
+.padd-right {
+  width: 8px !important;
+}
+
+.quantity__column {
+  width: 8% !important;
+  text-align: right !important;
+}
+
+.quantity__record {
+  position: relative;
+  right: 20%;
+}
+
+.status__column {
+  width: 9% !important;
+}
+
+.created-date__column {
+  width: 10% !important;
+}
+
+.action__column {
+  width: 6% !important;
+}
+
+/* campaign grid styles */
+
+@media (min-width: 1500px) {
+  /* campaign grid styles */
+  .expander_column {
+    width: 2% !important;
+  }
+  .expander_record {
+    width: 2% !important;
+  }
+
+  .id__column {
+    width: 6% !important;
+  }
+
+  .description__column {
+    width: 20% !important;
+  }
+
+  .customer__column {
+    width: 13% !important;
+  }
+
+  .database__column {
+    width: 13% !important;
+  }
+
+  .quantity__header {
+    width: 8% !important;
+    text-align: right !important;
+  }
+
+  .quantity__column {
+    width: 8% !important;
+    text-align: right !important;
+  }
+
+  .status__column {
+    width: 12% !important;
+  }
+
+  .created-date__column {
+    width: 7% !important;
+  }
+
+  .action__column {
+    width: 5% !important;
+  }
+
+  /* campaign grid styles */
+}
+
+@media (max-width: 768px) {
+  .customer-input {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 623px) {
+  .new-campaign__wrapper {
+    display: flex;
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+}
+
+@media (max-width: 472px) {
+  .top-portlet {
+    display: block;
+  }
+
+  .global-data__filter {
+    display: inline;
+  }
+
+  .new-campaign__container {
+    display: block;
+    justify-content: flex-end;
+    float: right;
+  }
+
+  .new-campaign__wrapper {
+    display: flex;
+    height: 37.875px;
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+
+  .custom-date {
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+
+  .date-range-filter {
+    width: 5px;
+    padding: 0;
+    visibility: hidden;
+    transform: translateX(-100px);
+  }
+}

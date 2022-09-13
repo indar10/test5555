@@ -1,0 +1,72 @@
+<div class="modal-content">
+    <form #queueForm="ngForm" novalidate (ngSubmit)="save(queueForm)" autocomplete="off" >
+        <div class="modal-header">
+            <h4 class="modal-title">
+
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group m-form__group col-xs-6 col-sm-6 col-md-6">
+                    <label>Queue Name</label>
+                    <input type="text" class="form-control" [(ngModel)]="processQueue.cQueueName" name="queueName"
+                        #queueNameInput="ngModel" required />
+                    <div *ngIf="queueNameInput.errors &&(queueNameInput.dirty || queueNameInput.touched)"
+                        class="form-control-feedback error-listname">
+                        <div [hidden]="!queueNameInput.errors.required">
+                            Enter Queue name
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group m-form__group col-xs-6 col-sm-6 col-md-6">
+                    <label>Queue Type</label>
+                    <p-dropdown [style]="{'width':'100%'}" [(ngModel)]="processQueue.lK_QueueType" name="queueType"
+                        [options]="queueType" placeholder="Select Value" (onChange)="FillProcessType(queueForm)"
+                        required></p-dropdown>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group m-form__group col-xs-6 col-sm-6 col-md-6 ">
+                    <label>Description</label>
+                    <textarea class="form-control" [(ngModel)]="processQueue.cDescription"
+                        name="description"></textarea>
+                </div>
+                <div class="form-group m-form__group col-xs-6 col-sm-6 col-md-6 ">
+                    <label>Process</label>
+                    <p-dropdown [style]="{'width':'100%'}" #processTypeInput="ngModel"
+                        [(ngModel)]="processQueue.lK_ProcessType" name="processType" [options]="processType" required>
+                    </p-dropdown>
+                    <!-- <div *ngIf="showEmptyProcessType"> {{'NoData' | localize}}</div> -->
+                    <!-- <div *ngIf="processTypeInput.errors &&(processTypeInput.dirty || processTypeInput.touched)"
+                        class="form-control-feedback error-listname">
+                        <div [hidden]="!processTypeInput.errors.required">
+                            No Data Avaiable
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group m-form__group col-xs-6 col-sm-6 col-md-6 ">
+                    <label>Allowed Thread #s</label>
+                    <input type="text" class="form-control" [(ngModel)]="processQueue.iAllowedThreadCount" name="count"
+                        #Count="ngModel" required />
+                    <div *ngIf="Count.errors &&(Count.dirty || Count.touched)"
+                        class="form-control-feedback error-listname">
+                        <div [hidden]="!Count.errors.required">
+                            Enter Allowed Thread Count
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">Cancel</button>
+            <button type="submit" class="btn btn-primary blue" [disabled]="queueForm.invalid || processQueue.lK_ProcessType === ''" [buttonBusy]="saving"
+                [busyText]="'SavingWithThreeDot'"><i class="fa fa-save"></i>
+                <span>{{l("Save")}}</span></button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,179 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <Import Project="..\..\common.props"></Import>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <AssemblyName>Infogroup.IDMS.Web.Host</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>Infogroup.IDMS.Web.Host</PackageId>
+    <UserSecretsId>Infogroup-IDMS-894FDFC1-6482-4A56-926A-3C46C9FE0329</UserSecretsId>
+    <RootNamespace>Infogroup.IDMS.Web</RootNamespace>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <LangVersion>7.2</LangVersion>
+    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="App_Data\**" />
+    <Content Remove="App_Data\**" />
+    <EmbeddedResource Remove="App_Data\**" />
+    <None Remove="App_Data\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\swagger\ui\index.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="src\app\main\campaigns\campaigns\schedule-campaign\schedule-campaign-modal.component.ts" />
+    <None Remove="src\app\main\maintenance\export-layout\copy-export-layout-modal.component.ts" />
+    <None Remove="src\app\main\maintenance\group-broker\group-broker-modal.component.ts" />
+    <None Remove="src\app\main\maintenance\securityGroups\create-or-edit-security-group-modal.component.ts" />
+    <None Remove="src\app\main\maintenance\securityGroups\group-user-modal.component.ts" />
+    <None Remove="src\app\main\maintenance\securityGroups\security-group-modal.component.ts" />
+    <None Remove="src\app\main\maintenance\securityGroups\select-broker.modal.component.ts" />
+    <None Remove="src\app\main\tasks\tasks\activate-link-table-build-task-modal.component.ts" />
+    <None Remove="src\app\main\tasks\tasks\apogee-custom-export-task-modal.component.ts" />
+    <None Remove="src\app\main\tasks\tasks\apogee-export-point-in-time-task-modal.component.ts" />
+    <None Remove="src\app\main\tasks\tasks\bulk-update-list-action-task-modal.component.ts" />
+    <None Remove="src\app\main\tasks\tasks\close-notification-and-delete-build-task-modal.component.ts" />
+    <None Remove="src\app\main\tasks\tasks\copy-build-task-modal.component.ts" />
+    <None Remove="src\app\main\tasks\tasks\enhance-audit-report-modal.component.ts" />
+    <None Remove="src\app\main\tasks\tasks\export-email-hygien-data-task-modal.component.ts" />
+    <None Remove="src\app\main\tasks\tasks\export-list-conversion-data-modal.component.ts" />
+    <None Remove="src\app\main\tasks\tasks\optout-hardbounce-task-modal.component.ts" />
+    <None Remove="src\app\main\tasks\tasks\search-previous-order-history-byKey-task-modal.component.ts" />
+    <None Remove="src\app\main\match-append\match-append-routing.module.ts" />
+    <None Remove="src\app\main\match-append\match-append.module.ts" />
+    <None Remove="src\app\main\match-append\match-append\create-or-edit-match-append-modal.component.ts" />
+    <None Remove="src\app\main\match-append\match-append\match-append.component.ts" />
+    <None Remove="src\app\main\match-append\shared\match-append-status.component.ts" />
+    <None Remove="src\app\main\match-append\shared\match-append-status.enum.ts" />
+    <None Remove="src\app\main\tasks\tasks-routing.module.ts" />
+    <None Remove="src\app\main\tasks\tasks.module.ts" />
+    <None Remove="src\app\main\tasks\tasks\aop-from-previous-build-modal.component.ts" />
+    <None Remove="src\app\main\tasks\tasks\load-mailer-usage-modal.component.ts" />
+    <None Remove="src\app\main\models\models-routing.module.ts" />
+    <None Remove="src\app\main\models\models.module.ts" />
+    <None Remove="src\app\main\models\models\create-or-edit-models-modal.component.ts" />
+    <None Remove="src\app\main\models\models\models.component.ts" />
+    <None Remove="src\app\main\models\shared\model-status.enum.ts" />
+    <None Remove="src\app\main\models\shared\model-status\model-status.component.ts" />
+    <None Remove="src\app\main\reports\reports-routing.module.ts" />
+    <None Remove="src\app\main\reports\reports.module.ts" />
+    <None Remove="src\app\main\reports\shipped-reports\shippedreports.component.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="wwwroot\Plugins\.gitkeep" />
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+    <None Update="wwwroot\**\*">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Infogroup.IDMS.Web.Core\Infogroup.IDMS.Web.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="2.2.32" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.14.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="2.2.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Abp.Castle.Log4Net" Version="4.9.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.2.0" />
+	<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="2.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\swagger\ui\index.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Plugins\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="src\app\main\campaigns\campaigns\schedule-campaign\schedule-campaign-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\maintenance\export-layout\copy-export-layout-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\maintenance\group-broker\group-broker-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\maintenance\securityGroups\create-or-edit-security-group-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\maintenance\securityGroups\group-user-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\maintenance\securityGroups\security-group-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\maintenance\securityGroups\select-broker.modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\activate-link-table-build-task-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\apogee-custom-export-task-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\apogee-export-point-in-time-task-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\bulk-update-list-action-task-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\close-notification-and-delete-build-task-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\copy-build-task-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\enhance-audit-report-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\export-email-hygien-data-task-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\export-list-conversion-data-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\optout-hardbounce-task-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\search-previous-order-history-bykey-task-modal.component.ts" />
+	 <TypeScriptCompile Include="src\app\main\match-append\match-append\create-or-edit-match-append-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\match-append\match-append\match-append.component.ts" />
+    <TypeScriptCompile Include="src\app\main\match-append\match-append-routing.module.ts" />
+    <TypeScriptCompile Include="src\app\main\match-append\match-append.module.ts" />
+    <TypeScriptCompile Include="src\app\main\match-append\shared\match-append-status.enum.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks-routing.module.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks.module.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\aop-from-previous-build-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\load-mailer-usage-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\task.component.ts" />
+    <TypeScriptCompile Include="src\app\main\tasks\tasks\set-valid-email-flag.component.ts" />
+	<TypeScriptCompile Include="src\app\main\match-append\shared\match-append-status.component.ts" />
+    <TypeScriptCompile Include="src\app\main\models\models-routing.module.ts" />
+    <TypeScriptCompile Include="src\app\main\models\models.module.ts" />
+    <TypeScriptCompile Include="src\app\main\models\models\create-or-edit-models-modal.component.ts" />
+    <TypeScriptCompile Include="src\app\main\models\models\models.component.ts" />
+    <TypeScriptCompile Include="src\app\main\models\shared\model-status.enum.ts" />
+    <TypeScriptCompile Include="src\app\main\models\shared\model-status\model-status.component.ts" />
+    <TypeScriptCompile Include="src\app\main\reports\reports-routing.module.ts" />
+    <TypeScriptCompile Include="src\app\main\reports\reports.module.ts" />
+    <TypeScriptCompile Include="src\app\main\reports\shipped-reports\shippedreports.component.ts" />
+  </ItemGroup>
+   <PropertyGroup>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+  </PropertyGroup>
+</Project>

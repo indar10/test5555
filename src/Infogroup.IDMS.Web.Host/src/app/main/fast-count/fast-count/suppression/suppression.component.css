@@ -1,0 +1,25 @@
+.sup-header {
+  grid-auto-flow: column;
+  grid-template-columns: 3fr 1fr;
+  display: grid;
+}
+
+.sup-filters {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 4fr 2fr auto auto;
+  gap: 1rem;
+}
+
+.top-margin {
+  margin-top: calc(18px + 0.5rem) !important;
+}
+
+.m-input {
+  padding: 0.45em !important;
+  height: auto;
+}
+
+.description__column {
+  width: 17% !important;
+}

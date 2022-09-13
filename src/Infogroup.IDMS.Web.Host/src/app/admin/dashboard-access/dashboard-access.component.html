@@ -1,0 +1,132 @@
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" >
+    <div class="kt-subheader kt-grid__item">
+        <div [class]="containerClass">
+            <div class="kt-subheader__main">
+                <h3 class="kt-subheader__title">
+                    <span>
+                        Other Access<!-- {{"DashboardAccess" | localize}} -->
+                    </span>
+                </h3>
+                <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                <span class="kt-subheader__desc">
+                    <!-- {{"DashboardAccessInfo" | localize}} -->
+                </span>
+            </div>
+        </div>
+
+       
+    </div>
+</div>
+<div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid'">
+    <div class="kt-portlet kt-portlet--mobile">
+        <tabset>
+            <tab heading="Dashboard Access">
+                <div class="kt-portlet__body" [busyIf]="isLoading">
+                    <form autocomplete="off" (ngSubmit)="save(userReportForm)" #userReportForm = "ngForm">
+                    
+                    <div class="row"> 
+                        <div class="column" style="width: 600px;max-width: 600px;border-right: 1px solid #ccc;">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                                <label> User *</label>
+           
+                            <p-dropdown [options]="users" [filter]="true"
+                                    [style]="{'width':'100%','font-size':'small'}" name="selectedUsers"
+                                    [(ngModel)]="selectedUsers"  (onChange) = "getSelectedReports($event)">
+                             </p-dropdown>
+                          
+                            
+                        </div>
+                       
+                            <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                                <label for="cities">Report</label>
+                                <div class="ui-fluid">
+                                    <p-listbox [options]="report" [(ngModel)]="selectedReports" [multiple]="true" [filter]="true"
+                                        [style]="{ width: '100%'}" name="report" id="report" [checkbox]="true"
+                                        [listStyle]="{'max-height':'250px','font-size':'small'}" optionLabel="cReportName"></p-listbox>
+                                </div>
+                            </div>
+                         </div> 
+
+                        
+                        <div class="column">
+                            <label style="margin-left: 30px;margin-bottom: 30px;">Selected Reports</label>
+                            <div style="height: 400px;width:400px;overflow-y:auto">
+                            <ul>
+                                <ng-container *ngIf="selectedReports;  else noItems">
+                                    <li *ngFor="let choosedReport of selectedReports" class="list-group-item" style="margin-left: 30px; width: 220px;font-size: smaller;">
+                                        <span class="name">{{ choosedReport.cReportName}}</span>
+                                        <button class="btn btn-default btn-xs pull-right remove-item" style="padding: 1px 6px"
+                                            (click)="removeReport(choosedReport.id)">
+                                            <i class="far fa-times p-0"></i>
+                                        </button>
+                                    </li>
+                                </ng-container>
+                                <ng-template #noItems>
+                                    <div class="text-center">Selected Reports will appear here</div>
+                                </ng-template>
+                            </ul>
+                        </div>
+                        </div>
+                        
+                    </div>  
+                    <div class="row align-items-center">
+                        <button type="submit" class="btn btn-primary blue" [disabled] = "(selectedUsers | json) == '{}'"
+                        ><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>  
+                    </div>   
+                    </form>
+                </div>
+            </tab>
+            <tab heading="Match & Append Access">
+                <div class="kt-portlet__body" [busyIf]="isLoading">
+                    <form autocomplete="off"  #matchandAppendForm = "ngForm">
+                        <div class="row"> 
+                            <div class="column" style="width: 600px;max-width: 600px;border-right: 1px solid #ccc;">
+                                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                                    <label> User *</label>
+            
+                                    <p-dropdown [options]="users" [filter]="true"
+                                            [style]="{'width':'100%','font-size':'small'}" name="selectedMatchAppendUsers"
+                                            [(ngModel)]="selectedMatchAppendUsers"  (onChange) = "getExistingDatabaseForUser(selectedMatchAppendUsers)">
+                                    </p-dropdown>
+                                </div>
+                                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                                    <label for="cities">Database</label>
+                                    <div class="ui-fluid">
+                                        <p-listbox [options]="databaseList" [(ngModel)]="selectedDatabase" [multiple]="true" [filter]="true"
+                                            [style]="{ width: '100%'}" name="databaseList" id="databaseList" [checkbox]="true"
+                                            [listStyle]="{'max-height':'250px','font-size':'small'}" optionLabel="label"></p-listbox>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="column">
+                                <label style="margin-left: 30px;margin-bottom: 30px;">Selected Databases</label>
+                                <div style="height: 400px;width:450px;overflow-y:auto">
+                                <ul>
+                                    <ng-container *ngIf="selectedDatabase;  else noItems">
+                                        <li *ngFor="let choosedDB of selectedDatabase" class="list-group-item" style="margin-left: 30px; width: 370px;font-size: smaller;">
+                                            <span class="name">{{ choosedDB.label}}</span>
+                                            <button class="btn btn-default btn-xs pull-right remove-item" style="padding: 1px 6px"
+                                                (click)="removeDatabase(choosedDB.value)">
+                                                <i class="far fa-times p-0"></i>
+                                            </button>
+                                        </li>
+                                    </ng-container>
+                                    <ng-template #noItems>
+                                        <div class="text-center">Selected databases will appear here</div>
+                                    </ng-template>
+                                </ul>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-center">
+                            <button type="submit" class="btn btn-primary blue" [disabled] = "(selectedMatchAppendUsers | json) == '{}'"
+                            (click)="saveMatchAppendAccess(matchandAppendForm)" ><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>  
+                        </div>   
+                    </form>
+                </div>
+            </tab>
+        </tabset>
+       
+    
+</div>

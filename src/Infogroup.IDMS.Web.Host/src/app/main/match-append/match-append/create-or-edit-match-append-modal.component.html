@@ -1,0 +1,543 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #matchAppendForm="ngForm" novalidate (ngSubmit)="finish(matchAppendForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">              
+                <span *ngIf="!matchAppendId">{{l("CreateNewMatchAppendTask")}}</span>
+                <span *ngIf="matchAppendId">{{l("EditNewMatchAppendTask")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body ">
+            
+            <p-steps [model]="items" [(activeIndex)]="activeIndex" styleClass="steps-custom"></p-steps>
+            <div *ngIf="activeIndex==0">
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label for="Database">{{l("Database")}} *</label>
+                        <div class="ui-fluid">
+                            <p-dropdown [required]="true" [options]="databases"
+                                        [filter]="true" (onChange)="getLatestBuild($event.value,true)" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.databaseID" name="databaseID">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label>{{l("Build")}} *</label>
+                       
+                        <div class="ui-fluid">
+                            <p-dropdown [required]="true" [options]="builds" [disabled]="createOrEditMatchAppendDto.matchAppendDto.databaseID==0"
+                                        [filter]="true" (onChange)="getSelectedBuild($event.value)" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.buildID" name="builds">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label>{{l("MatchAppendClientName")}} *</label>
+                        <div class="ui-fluid">
+                            <input type="text" class="form-control" maxlength="50" #clientName="ngModel" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.cClientName" name="cClientName" required />
+                            <div *ngIf="clientName.errors && (clientName.dirty || clientName.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!clientName.errors.required">
+                                    {{l('ClientNameValidation')}}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label>{{l("MatchAppendRequestDescription")}} *</label>
+                        <div class="ui-fluid">
+                            <input type="text" class="form-control" maxlength="50" #description="ngModel" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.cRequestReason" name="cRequestReason" required />
+                            <div *ngIf="description.errors && (description.dirty || description.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!description.errors.required">
+                                    {{l('DescriptionValidation')}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label>{{l("MatchAppendUploadFile")}} *</label>
+                        <div class="ui-fluid">
+                            <input type="file" class="form-control" (change)="handleFileInput($event.target.files)" name="fileUploadControl" [disabled]="!createOrEditMatchAppendDto.matchAppendDto.databaseID" />
+
+                        </div>
+                    </div>                   
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label>{{l("MatchAppendEnterFullPath")}} *</label>
+                        <div class="ui-fluid">
+                            <input type="text" class="form-control" #uploadFileManually="ngModel" [(ngModel)]="fileNameFromManual" name="fileUploadManual" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12 col-sm-12 col-md-12 mt-3" *ngIf="matchAppendId">
+                        <label>{{l("MatchAppendUploadedFile")}}</label>
+                        <div class="ui-fluid">
+                            <label name="uploaded">{{createOrEditMatchAppendDto.matchAppendDto.cClientFileName}}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12 col-sm-12 col-md-12 mt-3">
+                        <label>{{l("IDMSDatabaseFilter")}}</label>
+                        <div class="ui-fluid">
+                            <textarea name="IdmsDatabaseFilter" class="form-control" #idmsDatabaseFilter="ngModel" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.cSourceFilter" style="height:90%" pattern="^[^\;\-]+$"></textarea>
+                            <div *ngIf="idmsDatabaseFilter.errors && (idmsDatabaseFilter.dirty || idmsDatabaseFilter.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!idmsDatabaseFilter.errors.pattern">
+                                    {{l("InvalidIDMSDatabaseFilter")}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="justify-content:flex-end;padding-right:1.5%">
+                    <button type="button" class="btn btn-primary blue" nam="nextStep1" (click)="processDatabaseStep(createOrEditMatchAppendDto.matchAppendDto)" [disabled]="!matchAppendForm.form.valid">
+                        <span style="font-size:115%">{{l("Next")}}</span>&nbsp;<i class="fa fa-arrow-right" style="padding-bottom:5%"></i>
+                    </button>
+
+                </div>
+            </div>
+            <div *ngIf="activeIndex==1">
+                <div class="row">
+                    <div class="form-group col-xs-4 col-sm-4 col-md-4 mt-3">
+                        <label for="Database">{{l("MatchAppendFileType")}} *</label>
+                        <div class="ui-fluid">
+                            <p-dropdown [required]="true" [options]="fileTypes"
+                                        [filter]="true" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.lK_FileType" name="fileType" (onChange)="DisplayOrderColumn()">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-4 col-sm-4 col-md-4 mt-3">
+                        <label>{{l("MatchAppendFileName")}}</label>
+                        <div class="ui-fluid" style="padding-top:2%">
+                            <label name="fileName">{{createOrEditMatchAppendDto.matchAppendDto.cClientFileName}}</label>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-2 col-sm-2 col-md-2 mt-3" style="padding-top:0.5%">
+                        <label class="switchM" (onclick)="getMatchAppendTasks()">
+                            <input type="checkbox" id="togBtn" name="toggle" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.iSkipFirstRow" />
+                            <div class="mSlider round" style="top:0px;bottom:0px">
+                                <span class="on">Skip First Row</span><span class="off">Skip First Row</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="form-group col-xs-1 col-sm-1 col-md-1 mt-3" style="justify-content:flex-end;padding-right:1.5%;padding-top:2.5%;padding-left: 5%;">
+                        <button class="btn icons-edited-primary" type="button" (click)="addRows()" placement="left" ngbTooltip="Add Rows">
+                            <i class="fa fa-plus fa-lg"></i>
+                        </button>
+                    </div>
+                    <div class="form-group col-xs-1 col-sm-1 col-md-1 mt-3" style="justify-content:flex-end;padding-right:1.5%;padding-top:2.5%;">
+                        <button class="btn icons-edited-primary" type="button" name="clearButton" (click)="clear()" placement="left" ngbTooltip="Clear">
+                            <i class=" fa fa-times fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="primeng-datatable-container">
+                    <p-table #dataTable
+                             (onLazyLoad)="getMatchAppendInputLayout($event)"
+                             [value]="primengTableHelper.records"
+                             rows="15"
+                             [paginator]="false"
+                             [lazy]="true"
+                             [scrollable]="true"
+                             ScrollWidth="50px"
+                             [responsive]="primengTableHelper.isResponsive"
+                             [resizableColumns]="primengTableHelper.resizableColumns"
+                             scrollHeight="250px"
+                             dataKey="id">
+
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:2%" hidden>
+                                    {{l('Id')}}
+                                </th>
+                                <th style="width:2%" hidden>
+                                    {{l('MatchAppendId')}}
+                                </th>
+                                <th style="width:25%;">
+                                    {{l('MatchAppendFieldName')}}
+                                </th>
+                                <th style="width:8%" *ngIf="createOrEditMatchAppendDto.matchAppendDto.lK_FileType=='A'">
+                                    {{l('MatchAppendStartIndex')}}
+                                </th>
+                                <th style="width:8%" *ngIf="createOrEditMatchAppendDto.matchAppendDto.lK_FileType=='A'">
+                                    {{l('MatchAppendEndIndex')}}
+
+                                </th>
+
+                                <th style="width:8%;" *ngIf="createOrEditMatchAppendDto.matchAppendDto.lK_FileType=='A'">
+                                    {{l('MatchAppendWidth')}}
+                                </th>
+
+                                <th style="width:6%;" [hidden]="!isOrderDisplay">
+                                    {{l('MatchAppendOrder')}}
+                                </th>
+                                <th style="width:20%;">
+                                    {{l('MatchAppendMapping')}}
+                                </th>
+                                <th style="width:2%" hidden>
+
+                                </th>
+                                <th style="width:2%" hidden>
+
+                                </th>
+
+
+
+                            </tr>
+
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                            <tr [hidden]="record.actionType==3">
+                                <td style="width:2%" hidden>
+                                    {{record.id}}
+                                </td>
+                                <td style="width:2%" hidden>
+                                    {{record.matchAppendId}}
+                                </td>
+                                <td style="width:25%;" pEditableColumn>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText #cFieldName="ngModel" type="text" maxlength="50" (blur)="setInputLayoutOrder(i,cFieldName.dirty)" (keydown)="avoidSpace($event)" style="height:30px" name="cfieldName" class="form-control" [(ngModel)]="record.cFieldName" />
+                                            
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+
+                                            <input pInputText type="text" style="height:30px"  maxlength="50"  name="fieldName" class="form-control" (keydown)="avoidSpace($event)" [(ngModel)]="record.cFieldName" *ngIf="record.cFieldName==''">
+                                            <label name="cFieldLabel" *ngIf="record.cFieldName!=''">{{record.cFieldName}}</label>
+
+                                        </ng-template>
+                                    </p-cellEditor>
+
+                                </td>
+
+                                <td style="width:8%" pEditableColumn *ngIf="createOrEditMatchAppendDto.matchAppendDto.lK_FileType=='A'">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" id="" style="height:30px" maxlength="6" digitOnly name="startIndex" class="form-control" [(ngModel)]="record.startIndex">
+
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{record.startIndex}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td style="width:8%" pEditableColumn *ngIf="createOrEditMatchAppendDto.matchAppendDto.lK_FileType=='A'">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText #iEndIndex="ngModel" type="text" maxlength="6" (blur)="calculateWidth(i,iEndIndex.dirty)" style="height:30px" digitOnly name="endIndex" class="form-control" [(ngModel)]="record.endIndex">
+
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{record.endIndex}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td style="width: 8%" pEditableColumn *ngIf="createOrEditMatchAppendDto.matchAppendDto.lK_FileType=='A'">
+
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText #iWidth="ngModel" type="text" maxlength="6" (blur)="calculateEndPos(i,iWidth.dirty)" style="height:30px" digitOnly name="width" class="form-control" [(ngModel)]="record.dataLength">
+
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{record.dataLength}}
+                                        </ng-template>
+                                    </p-cellEditor>
+
+                                </td>
+                                <td style="width: 6%" [hidden]="!isOrderDisplay">
+                                    <span class="ui-column-title"> {{l('MatchAppendOrder')}}</span>
+                                    {{record.importLayoutOrder}}
+
+                                </td>
+                                <td style="width: 20%" pEditableColumn>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <p-dropdown [options]="mappings" name="mapping" (onChange)="getDropDownDescription($event,i)" [(ngModel)]="record.cMCMapping"></p-dropdown>
+
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{record.mappingDescription}}
+                                        </ng-template>
+                                    </p-cellEditor>
+
+                                </td>
+                               
+                            </tr>
+                        </ng-template>
+
+                    </p-table>
+                    <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                        {{l('NoData')}}
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <div class="row">
+                            <div class="form-group col-xs-9 col-sm-9 col-md-9 mt-3">
+                                <label>{{l("EnterFieldName")}}</label>
+                                <div class="ui-fluid">
+                                    <textarea name="fieldNameTextArea" class="form-control" #idmsDatabaseFilter="ngModel" [(ngModel)]="importFieldsText" style="height:90%"></textarea>
+
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-3 col-sm-3 col-md-3 mt-3">
+                                <div style="justify-content:flex-end;padding-top:33%">
+                                    <button type="button" (click)="importFields()" [disabled]="importFieldsText==''" name="import" class="btn btn-primary blue">Import</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <div class="row">
+                            <div class="form-group col-xs-12 col-sm-12 col-md-12 mt-3">
+                                <label>{{l("InputFileFilter")}}</label>
+                                <div class="ui-fluid">
+                                    <input type="text" name="inputFileFilter" class="form-control" #inputFileFilter="ngModel" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.cInputFilter" style="height:90%" pattern="^[^\;\-]+$"/>
+                                    <div *ngIf="inputFileFilter.errors && (inputFileFilter.dirty || inputFileFilter.touched)"
+                                         class="form-control-feedback">
+                                        <div [hidden]="!inputFileFilter.errors.pattern">
+                                            {{l("InvalidInputFileValidation")}}
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="row" style="justify-content:flex-end;padding-right:1.5%">
+                    <button type="button" class="btn btn-primary blue" (click)="processInputLayoutStep(false)" name="previousStep2" [disabled]="!matchAppendForm.form.valid">
+                        <i class="fa fa-arrow-left" style="padding-bottom:5%"></i><span style="font-size:115%">{{l("Previous")}}</span>
+                    </button>
+                    <button type="button" class="btn btn-primary blue" name="nextStep2" (click)="processInputLayoutStep(true)" [disabled]="!matchAppendForm.form.valid">
+                        <span style="font-size:115%">{{l("Next")}}</span>&nbsp;<i class="fa fa-arrow-right" style="padding-bottom:5%"></i>
+                    </button>
+
+                </div>
+            </div>
+            <div *ngIf="activeIndex==2">
+                <div class="row">
+                    <div class="form-group col-xs-3 col-sm-3 col-md-3 mt-3">
+                        <label>{{l("MatchAppendOrderType")}}</label>
+                        <div class="ui-fluid">
+                            <p-radioButton name="cOrderType" [style]="{'margin':'8px'}" value="N" label=" Net"
+                                           [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.cOrderType" inputId="opt1">
+                            </p-radioButton>
+                            <p-radioButton name="cOrderType" [style]="{'margin':'8px'}" value="G" label=" Gross"
+                                           [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.cOrderType" inputId="opt2">
+                            </p-radioButton>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-3 col-sm-3 col-md-3 mt-3">
+                        <label>{{l("MatchAppendKeyCode")}}</label>
+                        <div class="ui-fluid" style="height:60%">
+                            <input type="text" class="form-control" name="ckeyCode" maxlength="30" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.cKeyCode" style="height:90%" />
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-3 col-sm-3 col-md-3 mt-3">
+                        <label>{{l("MatchAppendOutputType")}}</label>
+                        <div class="ui-fluid">
+                            <p-dropdown name="outputType" [options]="outputTypes" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.lK_ExportFileFormatID"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-3 col-sm-3 col-md-3 mt-3">
+                        <label>{{l("MatchAppendExportType")}}</label>
+                        <div class="ui-fluid">
+                            <p-dropdown name="exportType" [options]="exportTypes" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.iExportType"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label>{{l("MatchAppendIdmsKeyField")}} *</label>
+                        <div class="ui-fluid">
+                            <p-dropdown name="idmsKeyFields" [required]="true" [filter]="true" [options]="idmsKeyFields" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.cIDMSMatchFieldName"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label>{{l("MatchAppendInputKeyField")}} *</label>
+                        <div class="ui-fluid">
+                            <p-dropdown name="inputKeyFields" [required]="true" [filter]="true" [options]="inputKeyFields" [(ngModel)]="createOrEditMatchAppendDto.matchAppendDto.cInputMatchFieldName"></p-dropdown>
+                        </div>
+                    </div>
+                   
+
+                </div>
+                
+                
+                <div class="row" style="justify-content:flex-end;padding-right:1.5%">
+
+                    <button type="button" class="btn btn-primary blue" (click)="processStep3(false)" name="previousStep3">
+                        <i class="fa fa-arrow-left" style="padding-bottom:5%"></i><span style="font-size:115%">{{l("Previous")}}</span>
+                    </button>
+                    <button type="button" class="btn btn-primary blue" (click)="processStep3(true)" name="nextStep3" [disabled]="!matchAppendForm.form.valid" >
+                        <span style="font-size:115%">{{l("Next")}}</span>&nbsp;<i class="fa fa-arrow-right" style="padding-bottom:5%"></i>
+                    </button>
+
+                </div>
+            </div>
+
+
+            <div *ngIf="activeIndex==3">
+
+                <div class="row">
+                    <div class="form-group col-xs-4 col-sm-4 col-md-4 mt-3">
+                        <label>{{l("MatchAppendSource")}}</label>
+                        <div class="ui-fluid">
+                            <p-dropdown name="sourceList" [filter]="true" [options]="sourceList" (onChange)="fillAvailableFields($event.value)" [(ngModel)]="selectedTable" [style]="{'height':'34px'}"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label>{{l("MatchAppendFields")}}</label>
+                        <div class="ui-fluid">
+                            <p-multiSelect [showToggleAll]="true" name="availableFields" [options]="availabelFields" [(ngModel)]="selectedAvailableFields"></p-multiSelect>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-1 col-sm-1 col-md-1 mt-3">
+
+                    </div>
+                    <div class="form-group col-xs-1 col-sm-1 col-md-1 mt-3" style="justify-content:flex-end;padding-right:1.5%;padding-top:25px;">
+                        <button class="btn icons-edited-primary" type="button" (click)="addSelectedOutputFields(outputLayoutTable)" placement="left" ngbTooltip="Add Fields" [disabled]="selectedAvailableFields.length==0">
+                            <i class="fa fa-plus fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="primeng-datatable-container">
+                    <p-table #outputLayoutTable
+                             (onLazyLoad)="getMatchAppendOutputLayouts($event)"
+                             [value]="primengTableHelperMatchAppendOutputLayout.records"
+                             rows="15"
+                             [paginator]="false"
+                             [lazy]="true"
+                             [scrollable]="true"
+                             scrollHeight="400px"
+                             
+                             [responsive]="primengTableHelperMatchAppendOutputLayout.isResponsive"
+                             [resizableColumns]="primengTableHelperMatchAppendOutputLayout.resizableColumns"
+                             [(selection)]="addRows"
+                             dataKey="id"
+                             [style]="{'overflow':'visible'}">
+
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:2%" hidden>
+                                    {{l("Id")}}
+                                </th>
+                                <th style="width:2%" hidden>
+                                    {{l("MatchAppendId")}}
+                                </th>
+
+                                <th style="width:5%;">
+                                    {{l('MatchAppendOutputOrder')}}
+                                </th>
+                                <th style="width:10%">
+                                    {{l('MatchAppendOutputFieldName')}}
+                                </th>
+                                <th style="width:5%">
+                                    {{l('MatchAppendOutputWidth')}}
+
+                                </th>
+                                <th style="width:2%">
+
+                                </th>
+                                <th style="width:2%" hidden>
+
+                                </th>
+
+
+
+
+                            </tr>
+
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                            <tr [hidden]="record.actionType==3">
+                                <td style="width:2%" hidden>
+                                    {{record.id}}
+                                </td>
+                                <td style="width:2%" hidden>
+                                    {{record.matchAppendID}}
+                                </td>
+                                <td style="width: 5%">
+                                    <span class="ui-column-title"> {{l('MatchAppendOrder')}}</span>
+                                    {{record.outputLayoutOrder}}
+
+                                </td>
+                                <td style="width:10%;" pEditableColumn>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText #cFieldName="ngModel" maxlength="50" type="text" (blur)="setInputLayoutOrder(i,cFieldName.dirty)" style="height:30px" name="fieldName" class="form-control" [(ngModel)]="record.cOutputFieldName" required />
+                                            <div *ngIf="cFieldName.errors && (cFieldName.dirty || cFieldName.touched)"
+                                                 class="form-control-feedback">
+                                                <div [hidden]="!cFieldName.errors.noSpaceValidator && !cFieldName.errors.required">
+                                                    {{l('EnterMatchAppedFieldName')}}
+                                                </div>
+                                            </div>
+
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+
+                                            {{record.cOutputFieldName}}
+
+                                        </ng-template>
+                                    </p-cellEditor>
+
+                                </td>
+                                <td style="width: 5%" pEditableColumn>
+
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText #iWidth="ngModel" maxlength="6" type="text"  style="height:30px" digitOnly name="widthOutput" class="form-control" [(ngModel)]="record.outputLength">
+
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{record.outputLength}}
+                                        </ng-template>
+                                    </p-cellEditor>
+
+                                </td>
+                                <td style="width:2%">
+                                    <button class="btn icons-edited-primary" type="button" (click)="deleteOutputlayout(record, i)" placement="left" ngbTooltip="Delete">
+                                        <i class="fa fa-trash fa-lg"></i>
+                                    </button>
+                                </td>
+                                <td style="width:2%" hidden>
+                                    {{record.cTableName}}
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="primeng-no-data" *ngIf="primengTableHelperMatchAppendOutputLayout.totalRecordsCount == 0">
+                        {{l('NoData')}}
+                    </div>
+                </div>
+                <br/>
+                <div class="row" style="justify-content:flex-end;padding-right:1.5%">
+                    <button type="button" class="btn btn-primary blue" (click)="processStep4()" name="previousStep4" [disabled]="saving">
+                        <i class="fa fa-arrow-left" style="padding-bottom:5%"></i><span style="font-size:115%">{{l("Previous")}}</span>
+                    </button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="primengTableHelperMatchAppendOutputLayout.totalRecordsCount == 0 || (!isGranted('Pages.MatchAppends.Edit') && matchAppendId) || iStatus==20 || iStatus==30 || iStatus==40 || iStatus==50" [hidden]="activeIndex!=3" [buttonBusy]="saving" [busyText]="l('FinishingWithThreeDot')" ><i class="fa fa-save"></i> <span style="font-size:115%">{{l("Finish")}}</span></button>
+                </div>
+            </div>
+
+
+
+        </div>
+       
+    </form>
+</div>
+

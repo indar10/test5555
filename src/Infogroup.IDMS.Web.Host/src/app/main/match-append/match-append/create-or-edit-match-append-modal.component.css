@@ -1,0 +1,118 @@
+﻿
+.switchM {
+    position: relative;
+    display: inline-block;
+    width: 161px;
+    height: 34px;
+    margin-top: 20px;
+}
+
+    .switchM input {
+        display: none;
+    }
+
+.mSlider {
+    position: absolute;
+    cursor: pointer;
+    top: 18px;
+    left: 0;
+    right: 0;
+    bottom: -18px;    
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .mSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 2px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+
+
+input:focus + .mSlider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .mSlider:before {
+    -webkit-transform: translateX(129px);
+    -ms-transform: translateX(129px);
+    transform: translateX(129px);
+}
+
+input:checked + .mSlider {
+    background-color: #5867dd;
+    border-color: #5867dd;
+}
+/*------ ADDED CSS ---------*/
+.on {
+    display: none;
+}
+
+.on,
+.off {
+    color: white;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 46%;
+    font-size: 11px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked + .mSlider .on {
+    display: block;
+}
+
+input:checked + .mSlider .off {
+    display: none;
+}
+
+/*--------- END --------*/
+/* Rounded sliders */
+.mSlider.round {
+    border-radius: 34px;
+}
+
+    .mSlider.round:before {
+        border-radius: 50%;
+    }
+
+::ng-deep .dataTable .ui-datatable-scrollable-view .ui-datatable-scrollable-body {
+    min-height: 27vh;
+}
+
+:host::ng-deep .ui-steps .ui-steps-item {
+    width: 25%;
+    text-align: center;
+}
+
+.ui-steps.steps-custom {
+    margin-bottom: 30px;
+}
+
+    .ui-steps.steps-custom .ui-steps-item .ui-menuitem-link {
+        padding: 0 8em;
+        overflow: visible;
+    }
+
+     .ui-steps.steps-custom .ui-steps-item .ui-steps-number {
+        background-color: #0081c2;
+        color: #FFFFFF;
+        display: inline-block;
+        width: 36px;
+        border-radius: 50%;
+        margin-top: -14px;
+        margin-bottom: 10px;
+    }
+
+     .ui-steps.steps-custom .ui-steps-item .ui-steps-title {
+        color: #555555;
+    }

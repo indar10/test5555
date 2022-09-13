@@ -1,0 +1,66 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #OptoutHardboundForm="ngForm" novalidate (ngSubmit)="save(OptoutHardboundForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="taskId">{{l("OptoutHardboundForm")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <general-database-build (taskGeneral)="storeTaskGeneral($event)"></general-database-build>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="fileLocation">{{l("fileLocation")}} *</label>
+                    <div class="ui-fluid">
+                        <input type="text" class="form-control" [(ngModel)]="task.fileLocation" name="fileLocation" disabled />
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="inputFileName">{{l("inputFileName")}} *</label>
+                    <div class="ui-fluid">
+                        <input type="text" class="form-control" #FileNameInput="ngModel" [(ngModel)]="task.inputFileName" name="inputFileName" required />
+                        <div *ngIf="FileNameInput.errors && (FileNameInput.dirty || FileNameInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!FileNameInput.errors.required">
+                                {{l('FileNameRequired')}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="fileType">{{l("fileType")}} *</label>
+                    <div class="ui-fluid">
+                        <p-dropdown [options]="fileTypeList" #FileTypeInput="ngModel" [required]="true" [(ngModel)]="task.fileType" (onChange)="onFileTypeChange($event)" name="fileType"></p-dropdown>
+                        <div *ngIf="FileTypeInput.errors && (FileTypeInput.dirty || FileTypeInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!FileTypeInput.errors.required">
+                                {{l('FileTypeRequired')}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3 pt-4">
+                    <label id="fileType">
+                        {{FileTypeDescription}}
+                    </label>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                <button type="submit" class="btn btn-primary blue"
+                        [disabled]="!OptoutHardboundForm.form.valid" [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')">
+                    <i class="fa fa-save"></i>
+                    <span>{{l("Execute")}}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,152 @@
+select {
+    color: rgb(87, 89, 98);
+    display: block;
+    height: 37.1875px;
+    text-decoration: none solid rgb(87, 89, 98);
+    width: 750px;
+    column-rule-color: rgb(87, 89, 98);
+    perspective-origin: 375px 18.5938px;
+    transform-origin: 375px 18.5938px;
+    caret-color: rgb(87, 89, 98);
+    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box padding-box;
+    border: 1px solid rgb(235, 237, 242);
+    border-radius: 3.5px 3.5px 3.5px 3.5px;
+    font: normal normal 400 normal 14px / 17.5px sans-serif, Arial;
+    outline: rgb(87, 89, 98) none 0px;
+    padding: 9.1px 14px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}/*#INPUT_1*/
+select option{
+    font-size: 16px;
+
+}
+.actions-menu{
+        z-index: 1100;
+ }
+/* #builder  {
+    border: 1px solid black;
+}
+btn .btn-xs .btn-success{
+    width: 45%
+} */
+/* #builder_group_0 {
+    width: 100%
+} */
+.centreButton {
+    text-align: center;
+}
+.modal-lg1 {
+    max-width: 90%;
+}
+.modal .ui-widget  {
+    border:1px solid red;
+}
+
+.form-group {
+    margin-bottom: 1rem !important;
+}
+
+
+
+.marginTop8 {
+    margin-top: 8px;
+}
+
+.switchL {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 34px;
+    margin-top: 8px;
+}
+
+    .switchL input {
+        display: none;
+    }
+
+.sliderl {
+    position: absolute;
+    cursor: pointer;
+    top: 18px;
+    left: 0;
+    right: 0;
+    bottom: -18px;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .sliderl:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 2px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+
+
+input:focus + .sliderl {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .sliderl:before {
+    -webkit-transform: translateX(169px);
+    -ms-transform: translateX(169px);
+    transform: translateX(169px);
+}
+
+input:checked + .sliderl {
+    background-color: #5867dd;
+    border-color: #5867dd;
+}
+/*------ ADDED CSS ---------*/
+.on {
+    display: none;
+}
+
+.on,
+.off {
+    color: white;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 46%;
+    font-size: 11px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked + .sliderl .on {
+    display: block;
+}
+
+input:checked + .sliderl .off {
+    display: none;
+}
+
+/*--------- END --------*/
+/* Rounded sliders */
+.sliderl.round {
+    border-radius: 34px;
+}
+
+    .sliderl.round:before {
+        border-radius: 50%;
+    }
+
+.icons-edited-primary {
+    color: #2e40d4;
+}
+
+.textAllignL {
+    width: 80%;
+    margin-left: 30px;
+}
+
+::ng-deep .modal-lg {
+    width: calc(800px - 10%) !important;
+}

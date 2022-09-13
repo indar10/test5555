@@ -1,0 +1,63 @@
+<div class="modal-content">
+    <form  *ngIf="active" #databaseForm="ngForm" novalidate (ngSubmit)="AddExportLayoutRecord()" autocomplete="off">
+        <div class="modal-header">
+            <h1 class="modal-title">
+                <span>{{l('CreateLayoutTitle')}}</span>
+                
+            </h1>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+        </div>
+        <div class="modal-body">            
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="form-group">
+                        <label>{{l('DescriptionLabel')}}</label>
+                        <input type="text" #description="ngModel" id="Segment_ID" class="form-control" [(ngModel)]="cDescription" name="description" maxlength="50"  noSpaceValidator="{{cDescription}}" />
+                        <div *ngIf="description.errors && (description.dirty || description.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!description.errors.noSpaceValidator">
+                                {{l("RequiredField","Description")}}
+                            </div>
+                        </div>
+                        <validation-messages [formCtrl]="description"></validation-messages>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>{{l('GroupLabel')}}</label>
+                        <p-dropdown #groupName="ngModel" filter="true" [(ngModel)]="selectedGroup" [style]="{'width':'100%'}" [options]="groupValueList" name="Group" required></p-dropdown>
+                        <validation-messages [formCtrl]="groupName"></validation-messages>
+                    </div>
+                    <div class="form-group">
+                        <label>{{l('CaseLabel')}}</label>
+                        <p-dropdown [(ngModel)]="selectedOutputCase" [style]="{'width':'100%'}" [options]="outputCaseList" name="case"></p-dropdown>
+                    </div>
+
+                    <div class="row m--margin-bottom-10">
+                        <div class="col-md-auto">
+                            <p-checkbox name="bTelemarketing" label="Telemarketing" binary="true"
+                                        [(ngModel)]="bTelemarketing" inputId="bTelemarketing">
+                            </p-checkbox>
+
+                        </div>
+                        <div class="col-md-auto">
+                            <p-checkbox name="bKeyCode" label="Key Code"
+                                        [(ngModel)]="bKeyCode" binary="true" inputId="bKeyCode"></p-checkbox>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+                </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button type="submit"  class="btn btn-primary blue" [disabled]="!databaseForm.form.valid || saveDisabled" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+        </div>
+    </form>
+</div>

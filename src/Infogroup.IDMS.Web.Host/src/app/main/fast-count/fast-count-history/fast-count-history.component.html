@@ -1,0 +1,276 @@
+<div>
+  <!-- <fastCount #fastCount></fastCount> -->
+  <div class="heading">
+    <h3>History</h3>
+    <div role="group" class="groupedButton" *ngIf="!hasSalesPermission">
+      <button
+        class="btn"
+        [ngClass]="
+          historyDto.selectedTab === selectedTab.All
+            ? 'btn-outline-primary'
+            : 'btn-outline-secondary'
+        "
+        (click)="changeTab(selectedTab.All)"
+      >
+        All
+      </button>
+      <button
+        class="btn ml-0"
+        [ngClass]="
+          historyDto.selectedTab === selectedTab.Orders
+            ? 'btn-outline-primary'
+            : 'btn-outline-secondary'
+        "
+        (click)="changeTab(selectedTab.Orders)"
+      >
+        Orders
+      </button>
+      <button
+        class="btn ml-0"
+        [ngClass]="
+          historyDto.selectedTab === selectedTab.Saved
+            ? 'btn-outline-primary'
+            : 'btn-outline-secondary'
+        "
+        (click)="changeTab(selectedTab.Saved)"
+      >
+        Saved
+      </button>
+    </div>
+  </div>
+  <form
+    #fcHistoryFilters="ngForm"
+    autocomplete="off"
+    class="filters"
+    (ngSubmit)="searchByFilters()"
+  >
+    <div>
+      <label>Search</label>
+      <div class="ui-fluid">
+        <input
+          name="filterText"
+          autoFocus
+          class="form-control m-input"
+          [placeholder]="
+            historyDto.selectedTab === selectedTab.Saved
+              ? 'Search by ID...'
+              : 'Search by Order number...'
+          "
+          type="search"
+          #search="ngModel"
+          [(ngModel)]="historyDto.search"
+        />
+      </div>
+    </div>
+    <div>
+      <label>Database</label>
+      <div class="ui-fluid">
+        <p-autoComplete
+          [minLength]="3"
+          [suggestions]="databases"
+          (completeMethod)="searchDatabases($event)"
+          name="hcDatabases"
+          field="cDatabaseName"
+          [dropdown]="true"
+          dropdownMode="current"
+          [placeholder]="'All Lists'"
+          [multiple]="true"
+          #hcDatabases="ngModel"
+          [(ngModel)]="historyDto.databases"
+          [forceSelection]="true"
+        >
+        </p-autoComplete>
+      </div>
+    </div>
+    <div>
+      <label>User</label>
+      <div class="ui-fluid">
+        <p-autoComplete
+          [minLength]="3"
+          [suggestions]="users"
+          name="hcUsers"
+          [dropdown]="true"
+          (completeMethod)="searchUsers($event)"
+          field="userName"
+          [placeholder]="'All Users'"
+          [multiple]="true"
+          #hcUsers="ngModel"
+          [(ngModel)]="historyDto.users"
+          [forceSelection]="true"
+          dropdownMode="current"
+        >
+        </p-autoComplete>
+      </div>
+    </div>
+    <div>
+      <label>Date Range</label>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"
+            ><i class="far fa-calendar-alt"></i
+          ></span>
+        </div>
+        <input
+          class="form-control m-input"
+          #drp="bsDaterangepicker"
+          bsDaterangepicker
+          name="selectedDateRange"
+          placeholder="This year"
+          [placement]="'left'"
+          #selectedDateRange="ngModel"
+          [(ngModel)]="historyDto.selectedDateRange"
+        />
+      </div>
+    </div>
+    <div class="top-margin">
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        <i class="flaticon-search-1 pr-0"></i>
+      </button>
+    </div>
+    <div class="top-margin">
+      <button
+        class="btn btn-primary"
+        type="button"
+        (click)="clearfcHistoryFilters()"
+      >
+        <i class="fal fa-times-circle pr-0"></i>
+      </button>
+    </div>
+  </form>
+</div>
+<div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid pb-5'">
+  <div class="row align-items-center">
+    <!--<Primeng-Datatable-Start>-->
+    <div class="primeng-datatable-container">
+      <p-table
+        #dataTable
+        [value]="records"
+        [totalRecords]="records.length"
+        [rows]="10"
+        [paginator]="records.length == 0 ? false : true"
+        [scrollable]="true"
+        ScrollWidth="100%"
+        [rowsPerPageOptions]="[10, 50, 100]"
+      >
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th>
+              {{
+                historyDto.selectedTab === selectedTab.Orders
+                  ? l("Order No")
+                  : l("ID")
+              }}
+            </th>
+            <th *ngIf="historyDto.selectedTab !== selectedTab.Saved && !hasSalesPermission">
+              {{ l("PO Order No.") }}
+            </th>
+            <th>
+              {{ l("User") }}
+            </th>
+            <th class="description__column">
+              {{ l("Description") }}
+            </th>
+            <th>
+              {{ l("Database") }}
+            </th>
+            <th class="quantity__header">
+              <span>{{ l("Quantity") }}</span>
+            </th>
+            <th>
+              {{
+                historyDto.selectedTab === selectedTab.Orders
+                  ? l("Last Modified")
+                  : l("Date")
+              }}
+            </th>
+            <th *ngIf="historyDto.selectedTab !== selectedTab.Saved && !hasSalesPermission">
+              {{ l("Status") }}
+            </th>
+            <th class="action__column">
+              {{ l("Actions") }}
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-record="$implicit">
+          <tr>
+            <td>
+              <a
+                href="javascript:;"
+                data-toggle="tooltip"
+                data-placement="right"
+                (click)="openFastCountView(record, '0')"
+              >
+                {{ record.campaignId }}
+              </a>
+            </td>
+            <td *ngIf="historyDto.selectedTab !== selectedTab.Saved && !hasSalesPermission">
+              {{
+                historyDto.selectedTab === selectedTab.All
+                  ? "-"
+                  : record.poOrderNumber
+              }}
+            </td>
+            <td>
+              {{ record.createdBy }}
+            </td>
+            <td class="description__column">
+              {{ record.campaignDescription }}
+            </td>
+            <td>
+              {{ record.databaseName }}
+            </td>
+            <td class="quantity__header">
+              <div *ngIf="record.providedQty > 0 && record.providedQty < record.iAvailableQty">{{ record.providedQty | number }}</div>
+              <div *ngIf="record.iAvailableQty == record.providedQty && record.providedQty != 0">{{ record.iAvailableQty | number }}</div>
+              <div *ngIf="record.providedQty == 0">{{ record.iAvailableQty | number }}</div>
+            </td>
+            <td>
+              {{ record.orderCreatedDate }}
+            </td>
+            <td *ngIf="historyDto.selectedTab != selectedTab.Saved && !hasSalesPermission">
+              {{ record.statusDescription }}
+            </td>
+            <td class="action__column">
+              <div
+                class="btn-group dropdown"
+                dropdown
+                container="body"
+                placement="bottom left"
+              >
+                <button
+                  class="dropdown-toggle btn btn-sm btn-primary"
+                  aria-controls="dropdown-alignment"
+                  dropdownToggle
+                >
+                  <i class="fa fa-cog"></i><span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu left-dropdown" *dropdownMenu>
+                  <li>
+                    <a href="javascript:;" (click)="duplicateAndEdit(record.campaignId)">{{ l("Duplicate & Edit") }}</a>
+                  </li>
+                  <li>
+                    <a
+                      href="javascript:;"
+                      (click)="openFastCountView(record, '0')"
+                      >{{ l("View") }}</a
+                    >
+                  </li>
+                   <li *ngIf="historyDto.selectedTab === selectedTab.Orders">                     
+                    <a href="javascript:;" *ngIf="permission.isGranted('Pages.PlaceOrder')" (click)="getFastCountConfig(record,'PlaceOrder')">{{ l("Place Order") }}</a>
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <div class="primeng-no-data" *ngIf="records.length == 0 && !isLoading">
+        {{ l("NoData") }}
+      </div>
+    </div>
+  </div>
+</div>
+<app-page-loader *ngIf="isLoading"></app-page-loader>

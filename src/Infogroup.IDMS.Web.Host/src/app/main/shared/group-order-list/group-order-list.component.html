@@ -1,0 +1,111 @@
+<div
+  [ngClass]="{ 'g-disabled': disabled }"
+  [ngStyle]="style"
+  [class]="styleClass"
+>
+  <div class="input-group p-3" *ngIf="filter">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon1">
+        <i class="flaticon-search-1"></i
+      ></span>
+    </div>
+    <input
+      class="form-control"
+      type="search"
+      [value]="filterValue || ''"
+      (input)="onFilter($event)"
+      [disabled]="disabled"
+      [attr.placeholder]="filterPlaceHolder"
+      [attr.aria-label]="ariaFilterLabel"
+    />
+  </div>
+  <div
+    [ngStyle]="listStyle"
+    [class]="listStyleClass"
+    role="listbox"
+    [ngClass]="{ 'g-listbox-wrapper pl-3': group }"
+  >
+    <ng-container *ngIf="group">
+      <div class="group-label">
+        <ng-template ngFor let-optgroup [ngForOf]="options">
+          <div (click)="scrollToView(optgroup)" class="font-weight-bold p-2 text-label mr-2">
+            {{ getOptionGroupLabel(optgroup) }}
+          </div>
+        </ng-template>
+      </div>
+      <div class="g-overflow">
+        <ng-template ngFor let-optgroup [ngForOf]="optionsToRender">
+          <div
+            *ngIf="!groupTemplate"
+            class="font-weight-bold py-2 pl-2"
+            style="font-size: 1.2rem;"
+            id="{{ getOptionGroupLabelForId(optgroup) }}"
+          >
+            {{ getOptionGroupLabel(optgroup) }}
+          </div>
+          <ng-container
+            *ngTemplateOutlet="groupTemplate; context: { $implicit: optgroup }"
+          ></ng-container>
+          <ng-container
+            *ngTemplateOutlet="
+              itemslist;
+              context: { $implicit: getOptionGroupChildren(optgroup) }
+            "
+          ></ng-container>
+        </ng-template>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!group">
+      <ng-container
+        *ngTemplateOutlet="itemslist; context: { $implicit: optionsToRender }"
+      ></ng-container>
+    </ng-container>
+    <ng-template #itemslist let-optionsToDisplay>
+      <div
+        *ngFor="let option of optionsToDisplay; let i = index"
+        [attr.tabindex]="disabled || isOptionDisabled(option) ? null : '0'"
+        pRipple
+        [ngClass]="{
+          'g-disabled': this.isOptionDisabled(option)
+        }"
+        role="option"
+        [attr.aria-label]="getOptionLabel(option)"
+        [attr.aria-selected]="isSelected(option)"
+        (click)="onOptionClick($event, option)"
+        class="p-2 text-label g-pointer mr-2"
+      >
+        <div
+          [ngClass]="{
+            'text-success font-weight-bold': option.value.isDatafilter
+          }"
+          *ngIf="!itemTemplate"
+        >
+          {{ getOptionLabel(option) }}
+        </div>
+        <ng-container
+          *ngTemplateOutlet="
+            itemTemplate;
+            context: { $implicit: option, index: i }
+          "
+        ></ng-container>
+      </div>
+      <div *ngIf="hasFilter() && isEmpty(optionsToDisplay)">
+        <ng-container
+          *ngIf="!emptyFilterTemplate && !emptyTemplate; else emptyFilter"
+        >
+          {{ emptyMessageLabel }}
+        </ng-container>
+        <ng-container
+          #emptyFilter
+          *ngTemplateOutlet="emptyFilterTemplate || emptyTemplate"
+        ></ng-container>
+      </div>
+      <div *ngIf="!hasFilter() && isEmpty(optionsToDisplay)">
+        <ng-container *ngIf="!emptyTemplate; else empty">
+          {{ emptyMessageLabel }}
+        </ng-container>
+        <ng-container #empty *ngTemplateOutlet="emptyTemplate"></ng-container>
+      </div>
+    </ng-template>
+  </div>
+</div>

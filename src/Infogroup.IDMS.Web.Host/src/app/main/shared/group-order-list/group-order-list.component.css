@@ -1,0 +1,53 @@
+.g-disabled,
+.g-disabled * {
+  cursor: default !important;
+  pointer-events: none;
+}
+
+.g-listbox-wrapper {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr 2fr;
+  gap: 0.5rem;
+}
+
+.g-overflow {
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow: -moz-scrollbars-none;
+  overscroll-behavior: contain;
+}
+
+.g-overflow::-webkit-scrollbar {
+  display: none;
+}
+
+.g-grid {
+  display: grid;
+  place-content: start;
+}
+
+.g-pointer {
+  cursor: pointer;
+}
+
+.g-hover:hover {
+  background-color: #f4f5f8;
+}
+
+.group-label {
+  cursor: pointer;
+  border-right: 1px solid #ccc;
+}
+
+.text-label:hover {
+  background: rgb(0 0 0 / 10%);
+  border-radius: 5px;
+}
+
+.text-label:focus {
+  background: #3B82F6;
+  color: white;
+  border-radius: 5px;
+}

@@ -1,0 +1,14 @@
+.listbox-height{
+    overflow: auto;
+    height: 400px;
+    width: 100%;
+}
+.header-data{
+    width: 100%;
+}
+.header-data-2{
+    width: 100%;
+}
+.list-box-width{
+    width: 100% !important;
+}

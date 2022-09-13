@@ -1,0 +1,84 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #ExportListConversionForm="ngForm" novalidate (ngSubmit)="save(ExportListConversionForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="taskId">{{l("ExportListConversionForm")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <general-database-build (taskGeneral)="storeTaskGeneral($event)"></general-database-build>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="listId">{{l("ListID")}} *</label>
+                    <div class="ui-fluid">
+                        <input type="text" digitOnly class="form-control" #ListIdInput="ngModel" [(ngModel)]="task.listId" name="listId" noSpaceValidator="{{task.listId}}" required />
+                        <div *ngIf="ListIdInput.errors && (ListIdInput.dirty || ListIdInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!ListIdInput.errors.noSpaceValidator && !ListIdInput.errors.required">
+                                {{l('ListIdInput')}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="outputQuantity">{{l("outputQuantity")}} *</label>
+                    <div class="ui-fluid">                        
+                            <input type="text" digitOnly class="form-control" [popover]="outputQuantity" placement="top" triggers="mouseenter:mouseleave" [(ngModel)]="task.outputQuantity" name="outputQuantity" required/>
+                        <ng-template #outputQuantity>
+                            <div>
+                                <span>{{l("ZeroMeansAll")}}</span>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="outputType">{{l("OutputType")}}</label>
+                    <div class="ui-fluid">
+                        <p-dropdown [options]="outputTypeList" [(ngModel)]="task.outputType" (onChange)="onOutputTypeChange($event)" name="outputType"></p-dropdown>
+                    </div>                    
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="tableType">{{l("TableType")}}</label>
+                    <div>
+                        <p-radioButton name="tableType" value="1" label="Before conversion" [(ngModel)]="task.tableType"
+                                       [style]="{'margin':'8px'}">
+                        </p-radioButton>
+                        <p-radioButton name="tableType" [style]="{'margin':'8px'}" value="0" label="After conversion"
+                                       [(ngModel)]="task.tableType">
+                        </p-radioButton>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="fields">{{l("Fields")}}</label>
+                    <div class="ui-fluid">
+                        <textarea class="form-control" id="fields" [(ngModel)]="task.fields" name="fields"></textarea>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="selection">{{l("SelectionsLabel")}}</label>
+                    <div class="ui-fluid">
+                        <textarea class="form-control" id="selection" [(ngModel)]="task.selection" name="selection"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                <button type="submit" class="btn btn-primary blue"
+                        [disabled]="!ExportListConversionForm.form.valid" [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')">
+                    <i class="fa fa-save"></i>
+                    <span>{{l("Save")}}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

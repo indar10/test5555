@@ -1,0 +1,65 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #ImportEmailHygieneDataForm="ngForm" novalidate (ngSubmit)="save(ImportEmailHygieneDataForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="taskId">{{l("ImportEmailHygieneDataForm")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <general-database-build (taskGeneral)="storeTaskGeneral($event)" [taskID]="taskId"></general-database-build>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="matchField">{{l("matchField")}} *</label>
+                    <div class="ui-fluid">
+                        <p-dropdown [required]="true" [options]="matchField" (onChange)="onImportMatchFieldChange($event)"
+                                    [filter]="true" [(ngModel)]="task.matchField" name="matchField"></p-dropdown>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="flagField">{{l("flagField")}} *</label>
+                    <div class="ui-fluid">
+                        <p-dropdown [required]="true" [options]="flagField" (onChange)="onImportFlagFieldChange($event)"
+                                    [filter]="true" [(ngModel)]="task.flagField" name="flagField"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="fileName">{{l("cFileName")}} *</label>
+                    <div class="ui-fluid">
+                        <input type="text" class="form-control" #fileNameInput="ngModel" [(ngModel)]="task.fileName" name="fileName" required pattern="^[\w,\s-]+\.[A-Za-z]{3}$" />
+                        <div *ngIf="fileNameInput.errors && (fileNameInput.dirty || fileNameInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!fileNameInput.errors.pattern">
+                                {{l('InvalidFileName')}}
+                            </div>
+                            <div [hidden]="!fileNameInput.errors.required">
+                                {{l('FileNameRequired')}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="filePath">{{l("cFilePath")}}</label>
+                    <div class="ui-fluid">
+                        <input type="text" class="form-control" [(ngModel)]="task.filePath" name="filePath" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                <button type="submit" class="btn btn-primary blue"
+                        [disabled]="!ImportEmailHygieneDataForm.form.valid" [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')">
+                    <i class="fa fa-save"></i>
+                    <span>{{l("Save")}}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

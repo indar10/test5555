@@ -1,0 +1,119 @@
+select {
+    color: rgb(87, 89, 98);
+    display: block;
+    height: 37.1875px;
+    text-decoration: none solid rgb(87, 89, 98);
+    width: 750px;
+    column-rule-color: rgb(87, 89, 98);
+    perspective-origin: 375px 18.5938px;
+    transform-origin: 375px 18.5938px;
+    caret-color: rgb(87, 89, 98);
+    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box padding-box;
+    border: 1px solid rgb(235, 237, 242);
+    border-radius: 3.5px 3.5px 3.5px 3.5px;
+    font: normal normal 400 normal 14px / 17.5px sans-serif, Arial;
+    outline: rgb(87, 89, 98) none 0px;
+    padding: 9.1px 14px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
+
+/*#INPUT_1*/
+select option {
+    font-size: 16px;
+
+}
+
+.modal-title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.actions-menu {
+    z-index: 1100;
+}
+
+/* #builder  {
+    border: 1px solid black;
+}
+btn .btn-xs .btn-success{
+    width: 45%
+} */
+/* #builder_group_0 {
+    width: 100%
+} */
+.centreButton {
+    text-align: center;
+}
+
+.modal-lg1 {
+    max-width: 90%;
+}
+
+
+#test123 {
+    margin-left: 20px;
+}
+
+.modal-footer {
+    justify-content: space-between !important;
+}
+
+.segment-value {
+    display: inline-block;
+    width: 375px;
+    margin-left: 5px;
+}
+
+.segment-label {
+    display: inline-block;
+}
+
+.segment-select {
+    display: inline-block;
+}
+
+.action-select {
+    display: flex;
+    margin-left: 3px;
+    margin-right: 5px;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.quick-count__value {
+    margin-left: 10px;
+    font-weight: 500;
+    color: #434349;
+}
+
+@media (max-width: 1024px) {
+    .modal-title {
+        width: 100%
+    }
+
+    .segment-select {
+        display: flex;
+    }
+
+    .segment-label {
+        margin-bottom: 0px;
+    }
+
+    .segment-label__value {
+        width: 123px;
+        margin-top: 0.5rem;
+    }
+
+    .segment-value {
+        display: inline-block;
+        width: 100%;
+        max-width: 375px;
+        margin-left: 10px;
+    }
+
+    .action-select {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
+    }
+}

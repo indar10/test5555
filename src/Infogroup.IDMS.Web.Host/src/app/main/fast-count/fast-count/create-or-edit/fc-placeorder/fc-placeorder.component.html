@@ -1,0 +1,408 @@
+<div class="modal-content" [busyIf]="isLoading || isSaving">
+  <form autocomplete="off" #placeOrderForm="ngForm" (ngSubmit)="save(placeOrderForm)">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <span>Place Order</span>
+      </h4>
+      <button
+        type="button"
+        class="close"
+        (click)="close()"
+        aria-label="Close"
+        [disabled]="isLoading"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <ul
+        ngbNav
+        #tabnav="ngbNav"
+        [activeId]="activeNav"
+        (navChange)="onNavChange($event)"
+        [(activeId)]="activeNav"
+        class="nav-tabs"
+      >
+        <li [ngbNavItem]="1" id="tab1" [disabled]="isEditLayout">
+          <a ngbNavLink>Customer</a>
+          <ng-template ngbNavContent>
+            <div class="form-group">
+              <label for="Segment_iRequiredQty"
+                >{{ l("RequiredQuantity") }} *</label
+              >
+              <input
+                type="text"
+                maxNumber="2147483647"
+                #requiredQuantityInput="ngModel"
+                id="Segment_iRequiredQty"
+                class="form-control"
+                [(ngModel)]="requiredQuantityValue"
+                valueValidator="^\bALL AVAILABLE\b$|^\d+$"
+                name="iRequiredQty"
+                (keydown)="onRequiredQuantityKeyDown($event)"
+                required
+              />
+              <div
+                *ngIf="
+                  requiredQuantityInput.errors &&
+                  (requiredQuantityInput.dirty || requiredQuantityInput.touched)
+                "
+                class="form-control-feedback"
+              >
+                <div [hidden]="!requiredQuantityInput.errors.valueValidator">
+                  {{ l("enterValidValue") }}
+                </div>
+              </div>
+              <div
+                *ngIf="
+                  requiredQuantityInput.errors &&
+                  (requiredQuantityInput.dirty || requiredQuantityInput.touched)
+                "
+                class="form-control-feedback"
+              >
+                <div [hidden]="!requiredQuantityInput.errors.maxNumber">
+                  {{ l("maxIntSize") }}
+                </div>
+              </div>
+              <validation-messages
+                [formCtrl]="requiredQuantityInput"
+              ></validation-messages>
+            </div>
+            <div class="form-group">
+              <label for="Mailer">{{ l("Customer") }} *</label>
+              <div class="ui-fluid">
+                <p-autoComplete
+                  [minLength]="2"
+                  field="label"
+                  name="mailer"
+                  [dropdown]="true"
+                  #mailerInput="ngModel"
+                  [forceSelection]="true"
+                  (completeMethod)="searchMailers($event)"
+                  [(ngModel)]="campaign.generalData.mailer"
+                  [suggestions]="mailers"
+                  required
+                >
+                </p-autoComplete>
+                <validation-messages
+                [formCtrl]="mailerInput"
+              ></validation-messages>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="outputShipTo">{{ l("ShipToLabel") }} *</label>
+              <p-dropdown
+                #shipToInput="ngModel"
+                [filter]="true"
+                [style]="{ width: '100%' }"
+                [options]="campaign.getOutputData.shipToList"
+                [(ngModel)]="selectedOutputShipTo"
+                editable="true"
+                name="outputShipTo"
+                (keydown)="shipToKeyDown($event)"
+                (onChange)="onShipToDropdownChange($event)"
+                id="outputShipTo"
+                emailValidator="(([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)(\s*;\s*|\s*$))*"
+                required
+              >
+              </p-dropdown>
+              <div
+                *ngIf="
+                  shipToInput.errors &&
+                  (shipToInput.dirty || shipToInput.touched)
+                "
+                class="form-control-feedback"
+              >
+                <div [hidden]="!shipToInput.errors.emailValidator">
+                  {{ l("InvalidEmailAddress") }}
+                </div>
+              </div>
+              <validation-messages
+                [formCtrl]="shipToInput"
+              ></validation-messages>
+            </div>
+            <div class="form-group">
+              <label for="lvaOrderNo">{{ l("PO#") }} *</label>
+              <input
+                id="lvaOrderNo"
+                #lvaOrderNo="ngModel"
+                type="text"
+                class="form-control"
+                [(ngModel)]="campaign.billingData.lvaOrderNo"
+                name="lvaOrderNo"
+                required
+              />
+              <validation-messages
+                [formCtrl]="lvaOrderNo"
+              ></validation-messages>
+            </div>
+            <div class="form-group">
+                <label for="Channel">{{l("Channel")}} *</label>
+                <div>
+                    <p-radioButton name="cChannelType" value="P" label="Postal" [(ngModel)]="campaign.generalData.cChannelType"
+                                    [style]="{'margin':'8px'}" inputId="cChannelType1">
+                    </p-radioButton>
+                    <p-radioButton name="cChannelType" [style]="{'margin':'8px'}" value="T" label="Tele-marketing"
+                                    [(ngModel)]="campaign.generalData.cChannelType" inputId="cChannelType2">
+                    </p-radioButton>
+                    <p-radioButton name="cChannelType" [style]="{'margin':'8px'}" value="E" label="Email "
+                                    [(ngModel)]="campaign.generalData.cChannelType" inputId="cChannelType3">
+                    </p-radioButton>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="campaign.generalData.cChannelType == 'T'">
+                <label for="sanNumber">{{l('SAN#')}}</label>
+                <input id="sanNumber" #sanNumber="ngModel" type="text" class="form-control"
+                        [(ngModel)]="campaign.billingData.sanNumber" name="sanNumber" />
+            </div>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="2" id="tab2">
+          <a ngbNavLink>Layout</a>
+          <ng-template ngbNavContent>
+            <div *ngIf="!isEditLayout">
+              <div class="form-group">
+                <label>{{ l("LayoutLabel") }} *</label>
+                <p-dropdown
+                  [filter]="true"
+                  #Layout
+                  name="outputLayout"
+                  [options]="campaign.getOutputData.layoutlist"
+                  [(ngModel)]="campaign.campaignOutputDto.layout"
+                  [style]="{ width: '100%' }"
+                  placeholder="Select Layout"
+                  (onChange)="onLayoutDropdownChange()"
+                  required
+                >
+                </p-dropdown>
+                <validation-messages
+                [formCtrl]="Layout"
+              ></validation-messages>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label>Existing Fields</label>
+                    <ol
+                      style="
+                        display: grid;
+                        gap: 0.5rem;
+                        max-height: 250px;
+                        overflow-y: auto;
+                      "
+                    >
+                      <li *ngFor="let item of layoutExistingFields">
+                        {{ item.outputFieldName }}
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="isEditLayout">
+              <div class="form-group">
+                <label
+                  >{{ l("LayoutLabel") }}:
+                  <span class="font-weight-bold"
+                    >{{ getLayoutDescription() }}
+                  </span>
+                </label>
+              </div>
+              <div class="row m-0">
+                <div class="form-group">
+                  <label>{{ l("Add New Fields") }}</label>
+                  <p-multiSelect
+                    [showToggleAll]="false"
+                    [style]="{ width: '100%' }"
+                    style="width: 100%; padding: 0.3em"
+                    [options]="exportLayoutAddFields"
+                    name="fields"
+                    [(ngModel)]="selectedAvailableFields"
+                  >
+                  </p-multiSelect>
+                </div>
+                <button
+                  class="btn icons-edited-primary"
+                  type="button"
+                  style="float: right; padding-top: 25px"
+                  placement="right"
+                  ngbTooltip="Add Fields"
+                  (click)="addFields()"
+                  [disabled]="isLoading || !selectedAvailableFields.length"
+                >
+                  <i class="fa fa-plus fa-lg"></i>
+                </button>
+              </div>
+              <div class="form-group primeng-datatable-container col-12">
+                <p-table
+                  #dataTable
+                  dataKey="id"
+                  [value]="layoutExistingFields"
+                  ScrollWidth="100%"
+                  scrollHeight="250px"
+                  [scrollable]="true"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width: 300px">Existing Fields</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template
+                    pTemplate="body"
+                    let-record="$implicit"
+                    let-expanded="expanded"
+                  >
+                    <tr>
+                      <td style="width: 300px">
+                        {{ record.outputFieldName }}
+                      </td>
+                      <td style="width: 100px">
+                        <i
+                          *ngIf="isEditLayout"
+                          class="fa fa-trash"
+                          aria-hidden="true"
+                          (click)="deleteField(record.id)"
+                        ></i>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="3" id="tab3" [disabled]="isEditLayout">
+          <a ngbNavLink>Documents</a>
+          <ng-template ngbNavContent>
+            <p-table
+              #dataTable
+              [value]="campaign.documentsData"
+              class="documentsTable"
+            >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 25%">
+                    {{ l("DocumentType") }}
+                  </th>
+                  <th style="width: 20%">
+                    {{ l("File") }}
+                  </th>
+                  <th style="width: 10%">
+                    {{ l("") }}
+                  </th>
+                  <th style="width: 5%"></th>
+                </tr>
+              </ng-template>
+              <ng-template
+                pTemplate="body"
+                let-record="$implicit"
+                let-i="rowIndex"
+              >
+                <tr *ngIf="record.action != 3">
+                  <td style="width: 25%">
+                    {{ record.formType }}
+                  </td>
+                  <td style="width: 20%">
+                    <a
+                      href="javascript:;"
+                      (click)="downloadAttachment(record.code)"
+                      >{{ record.cFileName }}</a
+                    >
+                  </td>
+                  <td style="width: 10%" class="dropdown-excel-operations">
+                    <p-fileUpload
+                      #PDFFileUpload
+                      customUpload="true"
+                      mode="basic"
+                      accept="application/pdf,image/png,image/gif,image/jpeg,application/msword,.gzip,.zip,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                      (uploadHandler)="
+                        uploadFile($event, PDFFileUpload, record)
+                      "
+                      (onError)="onUploadError()"
+                      [auto]="true"
+                      [disabled]="
+                        campaign.currentStatus > 100 || record.cFileName
+                      "
+                    ></p-fileUpload>
+                  </td>
+                  <td style="width: 5%" class="text-center">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-dangerous"
+                      [hidden]="campaign.currentStatus > 100"
+                    >
+                      <i
+                        class="fa fa-trash fa-lg"
+                        (click)="deleteOrderAttachment(record.id)"
+                      ></i>
+                    </button>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="tabnav" class="mt-2"></div>
+    </div>
+    <div class="modal-footer">
+      <button
+        [disabled]="isLoading"
+        *ngIf="activeNav == 1"
+        type="button"
+        class="btn btn-default btn-sm"
+        (click)="close()"
+      >
+        {{ l("Cancel") }}
+      </button>
+      <button
+        [disabled]="isLoading"
+        *ngIf="activeNav == 1"
+        type="button"
+        class="btn btn-primary btn-sm blue"
+        (click)="selectNext(2)"
+      >
+        {{ l("Next - Select Layout") }}
+      </button>
+      <button
+        *ngIf="activeNav == 2 && !isEditLayout"
+        type="button"
+        class="btn btn-primary btn-sm blue mr-auto"
+        (click)="editLayout()"
+      >
+        <i class="fa fa-pen-to-square"></i>
+        {{ l("Edit Layout") }}
+      </button>
+      <button
+        [disabled]="isLoading"
+        *ngIf="activeNav == 2 || activeNav == 3"
+        type="button"
+        class="btn btn-sm btn-default"
+        (click)="goBackToLayout()"
+      >
+        {{ l("Previous") }}
+      </button>
+      <button
+        [disabled]="isLoading"
+        *ngIf="activeNav == 2"
+        type="button"
+        class="btn btn-primary btn-sm blue"
+        (click)="selectNext(3)"
+      >
+        {{ l("Next - Upload Documents") }}
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary btn-sm blue"
+        [disabled]="
+          !placeOrderForm.form.valid || isLoading
+        "
+        [buttonBusy]="isSaving"
+        [busyText]="l('SavingWithThreeDot')"
+      >
+        <i class="fa fa-save"></i>
+        <span>{{ l("Place Order") }}</span>
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,51 @@
+<div [busyIf]="isLoading" class="kt-login__form" [@routerTransition] id="TenantDashboard">
+    <div class="kt-subheader kt-grid__item">
+        <div class="kt-subheader__main">
+            <h3 class="kt-subheader__title dashboard-title">
+                <span>{{"Dashboard" | localize}}</span>
+            </h3>
+            <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+            <span class="kt-subheader__desc">
+                {{"DashboardHeaderInfo" | localize}}
+            </span>
+        </div>
+    </div>
+    <div class="col-md-12 col-sm-12">
+        <div class="kt-portlet kt-portlet--height-fluid">
+            <div *ngIf="reports?.length > 1" class="kt-portlet__head content-box">
+                <div *ngIf="reports?.length > 1 else multipleReports" class="col-md-7">
+                    <span class="kt-portlet__head-title select-report">{{l("SelectReport")}} </span>
+                    <p-dropdown id="reportDropdown" [options]="reportOptions" [filter]="true" (onChange)="showReport()"
+                                name="report-Dropdown" [style]="{'width':'250px'}" [(ngModel)]="selectedReportId">
+                    </p-dropdown>
+                </div>
+                <ng-template #multipleReports>
+                    <div  class="col-md-7">
+                        <span class="kt-portlet__head-title select-report">{{l("Report")}} </span>
+                         <label class="name-label">{{selectedReport?.cReportName}}</label>
+                    </div>
+                </ng-template>
+                
+                <div class="col-md-5" *ngIf="permission.isGranted('Pages.Dashboard.Edit')">
+                    <span class="kt-portlet__head-title select-report">{{l("SelectReportMode")}} </span>
+                    <p-radioButton name="groupMode" value="edit" (onClick)="switchReportMode()"
+                                   [style]="{'margin-left':'5px','margin-right':'1px'}" label="Edit"
+                                   [(ngModel)]="selectedMode">
+                    </p-radioButton>
+                    <p-radioButton name="groupMode" value="view" (onClick)="switchReportMode()"
+                                   [style]="{'margin-left':'15px','margin-right':'1px'}" label="View"
+                                   [(ngModel)]="selectedMode">
+                    </p-radioButton>
+                </div>
+            </div>
+
+            <div id="showcaseContent">            
+                <div id="showcaseEmbedArea">
+                    <div id="themes-embedded-view">
+                        <div id="embedContainer" style="height: 100%; width : 100% "></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

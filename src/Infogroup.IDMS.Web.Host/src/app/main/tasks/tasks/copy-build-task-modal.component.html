@@ -1,0 +1,53 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #CopyBuildForm="ngForm" novalidate (ngSubmit)="save(CopyBuildForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="taskId">{{l("CopyBuildForm")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <div class="row">
+                <div class="form-group col">
+                    <label for="sourceBuild">{{l("sourceBuild")}} *</label>
+                    <div class="ui-fluid">
+                        <input type="text" class="form-control" digitOnly #sourceBuildIDInput="ngModel"  [(ngModel)]="task.sourceBuild" name="sourceBuild" pattern="^[1-9][0-9]*$" required />
+                        <div *ngIf="sourceBuildIDInput.errors && (sourceBuildIDInput.dirty || sourceBuildIDInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!sourceBuildIDInput.errors.pattern">
+                                {{l('InvalidSourceBuildID')}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col">
+                    <label for="targetBuild">{{l("targetBuild")}} *</label>
+                    <div class="ui-fluid">
+                        <input type="text" class="form-control" digitOnly #targetBuildIDInput="ngModel"  [(ngModel)]="task.targetBuild" name="targetBuild" pattern="^[1-9][0-9]*$" required />
+                        <div *ngIf="targetBuildIDInput.errors && (targetBuildIDInput.dirty || targetBuildIDInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!targetBuildIDInput.errors.pattern">
+                                {{l('InvalidTargetBuildID')}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                <button type="submit" class="btn btn-primary blue"
+                        [disabled]="!CopyBuildForm.form.valid" [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')">
+                    <i class="fa fa-save"></i>
+                    <span>{{l("Save")}}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

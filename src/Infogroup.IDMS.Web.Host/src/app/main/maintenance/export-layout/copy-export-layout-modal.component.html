@@ -1,0 +1,118 @@
+﻿<div class="modal-content">
+    
+        <div class="modal-header">
+            <h1 class="modal-title">
+                <span>{{l('CopyExportLayoutScreen')}}</span>
+            </h1>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" style="padding-top:0px">
+            <form #copyLayoutForm="ngForm" novalidate autocomplete="off">
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label for="DatabaseFrom">{{l("DatabaseFrom")}} *</label>
+                        <div class="ui-fluid">
+                            <p-dropdown [required]="true" (onChange)="onDatabaseFromChange($event)" [options]="databaseList"
+                                        [filter]="true" #databaseFrom="ngModel" [(ngModel)]="copyExportLayoutDto.databaseFromId" name="databaseFrom">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label for="GrouFrom">{{l("GroupFrom")}} *</label>
+                        <div class="ui-fluid">
+                            <p-dropdown [required]="true" (onChange)="onGroupFromChange($event)" [options]="groupFromList"
+                                        [filter]="true" #groupFrom="ngModel" [(ngModel)]="copyExportLayoutDto.groupFromId" name="groupFrom"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label for="DatabaseTo">{{l("DatabaseTo")}} *</label>
+                        <div class="ui-fluid">
+                            <p-dropdown [required]="true" (onChange)="onDatabaseToChange($event)" [options]="databaseList"
+                                        [filter]="true" #databaseTo="ngModel" [(ngModel)]="copyExportLayoutDto.databaseToId" name="databaseTo">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                        <label for="GroupTo">{{l("GroupTo")}} *</label>
+                        <div class="ui-fluid">
+                            <p-dropdown [required]="true" (onChange)="onGroupToChange($event)" [options]="groupToList"
+                                        [filter]="true" #groupTo="ngModel" [(ngModel)]="copyExportLayoutDto.groupToId" name="groupTo"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+            </form>
+                <div class="row align-items-center">
+                    <!--<Primeng-Datatable-Start>-->
+                    <div class="primeng-datatable-container" [hidden]="isDisabled" [busyIf]="primengTableHelper.isLoading" style="max-height:600px;overflow:auto;">
+                        <p-table #dataTable
+                                 (onLazyLoad)="getAllExportLayout($event)"
+                                 [value]="primengTableHelper.records"
+                                 rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                 [paginator]="false"
+                                 [lazy]="true"
+                                 [scrollable]="true"
+                                 ScrollWidth="100%"
+                                 scrollHeight="300px"
+                                 [responsive]="primengTableHelper.isResponsive"
+                                 dataKey="id"
+                                 [resizableColumns]="primengTableHelper.resizableColumns"
+                                 [(selection)]="CopyExportLayout">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width:8%" pSortableColumn="ID">
+                                        {{l('ID')}}
+                                        <p-sortIcon field="ID"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 45%" pSortableColumn="cDescription">
+                                        {{l('cDescription')}}
+                                        <p-sortIcon field="cDescription"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 5%">
+                                        <p-tableHeaderCheckbox (click)="canSave()"></p-tableHeaderCheckbox>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex" let-expanded="expanded">
+                                <tr [pSelectableRow]="rowData">
+                                    <td style="width:8%">
+                                        <span class="ui-column-title"> {{l('ID')}}</span>
+                                        {{record.id}}
+                                    </td>
+                                    <td style="width:45%; ">
+                                        <span class="ui-column-title"> {{l('cDescription')}}</span>
+                                        {{record.description}}
+                                    </td>
+                                    <td style="width: 5%">
+                                        <p-tableCheckbox [value]="record" (click)="canSave()"></p-tableCheckbox>
+                                    </td>
+                                </tr>
+                            </ng-template>
+
+                        </p-table>
+                        <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{l('NoData')}}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <span class="total-records-count" style="margin-top:4%">
+                                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                            </span>
+                        </div>
+                    </div>
+                    <!--<Primeng-Datatable-End>-->
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button class="btn btn-primary blue"
+                            [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')" [disabled]="copyLayoutForm.form.invalid || !canAdd" (click)="copyExportLayout()">
+                        <i class="fa fa-save"></i>
+                        <span>{{l("Save")}}</span>
+                    </button>
+                </div>
+        </div>
+    
+</div>
+

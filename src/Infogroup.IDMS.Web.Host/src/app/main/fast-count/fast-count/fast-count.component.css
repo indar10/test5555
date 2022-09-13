@@ -1,0 +1,43 @@
+:host ::ng-deep .ui-orderlist-controls {
+  display: none;
+}
+
+body .p-orderlist .p-orderlist-controls {
+  display: none !important;
+}
+
+div[class="p-orderlist-controls"] {
+  display: none !important;
+}
+
+.list-group-item {
+  padding: 1rem !important;
+}
+
+.fc-grid-wrapper {
+  display: grid;
+  gap: 0.25rem;
+  grid-template-columns: 1fr 1.25fr 1fr;
+  background-color: lightgrey;
+  grid-auto-flow: column;
+  height: 100%;
+}
+
+.fc-filter {
+  font-size: 1.05rem;
+  color: #333333;
+}
+
+.range-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1rem;
+}
+
+.range-grid-inner {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+}

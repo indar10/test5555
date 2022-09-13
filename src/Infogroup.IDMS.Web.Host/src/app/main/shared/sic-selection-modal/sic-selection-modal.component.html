@@ -1,0 +1,294 @@
+<div id="SICControls" class="modal-content">
+    <div class="modal-header">
+        <h1 class="modal-title">
+            <span> {{l("IndustrySearchTitle")}}</span>
+        </h1>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div id="AdvanceSelectionGrids" [busyIf]="isSmartAddLoading" class="modal-body" style="padding-top:0px">
+        <form class="kt-form">
+            <div class="search-container mb-1 mt-2">
+                <div class="search-container__input">
+                    <div style="width: 99%;" class="form-group m-form__group align-items-center search-margin">
+                        <div class="input-group">
+                            <input singleLineConverter [(ngModel)]="filterText" name="filterText" autoFocus
+                                class="form-control m-input" [placeholder]="l('SearchSIC')" type="text">
+                            <span class="input-group-btn">
+                                <button (click)="getSICCodes()" class="btn btn-primary" type="submit">
+                                    <i class="flaticon-search-1" [attr.aria-label]="l('Search')"></i>
+                                </button>
+                                <span class="input-group-btn" [popover]="l('SmartAdd')" triggers="mouseenter:mouseleave"
+                                    style="margin-left: 2px;">
+                                    <button (click)="addSmartSelection()" class="btn btn-primary" type="button">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div id="SICSelect" class="search-container__options">
+                    <div class="search-controls">
+                        <p-selectButton [style]="{'height':'38.391px'}" name="sicLength" [options]="sicLengths"
+                            [(ngModel)]="selectedSICs.selectedLength">
+                        </p-selectButton>
+                        <label class="switch">
+                            <input (change)="sortSIC()" name="sortByCode" type="checkbox" id="IsSortByCode"
+                                [(ngModel)]="sortByCode" />
+                            <span class="slider round">
+                                <span style="padding-right:40px;" class="on">Sort By Code</span>
+                                <span class="off">Sort By Description</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-md-4 col-sm-12 sic-container tree-card">
+                <div class="kt-portlet kt-portlet--height-fluid ">
+                    <div class="kt-portlet__head">
+                        <div class="kt-portlet__head-label">
+                            <h3 class="kt-portlet__head-title">
+                                {{l("SICCodes")}}
+                            </h3>
+                        </div>
+                    </div>
+                    <div id="SICTree" class="kt-portlet__body">
+                        <div class="tree-container">
+                            <p-tree [emptyMessage]="'No Data'" [loading]="isTreeLoading" [value]="sicTree"
+                                selectionMode="checkbox" [(selection)]="selectedSICs.selectedNodes"
+                                [propagateSelectionUp]="false" [propagateSelectionDown]="false"
+                                (onNodeSelect)="onSICSelect($event)" (onNodeUnselect)=" onSICDeselect($event)">
+                            </p-tree>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12 sic-container table-card">
+                <div class="kt-portlet kt-portlet--height-fluid ">
+                    <div class="kt-portlet__head">
+                        <div class="kt-portlet__head-label">
+                            <h3 class="kt-portlet__head-title">
+                                {{l("Franchise")}}
+                            </h3>
+                        </div>
+                        <div class="kt-portlet__head-toolbar">
+                            <span class="filter-toggle" *ngIf="!showFranchiseFilters" [hidden]="franchises.length == 0"
+                                (click)="showFranchiseFilters=!showFranchiseFilters">
+                                <i class="fa fa-search-plus fa-lg" style="color:black" ngbTooltip="Show search"></i>
+
+                            </span>
+                            <span class="filter-toggle" *ngIf="showFranchiseFilters" [hidden]="franchises.length == 0"
+                                (click)="showFranchiseFilters=!showFranchiseFilters">
+                                <i class="fa fa-search-minus fa-lg" style="color:black" ngbTooltip="Hide search"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="kt-portlet__body" [ngClass]="{'portlet-body__grey': franchises.length > 0 }">
+                        <div class="primeng-datatable-container">
+                            <p-table #franchiseTable [value]="franchises" [scrollable]="true" scrollHeight="200px"
+                                [busyIf]="isFranchiseLoading" [responsive]="primengTableHelper.isResponsive"
+                                [resizableColumns]="primengTableHelper.resizableColumns"
+                                [(selection)]="selectedSICs.selectedfranchises">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 9%">
+                                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                        </th>
+                                        <th style="width: 20%" pSortableColumn="value">
+                                            {{'Code' | localize}}
+                                            <p-sortIcon field="listID"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 71%" pSortableColumn="label">
+                                            {{'Description' | localize}}
+                                            <p-sortIcon field="listName"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                    <tr [hidden]="!showFranchiseFilters">
+                                        <th style="width: 9%">
+                                        </th>
+                                        <th style="width: 20%">
+                                            <input pInputText type="text" class="column-filter"
+                                                (input)="franchiseTable.filter($event.target.value, 'value', 'contains')">
+                                        </th>
+                                        <th style="width: 71%">
+                                            <input pInputText type="text" class="column-filter"
+                                                (input)="franchiseTable.filter($event.target.value, 'label', 'contains')">
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr [pSelectableRow]="rowData">
+                                        <td style="width: 9%">
+                                            <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                                        </td>
+                                        <td style="width: 20%">
+                                            <span class="ui-column-title"> {{'Code' | localize}}</span>
+                                            {{record.value}}
+                                        </td>
+                                        <td style="width: 71%">
+                                            <span class="ui-column-title"> {{'Description' | localize}}</span>
+                                            {{record.label}}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="primeng-no-data" *ngIf="franchises.length == 0">
+                                {{'NoData' | localize}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12 sic-container table-card">
+                <div class="kt-portlet kt-portlet--height-fluid ">
+                    <div class="kt-portlet__head">
+                        <div class="kt-portlet__head-label">
+                            <h3 class="kt-portlet__head-title">
+                                {{l("Industry")}}
+                            </h3>
+                        </div>
+                        <div class="kt-portlet__head-toolbar">
+                            <span class="filter-toggle" *ngIf="!showIndustryFilters" [hidden]="industries.length == 0"
+                                (click)="showIndustryFilters=!showIndustryFilters">
+                                <i class="fa fa-search-plus fa-lg" style="color:black" ngbTooltip="Show search"></i>
+
+                            </span>
+                            <span class="filter-toggle" *ngIf="showIndustryFilters" [hidden]="industries.length == 0"
+                                (click)="showIndustryFilters=!showIndustryFilters">
+                                <i class="fa fa-search-minus fa-lg" style="color:black" ngbTooltip="Hide search"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="kt-portlet__body" [ngClass]="{'portlet-body__grey': industries.length > 0 }">
+                        <div class="primeng-datatable-container">
+                            <p-table #industryTable [value]="industries" [scrollable]="true" scrollHeight="200px"
+                                [busyIf]="isIndustryLoading" [responsive]="primengTableHelper.isResponsive"
+                                [resizableColumns]="primengTableHelper.resizableColumns"
+                                [(selection)]="selectedSICs.selectedindustries">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 9%">
+                                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                        </th>
+                                        <th style="width: 20%" pSortableColumn="value">
+                                            {{'Code' | localize}}
+                                            <p-sortIcon field="value"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 71%" pSortableColumn="label">
+                                            {{'Description' | localize}}
+                                            <p-sortIcon field="label"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                    <tr [hidden]="!showIndustryFilters">
+                                        <th style="width: 9%">
+                                        </th>
+                                        <th style="width: 20%">
+                                            <input class="column-filter" pInputText type="text"
+                                                (input)="industryTable.filter($event.target.value, 'value', 'contains')">
+                                        </th>
+                                        <th style="width: 71%">
+                                            <input class="column-filter" pInputText type="text"
+                                                (input)="industryTable.filter($event.target.value, 'label', 'contains')">
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr [pSelectableRow]="rowData">
+                                        <td style="width: 9%">
+                                            <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                                        </td>
+                                        <td style="width: 20%">
+                                            <span class="ui-column-title"> {{'Code' | localize}}</span>
+                                            {{record.value}}
+                                        </td>
+                                        <td style="width: 71%">
+                                            <span class="ui-column-title"> {{'Description' | localize}}</span>
+                                            {{record.label}}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="primeng-no-data" *ngIf="industries.length == 0">
+                                {{'NoData' | localize}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="AddControls" class="add-container">
+            <div class="add-container__controls">
+                <div class="add-button">
+                    <button (click)="addSelection()" style="padding-top: 5.02px;
+                            padding-bottom: 5px;" class="btn btn-primary blue">
+                        <i class="fa fa-plus"></i>
+                        <span>{{l("Add")}}</span>
+                    </button>
+                </div>
+                <div class="indicators" style="width: 270px;margin-top: 5px;">
+                    <div class="indicators" *ngFor="let indicator of indicators">
+                        <span [ngStyle]="{'background-color': indicator.color}"
+                            class="indicator-box"></span>{{indicator.name}}
+                    </div>
+                </div>
+            </div>
+            <div class="type-container">
+                <div class="sic-container">
+                    <p-selectButton [options]="sicTypes" [(ngModel)]="selectedSICs.selectedSICType"></p-selectButton>
+                </div>
+                <div class="sic-container">
+                    <p-selectButton [options]="operatorTypes" [(ngModel)]="selectedOperator">
+                    </p-selectButton>
+                </div>
+            </div>
+        </div>
+        <div class="primeng-datatable-container">
+            <p-table #SelectionTable [value]="selectedSICs.selections" [scrollable]="true" scrollHeight="200px"
+                [resizableColumns]="primengTableHelper.resizableColumns">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 17%" pSortableColumn="field.cQuestionDescription">
+                            {{'Field' | localize}}
+                            <p-sortIcon field="listID"></p-sortIcon>
+                        </th>
+                        <th style="width: 85%">
+                            {{'Value' | localize}}
+                        </th>
+                        <th style="width:5%"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                    <tr>
+                        <td style="width: 17%">
+                            <span class="ui-column-title"> </span>
+                            {{record.field.cQuestionDescription}}
+                        </td>
+                        <td style="width: 85%">
+                            <span class="ui-column-title"> </span>
+                            {{record.value}}
+                        </td>
+                        <td style="width:5%">
+                            <button type="button" class="btn btn-sm btn-dangerous" style="float: right">
+                                <i class="fa fa-trash fa-lg" (click)="delete(i)"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <div class="primeng-no-data" *ngIf="selectedSICs.selections.length == 0">
+                {{'NoData' | localize}}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button class="btn btn-primary blue" [disabled]="saving || selectedSICs.selections.length == 0"
+                [buttonBusy]="saving" (click)="save()" [busyText]="l('SavingWithThreeDot')">
+                <i class="fa fa-save"></i>
+                <span>{{l("Save")}}</span>
+            </button>
+        </div>
+    </div>

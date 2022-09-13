@@ -1,0 +1,71 @@
+<div [busyIf]="isLoading" class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+    <div class="kt-subheader kt-grid__item">
+        <div [class]="containerClass">
+            <div class="kt-subheader__main">
+                <h3 class="kt-subheader__title">
+                    <span>{{l("Fast Count Dashboard")}}</span>
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid'">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__body">
+                <div class="col-md-12 text-center">
+                    <h4>Start New Search</h4>
+                </div>
+                <div class="row justify-content-md-center">
+                    <div class="col-md-12 text-center">
+                        <h6>First, Select Database
+                        </h6>
+                    </div>
+                    <div class="card text-center col-md-3 m-4 border" *ngFor="let data of databases;let i = index;">
+                        <div class="card-body">
+                            <h6 class="card-title text-center">{{data.label.split(":")[0]}}</h6>
+                            <img [src]="data.value==1267 ? '/assets/common/images/B2C.jpg':'/assets/common/images/B2B.jpg'"
+                                class="img-fluid" alt="...">
+                            <p class="card-text text-center">
+                                <label>{{l("Channel")}}</label>
+                                <p-dropdown [options]="channelData" [(ngModel)]="data.channelType" name="ChannelData" [style]="{'width':'100%'}"></p-dropdown>
+                                <br>
+                                <br>
+                            </p>
+                        </div>
+                        <div class="card-footer text-muted text-center">
+                            <button typeof="button" type="button" class="btn btn-primary blue"
+                                (click)="onSaveCompaign(data)">
+                                Select Audience
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card text-center col-md-3 m-4 border" *ngIf="otherDatabases.length">
+                        <div class="card-body">
+                            <h6 class="card-title text-center">Other Databases...</h6>
+                            <img [src]="'/assets/common/images/OtherDBs.jpg'" class="img-fluid" alt="..." class="image">
+                            <p class="card-text text-center">
+                                <label>Database</label>
+                                <p-dropdown [options]="otherDatabases" [filter]="true"
+                                    filterPlaceholder="Search Database" #otherDatabasesDropdown name="database"
+                                    [style]="{'width':'100%'}"></p-dropdown>
+                                <br>
+                                <br>
+                                <label>{{l("Channel")}}</label>
+                                <p-dropdown [options]="channelData" [(ngModel)]="selectedChannelTypeForOtherDb" #otherChannelType name="ChannelData"
+                                    [style]="{'width':'100%'}"></p-dropdown>
+                                <br>
+                                <br>
+                            </p>
+                        </div>
+                        <div class="card-footer text-muted text-center">
+                            <button typeof="button" type="button" class="btn btn-primary blue"
+                                (click)="onSaveCompaign({value:otherDatabasesDropdown.selectedOption.value, channelType: selectedChannelTypeForOtherDb })">
+                                Select Audience
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <app-fc-category *ngIf="!isLoading"></app-fc-category> -->
+    </div>
+</div>

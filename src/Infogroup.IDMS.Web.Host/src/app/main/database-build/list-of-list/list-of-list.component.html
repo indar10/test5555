@@ -1,0 +1,210 @@
+<div>
+    <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+        <div class="kt-subheader kt-grid__item">
+            <div [class]="containerClass"> 
+                <div class="kt-subheader__main">
+                    <h3 class="kt-subheader__title">
+                        <span>{{l("ListOfList")}}</span>
+                    </h3>
+                    <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                    <span class="kt-subheader__desc">
+                        &nbsp;
+                        &nbsp;
+                        <label>Select Database </label>
+                        &nbsp;
+                        <div class="btn-group" dropdown>
+                            <p-dropdown [options]="databaseList" [filter]="true"
+                                        [style]="{'width':'200%'}" name="selectedDatabase"
+                                        id="selectedDatabase" 
+                                        [(ngModel)]="selectedDatabase" (onChange)="getAllListOfList()">
+                            </p-dropdown>
+                        </div>
+                    </span>
+                </div>
+                <div class="kt-subheader__toolbar">
+                    <div class="kt-subheader__wrapper">
+                        <div class="btn-group" dropdown >
+                            <button dropdownToggle type="button" class="btn btn-outline-success dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="far fa-file-excel"></i> {{"ExcelOperations" | localize}}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-excel-operations" *dropdownMenu>
+                                <a class="dropdown-item" id="ExportMailersToExcelButton" (click)="PrintListMailerAccess()"
+                                   href="javascript:;" >
+                                    <i class="fa fa-download" style="font-size: 1rem;"></i>
+                                    {{'Export Mailer Access' | localize}}
+                                </a>
+                                <a class="dropdown-item" id="ExportMailersToExcelButton"  (click)="PrintList()"
+                                   href="javascript:;">
+                                    <i class="fa fa-download" style="font-size: 1rem;"></i>
+                                    {{'Export Lists' | localize}}
+                                </a>
+                            </div>
+                        </div>
+                    <button class="btn btn-primary blue" (click)="createList()"> <i class="fa fa-plus"></i>New List</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid'">
+            <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__body">
+                    <form class="kt-form" autocomplete="off">
+                        <div>
+                            <div class="row align-items-center">
+                                <div class="col-xl-12">
+                                    <div class="form-group m-form__group align-items-center">
+                                        <div class="input-group">
+                                    <span class="input-group-btn" style="margin-right: 2px;">
+                                        <button [disabled]="isHelpDisabled" class="btn btn-primary help-button" containerClass="notesTemplate"
+                                                type="button" [popover]="notesTemplate" placement="right" [popoverTitle]="helpData.header"
+                                                triggers="mouseenter:mouseleave">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </span>
+                                    <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                    <span class="input-group-btn">
+                                        <button (click)="getAllListOfList()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                    </span>
+                                    <ng-template #notesTemplate>
+                                        <ol class="help-notes">
+                                            <ol class="help-notes" type="1">
+                                                <ul style="padding-left: 2px;">
+                                                    <li *ngFor="let example of helpData.examples">{{example}}</li>
+                                                </ul>
+                                            </ol>
+                                        </ol>
+                                    </ng-template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                                                   
+                        </div>
+                    </form>
+                    <div class="row align-items-center">
+                         
+                        <div class="primeng-datatable-container col-12"
+                             [busyIf]="primengTableHelper.isLoading">
+                             <p-table #dataTable   
+                             (onLazyLoad)="getAllListOfList($event)"                   
+                             [value]="primengTableHelper.records"
+                             rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                             [paginator]="false"
+                             [lazy]="true"
+                             [scrollable]="true"
+                             ScrollWidth="100%"
+                             [responsive]="primengTableHelper.isResponsive"
+                             [resizableColumns]="primengTableHelper.resizableColumns">
+                        <ng-template pTemplate="header"> 
+                            <tr>
+                                
+                                <th style="width: 8%" pSortableColumn="ListId">
+                                    {{l('ListId')}}                                     
+                                    <!-- <p-sortIcon field="ListId"></p-sortIcon> -->
+                                </th>
+                                <th style="width: 30%" pSortableColumn="List Name">
+                                    {{l('ListName')}} 
+                                    <!-- <p-sortIcon field="ListName"></p-sortIcon> -->
+                                </th>
+                                <th style="width: 15%" pSortableColumn="Code">
+                                    {{l('ListCode')}}
+                                    <!-- <p-sortIcon field="Code"></p-sortIcon> -->
+                                </th>
+                                <th style="width: 20%" pSortableColumn="List Manager">
+                                    {{l('ListManager')}}
+                                    <!-- <p-sortIcon field="ListManager"></p-sortIcon> -->
+                                </th>
+                                <th style="width: 20%" pSortableColumn="List Owner">
+                                    {{l('ListOwner')}}
+                                    <!-- <p-sortIcon field="ListOwner"></p-sortIcon> -->
+                                </th>
+                                <th style="width: 10%" pSortableColumn="Permission">
+                                    {{l('Permission')}}
+                                    <!-- <p-sortIcon field="Permission"></p-sortIcon> -->
+                                </th>
+                                <th style="width: 9%" pSortableColumn="Active">
+                                    {{l('iIsActive')}}
+                                    <!-- <p-sortIcon field="iIsActive"></p-sortIcon> -->
+                                </th>  
+                                <th style="width: 10%" class="action__column">
+                                {{l('Actions')}}
+                            </th>
+                      
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record="$implicit">
+                            <tr>                            
+                                <td style="width:8%">
+                                    <span class="ui-column-title">{{l('ListId')}} </span>
+                                     <a href="javascript:;"
+                                               (click)="createList(record.id,'Edit')">{{record.id}}</a>    
+                                </td>
+                                <td style="width:30%">
+                                    <span class="ui-column-title">  {{l('ListName')}}  </span>
+                                    {{record.cListName}}
+                                </td>
+                                <td style="width:15%">
+                                    <span class="ui-column-title">  {{l('ListCode')}} </span>
+                                    {{record.cCode}}
+                                </td>
+                                <td style="width:20%">
+                                    <span class="ui-column-title"> {{l('ListManager')}} </span>
+                                     {{record.managerName}} 
+                                </td>
+                                <td style="width:20%">
+                                    <span class="ui-column-title"> {{l('ListOwner')}} </span>
+                                    {{record.listOwner}}
+                                </td>
+                                <td style="width:10%">
+                                    <span class="ui-column-title">  {{l('Permission')}}</span>
+                                    {{record.permissionTypeValue}}
+                                </td>                                
+                                <td style="width:9%">
+                                    <span class="ui-column-title"> {{l('iIsActive')}} </span>
+                                    <span class="kt-badge kt-badge--success kt-badge--inline"
+                                                  *ngIf="record.iIsActive">{{'Yes' | localize}}</span>
+                                            <span class="kt-badge kt-badge--dark kt-badge--inline"
+                                                  *ngIf="!record.iIsActive">{{'No' | localize}}</span>                                      
+                                </td> 
+                                 
+                                    <td style="width:10%" class="action__column">
+                                        <div class="btn-group dropdown" dropdown container="body"
+                                            placement="bottom left">
+                                            <button class="dropdown-toggle btn btn-sm btn-primary"
+                                                aria-controls="dropdown-alignment" dropdownToggle>
+                                                <i class="fa fa-cog"></i><span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu left-dropdown" *dropdownMenu>
+                                                <li>
+                                                    <a href="javascript:;"  (click)="createList(record.id,'Copy')">Copy</a>
+                                                </li>
+                                                </ul>
+                                        </div>
+                                </td> 
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                        {{l('NoData')}}
+                    </div>
+                    <div class="primeng-paging-container">
+                        <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                                     #paginator
+                                     (onPageChange)="getAllListOfList($event)"
+                                     [totalRecords]="primengTableHelper.totalRecordsCount"
+                                     [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">                                     
+                        </p-paginator>
+                        <!-- (onPageChange)="getAll($event)" -->
+                        <span class="total-records-count">
+                             {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}                             
+                        </span>
+                    </div>
+                    </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

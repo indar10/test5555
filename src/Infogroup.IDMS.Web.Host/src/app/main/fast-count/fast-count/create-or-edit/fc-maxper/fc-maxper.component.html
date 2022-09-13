@@ -1,0 +1,86 @@
+<div class="modal-content" [busyIf]="isLoading">
+  <form autocomplete="off" #maxPerForm="ngForm" (ngSubmit)="save()">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <span>Max Contacts Per</span>
+      </h4>
+      <button
+        type="button"
+        class="close"
+        (click)="close()"
+        aria-label="Close"
+        [disabled]="isLoading"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" style="min-height: 250px;">
+      <div class="row">
+        <div class="col-md-6">
+          <label>{{ l("Field") }}</label>
+          <input
+            type="text"
+            style="visibility: hidden"
+            aria-label="Hidden field"
+            aria-hidden="true"
+          />
+          <!-- Above input is to avoid expression changed warning message on console -->
+          <p-dropdown
+            [options]="maxPerFieldsFastCountlevel"
+            [(ngModel)]="
+              campaign.maxPerData.getCampaignLevelMaxPerData
+                .cMaxPerFieldOrderLevel
+            "
+            scrollHeight="250px"
+            (onChange)="onMaxPerChange($event)"
+            name="CampaignLevelMaxPerField"
+            [style]="{ width: '100%' }"
+          >
+          </p-dropdown>
+        </div>
+        <div class="col-md-6">
+          <label>{{ l("MaximumQuantity") }}</label>
+          <input
+            type="text"
+            digitOnly
+            maxlength="6"
+            class="form-control"
+            [required]="
+              campaign.maxPerData.getCampaignLevelMaxPerData
+                .cMaxPerFieldOrderLevel
+            "
+            [disabled]="
+              !campaign.maxPerData.getCampaignLevelMaxPerData
+                .cMaxPerFieldOrderLevel
+            "
+            [(ngModel)]="
+              campaign.maxPerData.getCampaignLevelMaxPerData.cMaximumQuantity
+            "
+            name="ToQty"
+            style="width: 100%"
+          />
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="modal-footer">
+      <button
+        [disabled]="isLoading"
+        type="button"
+        class="btn btn-default"
+        (click)="close()"
+      >
+        {{ l("Cancel") }}
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary blue"
+        [buttonBusy]="isLoading"
+        [busyText]="l('SavingWithThreeDot')"
+        [disabled]="maxPerForm.pristine || !maxPerForm.form.valid"
+      >
+        <i class="fa fa-save"></i> <span>{{ l("Save") }}</span>
+      </button>
+    </div>
+  </form>
+</div>

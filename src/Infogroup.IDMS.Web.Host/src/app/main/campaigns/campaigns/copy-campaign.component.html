@@ -1,0 +1,110 @@
+<div class="modal-content">
+    <form *ngIf="active" #databaseForm="ngForm" novalidate (ngSubmit)="copyCampaign()" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="campaignId">{{l("CopyCampaignTitle")}}</span>
+
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <fieldset ngModelGroup="mainForm">
+                <div class="form-group">
+                    <label for="Description">{{l("Description")}} *</label>
+                    <input id="Description" maxLen="50" #descriptionInput="ngModel" type="text" class="form-control"
+                        [(ngModel)]="campaign.cDescription" name="cDescription"
+                        noSpaceValidator="{{campaign.cDescription}}" />
+                    <validation-messages [formCtrl]="descriptionInput"></validation-messages>
+                    <div *ngIf="descriptionInput.errors" class="form-control-feedback">
+                        <div [hidden]="!descriptionInput.errors.maxLen">
+                            {{l("maxLength50")}}
+                        </div>
+                        <div [hidden]="!descriptionInput.errors.noSpaceValidator">
+                            {{l("{0}IsRequired","Description")}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" *ngIf="customerVisible">
+                    <label for="Mailer">
+                        {{l("Customer")}} {{!campaign.divisionalDatabase ? '*' : ''}}
+                    </label>
+                    <div class="ui-fluid">
+                        <p-autoComplete *ngIf="divisionalDatabase;else mailerTemplate" #mailerInput="ngModel"
+                            name="mailer" [(ngModel)]="campaign.divisionalMailer" [delay]="500" [minLength]="2"
+                            field="label" [suggestions]="mailers" name="mailer" [dropdown]="true"
+                            (completeMethod)="searchMailers($event)" [forceSelection]="true">
+                        </p-autoComplete>
+                        <ng-template #mailerTemplate>
+                            <p-autoComplete #mailerInput="ngModel" [required]="!divisionalDatabase" [delay]="500"
+                                [minLength]="2" [(ngModel)]="campaign.mailer" field="label" [suggestions]="mailers"
+                                name="mailer" [dropdown]="true" (completeMethod)="searchMailers($event)"
+                                [forceSelection]="true" (onSelect)="onMailerSelect($event)">
+                            </p-autoComplete>
+                        </ng-template>
+                    </div>
+                </div>
+                <div *ngIf="brokerVisible && brokerVisibleOnCount" class="form-group">
+                    <label for="Broker">
+                        {{l("Broker")}} {{!campaign.divisionalDatabase ? '*' : ''}}
+                    </label>
+                    <div class="ui-fluid">
+                        <p-autoComplete #brokerInput="ngModel" [required]="!divisionalDatabase" name="broker"
+                            [delay]="500" [minLength]="2" [(ngModel)]="campaign.divisionalBroker" [suggestions]="brokers"
+                            field="label" [dropdown]="true" (completeMethod)="searchBrokers($event)"
+                            [forceSelection]="true">
+                        </p-autoComplete>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="offerVisibleOnCount">
+                    <label for="Offer">{{l("Offer")}} {{!campaign.divisionalDatabase ? '*' : ''}}</label>
+                    <div *ngIf="offerDDVisible;else offerTextBox" class="ui-fluid">
+                        <p-dropdown #offerDDInput="ngModel" [required]="!divisionalDatabase" [options]="offers"
+                            #offerDDInput="ngModel" placeholder="Select Offer" [filter]="true"
+                            [(ngModel)]="campaign.offerId" name="offerDD"></p-dropdown>
+                    </div>
+                    <ng-template #offerTextBox>
+                        <div class="ui-fluid">
+                            <input id="Offer" maxlength="50" type="text" #offerTxtInput="ngModel" class="form-control"
+                                [(ngModel)]="campaign.cOfferName" name="cOffer" />
+                        </div>
+                    </ng-template>
+                </div>
+                <div class="form-group">
+                    <label for="Build">{{l("Build")}} *</label>
+                    <div class="ui-fluid">
+                        <p-dropdown #buildInput="ngModel" [required]="true" [options]="builds" [filter]="true"
+                            [(ngModel)]="campaign.buildId" name="buildID"></p-dropdown>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>{{l("Copies")}} *</label>
+                    <div class="ui-fluid">
+                        <input type="text" #copy="ngModel" name="copies" class="form-control"
+                            [(ngModel)]="campaign.numberOfCopies" maxNumber="5" digitOnly required
+                            (keydown)="copyKeyDown($event)" />
+                        <validation-messages [formCtrl]="copy"></validation-messages>
+                        <div *ngIf="copy.errors && (copy.dirty || copy.touched)" class="form-control-feedback">
+                            <div [hidden]="!copy.errors.maxNumber">
+                                {{l("MaxCopies")}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="modal-footer">
+            <button [disabled]="copying" type="button" class="btn btn-default"
+                (click)="close()">{{l("Cancel")}}</button>
+            <button type="submit" class="btn btn-primary blue" [buttonBusy]="copying"
+                [disabled]="!databaseForm.form.valid || (!permission.isGranted('Pages.Campaigns.Create'))"
+                [busyText]="l('CopyingWithThreeDot')">
+                <i class="fa fa-save"></i>
+                <span>{{l("Copy")}}</span>
+            </button>
+        </div>
+    </form>
+</div>

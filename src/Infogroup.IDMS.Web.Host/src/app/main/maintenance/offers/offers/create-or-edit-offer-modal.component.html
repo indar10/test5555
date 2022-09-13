@@ -1,0 +1,80 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #offerForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="offer.id">{{l("EditOffer")}}</span>
+                <span *ngIf="!offer.id">{{l("CreateNewOffer")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Offer_id">{{l("ID")}} </label>
+                    <input type="text" id="Offer_id" class="form-control" [(ngModel)]="offer.id" name="id" [(hidden)]="!offer.id" [disabled]="offer.id" />
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Offer_MailercCompany">{{l("MailercCompany")}}</label>
+                    <input type="text" id="Offer_MailercCompany" maxlength="50" class="form-control" [(ngModel)]="mailercCompany" name="mailercCompany" [disabled]="mailercCompany" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Offer_cOfferName">{{l("cOfferName")}} *</label>
+                    <input type="text" id="Offer_cOfferName" #offerNameInput="ngModel" rows="1" class="form-control" maxlength="50" [(ngModel)]="offer.cOfferName" name="cOfferName" required noSpaceValidator="{{offer.cOfferName}}" />
+                    <div *ngIf="offerNameInput.errors && (offerNameInput.dirty || offerNameInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!offerNameInput.errors.noSpaceValidator">
+                            {{l('EnterOfferName')}}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Offer_LK_OfferType">{{l('LK_OfferType')}}</label><br />
+                    <p-dropdown [filter]="true" name="LK_OfferType" [style]="{'width':'100%'}"
+                                [options]="offerTypeValues" [(ngModel)]="offer.lK_OfferType"
+                                placeholder="Select Offer Type">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Offer_cOfferCode">{{l("cOfferCode")}} </label>
+                    <input type="text" id="Offer_cOfferCode" class="form-control" maxlength="15" [(ngModel)]="offer.cOfferCode" name="cOfferCode" />
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label class="switchL">
+                        <input type="checkbox" id="Offer_iHideInDWAP" [(ngModel)]="offer.iHideInDWAP" name="iHideInDWAP" checked />
+                        <span class="sliderl round">
+                            <span class="on textAllignL"> {{l("iHideInDWAP")}}</span><span class="off textAllignL"> {{l("iHideInDWAP")}}</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label class="switchPopup">
+                        <input type="checkbox" id="Offer_iIsActive" [(ngModel)]="offer.iIsActive" name="iIsActive" checked />
+                        <span class="slider round">
+                            <span class="on">Active</span><span class="off">Inactive</span>
+                        </span>
+                    </label>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6" *ngIf="!offer.id">
+                    <label class="switchN">
+                        <input type="checkbox" id="Offer_autoApprove" [(ngModel)]="offer.isAutoApprove" name="autoApprove" checked />
+                        <span class="sliderN round">
+                            <span class="on">Auto Approve</span><span class="off">Auto Approve</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button type="submit" class="btn btn-primary blue" [disabled]="!offerForm.form.valid || (!permission.isGranted('Pages.Offers.Edit') && offer.id)" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+        </div>
+    </form>
+</div>

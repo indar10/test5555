@@ -1,0 +1,47 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #LoadMailerUsageForm="ngForm" novalidate (ngSubmit)="save(LoadMailerUsageForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="taskId">{{l("LoadMailerUsageForm")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <general-database-build (taskGeneral)="storeTaskGeneral($event)"></general-database-build>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Build">{{l("newBuild")}} *</label>
+                    <div class="ui-fluid">
+                        <p-dropdown [required]="true" [options]="newBuildList"
+                                    [filter]="true" [(ngModel)]="task.newBuildID" name="newBuildID"></p-dropdown>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="listId">{{l("FileFullPath")}} *</label>
+                    <div class="ui-fluid">
+                        <input type="text" #filePathInput="ngModel" class="ui-inputtext ui-corner-all ui-state-default ui-widget" id="filePath" [(ngModel)]="task.filePath" name="filePath" pattern='^([a-zA-Z]\:|\\\\[^\/\\:*?"<>|]+\\[^\/\\:*?"<>|]+)(\\[^\/\\:*?"<>|]+)+(\.[^\/\\:*?"<>|]+)$' required/>
+                        <div *ngIf="filePathInput.errors && (filePathInput.dirty || filePathInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!filePathInput.errors.pattern">
+                                {{l("FilePathError")}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                <button type="submit" class="btn btn-primary blue"
+                        [disabled]="!LoadMailerUsageForm.form.valid" [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')">
+                    <i class="fa fa-save"></i>
+                    <span>{{l("Execute")}}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

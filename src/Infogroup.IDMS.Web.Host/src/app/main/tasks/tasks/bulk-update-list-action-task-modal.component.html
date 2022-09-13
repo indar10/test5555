@@ -1,0 +1,40 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #BulkUpdateListActionForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="taskId">{{l("BulkUpdateListActionForm")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <general-database-build (taskGeneral)="storeTaskGeneral($event)" [taskID]="taskId"></general-database-build>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="fileName">{{l("cFileName")}} *</label>
+                    <div class="ui-fluid">
+                        <input type="text" #filePathInput="ngModel" class="ui-inputtext ui-corner-all ui-state-default ui-widget" id="fileName" [(ngModel)]="task.fileName" name="fileName" pattern='^([a-zA-Z]\:|\\\\[^\/\\:*?"<>|]+\\[^\/\\:*?"<>|]+)(\\[^\/\\:*?"<>|]+)+(\.[^\/\\:*?"<>|]+)$' required />
+                        <div *ngIf="filePathInput.errors && (filePathInput.dirty || filePathInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!filePathInput.errors.pattern">
+                                {{l("FilePathError")}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                <button type="submit" class="btn btn-primary blue"
+                        [disabled]="!BulkUpdateListActionForm.form.valid" [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')">
+                    <i class="fa fa-save"></i>
+                    <span>{{l("Save")}}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

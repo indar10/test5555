@@ -1,0 +1,140 @@
+<div class="modal-content">
+    <form *ngIf="active" #databaseForm="ngForm" novalidate (ngSubmit)="copySegment()" autocomplete="off">
+        <div class="modal-header">
+            <h1 class="modal-title">
+                <span>{{l('CopySegmentLabel')}}</span>
+
+            </h1>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label class="switchPopup">
+                    <input type="checkbox" id="isAllOrFrom" [(ngModel)]="selectedCopyMode" name="isAllOrFrom" checked />
+                    <span class="slider round">
+                        <span class="on">From</span><span class="off">All</span>
+                    </span>
+                </label>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" [hidden]="!selectedCopyMode">
+                    <div class="row m--margin-bottom-10">
+                        <div class="col-md-6">
+                            <label>{{l('From#Label')}}</label>
+                            &nbsp;
+                            <input type="text" class="form-control" digitOnly #copySegmentFrom="ngModel" name="copySegmentFrom" [style]="{'width':'100%'}" [(ngModel)]="copySegmentDto.iSegmentFrom" numberRangeValidator="{{maxDedupeId}}" noSpaceValidator="{{copySegmentDto.iSegmentFrom}}" />
+
+                            <div *ngIf="copySegmentFrom.errors && (copySegmentFrom.dirty || copySegmentFrom.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!copySegmentFrom.errors.numberRangeValidator && !copySegmentFrom.errors.noSpaceValidator">
+                                    {{l("InvalidOrder")}}
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-6">
+                            <label>{{l('To#Label')}}</label>
+                            &nbsp;
+                            <input type="text" class="form-control" digitOnly #copySegmentTo="ngModel" name="copySegmentTo" [style]="{'width':'100%'}" [(ngModel)]="copySegmentDto.iSegmentTo" numberRangeValidator="{{maxDedupeId}}" noSpaceValidator="{{copySegmentDto.iSegmentTo}}" />
+
+                            <div *ngIf="copySegmentTo.errors && (copySegmentTo.dirty || copySegmentTo.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!copySegmentTo.errors.numberRangeValidator && !copySegmentTo.errors.noSpaceValidator">
+                                    {{l("InvalidOrder")}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row m--margin-bottom-10">
+                        <div class="col-md-6">
+                            <label>{{l('NumberofCopiesLabel')}}</label>
+                            &nbsp;
+                            <p-dropdown [options]="copiesOption" [(ngModel)]="copySegmentDto.iNumberOfCopies" name="copies" [style]="{'width':'100%'}"></p-dropdown>
+                        </div>
+                        <div class="col-md-6">
+                            <label>{{l('cMaxPerGroup')}}</label> <br />                            
+                                <div class="ui-fluid">                                    
+                                    <p-dropdown [options]="maxPerDrop" [(ngModel)]="copySegmentDto.cmaxPer" name="MaxPer" [style]="{'width':'100%'}"></p-dropdown>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="form-group">
+                    <label>{{l('CopySegmentDescriptionLabel')}}</label>
+                    <input type="text" class="form-control" [(ngModel)]="copySegmentDto.cSegmentDescription" name="description" maxlength="50" />
+                </div>
+                <div class="form-group">
+                    <div class="row m--margin-bottom-10">
+                        <div class="col-md-6">
+                            <label>{{l('KeyCode1Label')}}</label>
+                            <input type="text" class="form-control" #keyCode1Label="ngModel" [(ngModel)]="copySegmentDto.cKeyCode1" maxlength="50" name="keyCode1Label" pattern="[^']*$">
+                            <div *ngIf="keyCode1Label.errors && (keyCode1Label.dirty || keyCode1Label.touched)" class="form-control-feedback">
+                                <div [hidden]="!keyCode1Label.errors.pattern">
+                                    {{l("validKeyCode")}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>{{l('KeyCode2Label')}}</label>
+                            <input type="text" class="form-control" #keyCode2Label="ngModel" [(ngModel)]="copySegmentDto.cKeyCode2" maxlength="15" name="keyCode2Label" pattern="[^']*$">
+                            <div *ngIf="keyCode2Label.errors && (keyCode2Label.dirty || keyCode2Label.touched)" class="form-control-feedback">
+                                <div [hidden]="!keyCode2Label.errors.pattern">
+                                    {{l("validKeyCode")}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row m--margin-bottom-10">
+                        <div class="col-md-6">
+                            <label>{{l('RequiredQuantity')}}</label>
+                            <input type="text" maxNumber="2147483647" #requiredQuantityInput="ngModel" id="Segment_iRequiredQty" class="form-control" [(ngModel)]="copySegmentDto.iRequiredQty" valueValidator="^[0-9]*$"
+                                   name="iRequiredQty" (keydown)="onRequiredQuantityKeyDown($event)"/>
+                            <div *ngIf="requiredQuantityInput.errors && (requiredQuantityInput.dirty || requiredQuantityInput.touched)" class="form-control-feedback">
+                                <div [hidden]="!requiredQuantityInput.errors.valueValidator">
+                                    {{l("enterValidValue")}}
+                                </div>
+                            </div>
+                            <div *ngIf="requiredQuantityInput.errors && (requiredQuantityInput.dirty || requiredQuantityInput.touched)" class="form-control-feedback">
+                                <div [hidden]="!requiredQuantityInput.errors.maxNumber">
+                                    {{l("maxIntSize")}}
+                                </div>
+                            </div>
+                            <validation-messages [formCtrl]="requiredQuantityInput"></validation-messages>
+                        </div>
+                        <br />
+                        <div class="col-md-6">
+                            <label>{{l("NetGroup")}}</label>
+                            <div>
+                                <input type="text" #netGroupInput="ngModel" id="Segment_iGroup" class="form-control" [(ngModel)]="copySegmentDto.iGroup"
+                                        name="iGroup" maxNumber="2147483647" minNumber="1" pattern="^[0-9]*$"/>
+                                <div *ngIf="netGroupInput.errors && (netGroupInput.dirty || netGroupInput.touched)" class="form-control-feedback">
+                                    <div [hidden]="!netGroupInput.errors.maxNumber && !netGroupInput.errors.pattern">
+                                        {{l("NetGroupMaxValueValidationMsg")}}
+                                    </div>
+                                    <div [hidden]="!netGroupInput.errors.minNumber">
+                                        {{l("NetGroupMinValueValidationMsg")}}
+                                    </div>
+                                    <div [hidden]="!netGroupInput.errors.required">
+                                        {{l("NetGroupReuiredMsg")}}
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="copying" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button class="btn btn-primary blue" [disabled]="!databaseForm.form.valid || saveDisabled" [buttonBusy]="copying" [busyText]="l('CopyingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("CopySegmentButtonLabel")}}</span></button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,91 @@
+.kt-portlet .kt-portlet__body {
+    padding: 0rem 0.1rem 0.1rem 0.1rem !important;
+    min-height: 242px !important;
+}
+
+.portlet-body__grey {
+    background-color: #f4f4f4 !important;
+}
+
+.kt-portlet__head {
+    padding-left: 10px !important;
+    padding-right: 0rem !important;
+}
+
+
+.primeng-datatable-container .primeng-no-data {
+    border-color: white !important;
+}
+
+.kt-portlet .kt-portlet__head {
+    min-height: 45px !important;
+}
+
+.city-container {
+    padding-right: 2px;
+    padding-left: 3px;
+}
+
+#SICtoolbar input[type="radio"] {
+    display: none;
+}
+
+#SICtoolbar .sales-summary-chart svg.ngx-charts {
+    margin-left: -35px;
+    margin-top: 35px;
+}
+
+#SICtoolbar .kt-portlet__head-toolbar .btn-group .btn {
+    cursor: pointer;
+}
+
+
+.add-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1 100%;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.type-container {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    flex-grow: 4;
+}
+
+.column-filter {
+    width: 98%;
+}
+
+.indicators {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: Poppins;
+}
+
+.add-container__controls {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: Poppins;
+    flex-grow: 1;
+}
+
+.get-container_button {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.select-container {
+    display: flex;
+    justify-content: space-between;
+}
+.get-button{
+    padding-top: 4px;
+    padding-bottom: 4px;
+}

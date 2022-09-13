@@ -1,0 +1,406 @@
+<div class="no-gutters fc-grid-wrapper">
+  <div class="card rounded-0 pb-2 fc-filter">
+    <app-group-order-list
+      [options]="groupFilterOptions"
+      [group]="true"
+      [metaKeySelection]="false"
+      [filter]="true"
+      [listStyle]="{ height: '75vh' }"
+      filterPlaceHolder="Search selections..."
+      (onClick)="createComponent($event)"
+    >
+    </app-group-order-list>
+  </div>
+  <div class="card rounded-0">
+    <div class="card-body" *ngIf="isOptionAvailable">
+      <div class="row">
+        <div class="col-md-6">
+          <h6 class="card-title" style="color: black">
+            <b>{{ selectedFastCountAttribute["fc-description"] }}</b>
+          </h6>
+        </div>
+        <div
+          class="col-md-6 float-right"
+          *ngIf="
+            !isCustomSuppression && isSelectionField && !excludeAddAndOmitOption
+          "
+        >
+          <button
+            [disabled]="Edit == 0"
+            *ngIf="!excludeOmitOption"
+            [ngStyle]="{ 'pointer-events': Edit == 0 ? 'none' : 'auto' }"
+            class="btn btn-outline-warning btn-sm float-right ml-1"
+            (click)="onOmitTitleClick()"
+          >
+            <i class="fa fa-thumbs-down"></i>
+            <span>Omit</span></button
+          >&nbsp;
+          <button
+            [disabled]="Edit == 0"
+            [ngStyle]="{ 'pointer-events': Edit == 0 ? 'none' : 'auto' }"
+            class="btn btn-outline-success btn-sm float-right"
+            (click)="onAddTitleClick()"
+          >
+            <i class="fa fa-thumbs-up"></i>
+            <span>Add</span>
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="col-md-12 mt-2"
+        *ngIf="
+          selectedFastCountAttribute['default-input'] == 'textarea' &&
+          isSelectionField
+        "
+      >
+        <textarea
+          type="text"
+          rows="20"
+          class="form-control"
+          placeholder="Enter Text"
+          name="textforinput"
+          [(ngModel)]="textData"
+          [disabled]="isReadOnly()"
+        ></textarea>
+      </div>
+
+      <div
+        class="col-md-12 mt-2"
+        *ngIf="
+          selectedFastCountAttribute['default-input'] == 'select' &&
+          isSelectionField
+        "
+      >
+        <ul ngbNav #tabnav="ngbNav" [(activeId)]="active" class="nav-tabs">
+          <li [ngbNavItem]="1" id="tab1">
+            <a ngbNavLink>Choose from list</a>
+            <ng-template ngbNavContent>
+              <p-listbox
+                [options]="optionValues"
+                [(ngModel)]="selectedOptions"
+                [metaKeySelection]="false"
+                [checkbox]="true"
+                [multiple]="true"
+                [filter]="true"
+                optionLabel="cDescription"
+                [listStyle]="{
+                  height: '60vh',
+                  'font-size': '0.9rem',
+                  'font-weight': '600'
+                }"
+                [style]="{ width: '100%' }"
+                #myListbox
+              >
+                <ng-template *ngFor="let item of optionValues">
+                  <div>{{ item.cDescription }}</div>
+                </ng-template>
+              </p-listbox>
+            </ng-template>
+          </li>
+          <li [ngbNavItem]="2" id="tab2" *ngIf="displayBulkEnterChoice()">
+            <a ngbNavLink>Bulk enter manually</a>
+            <ng-template ngbNavContent>
+              <div class="col-md-12 mt-2">
+                <textarea
+                  type="text"
+                  class="form-control"
+                  name="textforinput"
+                  rows="20"
+                  [(ngModel)]="textData"
+                ></textarea>
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="tabnav" class="mt-2"></div>
+      </div>
+
+      <div
+        class="col-md-12 mt-2"
+        *ngIf="
+          selectedFastCountAttribute['default-input'] == 'range' &&
+          isSelectionField
+        "
+      >
+        <div class="py-2">
+          Note: {{ selectedFastCountAttribute["input-format"] }}
+        </div>
+        <div
+          *ngFor="let range of rangeData; let i = index"
+          class="range-grid mt-3"
+        >
+          <div class="range-grid-inner">
+            <label
+              for="from"
+              class="d-flex align-items-center justify-content-end"
+              >From&nbsp;<span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              id="from"
+              name="from"
+              [value]="range.from || ''"
+              [(ngModel)]="range.from"
+              autocomplete="off"
+              digitOnly
+            />
+          </div>
+          <div class="range-grid-inner">
+            <label
+              for="to"
+              class="d-flex align-items-center justify-content-end"
+              >To&nbsp;<span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control"
+              id="to"
+              name="to"
+              [value]="range.to || ''"
+              [(ngModel)]="range.to"
+              autocomplete="off"
+              digitOnly
+            />
+          </div>
+          <div class="d-flex align-items-center">
+            <button
+              class="btn btn-sm"
+              (click)="removeRangeData(i)"
+              *ngIf="rangeData.length > 1"
+            >
+              <i class="fas fa-times pr-0"></i>
+            </button>
+          </div>
+        </div>
+        <button
+          (click)="addNewRange()"
+          class="btn btn-sm btn-outline-primary float-right mt-3"
+          [ngClass]="rangeData.length === 1 ? 'mr-3' : ''"
+        >
+          <i class="fas fa-plus pr-0"></i>
+        </button>
+      </div>
+
+      <div class="col-md-12 mt-2" *ngIf="isCustomSuppression">
+        <h6
+          class="card-title"
+          style="color: black; font-weight: bold; height: 50px"
+        >
+        </h6>
+        <div class="btn-group text-right">
+          <div>
+            <button
+              class="btn btn-outline-primary"
+              (click)="openCustomSupressionModal()"
+            >
+              View Previous Uploads
+            </button>
+          </div>
+          &nbsp; &nbsp;
+          <div>
+            <button
+              class="btn btn-outline-primary"
+              (click)="openUploadListModal()"
+            >
+              Upload New List
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card rounded-0">
+    <div class="card-body">
+      <div class="row">
+        <button
+          typeof="button"
+          style="font-size: 1.15rem"
+          type="button"
+          class="btn btn-primary btn-block"
+          (click)="recalculateCount()"
+          [disabled]="!permissionForSaveCount || Edit == 0 || isRecalculating"
+          [buttonBusy]="isRecalculating"
+          [ngStyle]="{ 'pointer-events': Edit == 0 ? 'none' : 'auto' }"
+        >
+          Recalculate<br />
+        </button>
+        <div
+          *ngIf="isRecalculateFail"
+          class="text-danger text-center w-100 mt-3"
+        >
+          Last recalculate operation failed. Please try again.
+        </div>
+        <div
+          style="width: 100%; color: #130b18"
+          class="pt-2 text-center"
+          *ngIf="!isRecalculating"
+        >
+          <div style="font-size: 1.35rem; font-weight: 600">
+            Records: {{ currentQuickCount.toLocaleString() }}
+          </div>
+          <div style="font-size: 1.15rem">
+            <i
+              class="far fa-arrow-circle-up"
+              style="color: #26a68d"
+              *ngIf="this.previousQuickCount <= this.currentQuickCount"
+            ></i>
+            <i
+              class="far fa-arrow-circle-down"
+              style="color: #c7502e"
+              *ngIf="this.previousQuickCount > this.currentQuickCount"
+            ></i>
+            {{ getRecordCount() }}
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4 align-items-center">
+        <div class="col-md-6">Selects Chosen</div>
+        <div class="col-md-6 pull-right">
+          <button
+            [disabled]="Edit == 0"
+            [ngStyle]="{ 'pointer-events': Edit == 0 ? 'none' : 'auto' }"
+            class="btn btn-outline-danger btn-sm pull-right"
+            (click)="onClearClick(null)"
+          >
+            Clear All
+          </button>
+        </div>
+      </div>
+      <!-- MaxPerData -->
+      <div
+              class="row mt-2 align-items-center"
+      >
+        <div class="col-md-1 m-0">
+          <i class="fa fa-times" [style.display]="'none'"></i>
+        </div>
+        <div class="col-md-9 mb-1 mt-1">
+          <label
+                  (click)="openModalPopup('Maxper')"
+                  class="mb-0"
+                  [style]="{ 'margin-left': '50px' }">
+            Max Contacts Per
+          </label>
+        </div>
+        <div
+                class="col-md-2 pull-right"
+                [ngClass]="isMaxPerLoading ? '' : 'mb-1 mt-1'"
+        >
+          <span>
+            <i class="mr-2"></i>
+            <i class="mr-2"></i>
+            <i class="mr-2"></i
+            ></span>
+          <i class="fas fa-spinner fa-spin m-0" *ngIf="isMaxPerLoading"></i>
+          <span
+                  *ngIf="!isMaxPerLoading"
+                  class="badge badge-success badge-pill w-80"
+                  ng-reflect-ng-class="badge badge-success  badge-pil"
+                  [style]="{ 'margin-right': '20px' }"
+          >1</span
+          >
+        </div>
+      </div>
+      <!-- MaxPerData End -->
+      <div class="row mt-2 align-items-center" *ngIf="isOrderSuppression">
+        <div class="col-md-1 m-0">
+          <i class="fa fa-times" [style.display]="'none'"></i>
+        </div>
+        <div class="col-md-9 mb-1 mt-1">
+          <label class="mb-0" [style]="{ 'margin-left': '50px' }" (click)="openSupressionModal(true)" >
+            Order Suppression
+          </label>
+        </div>
+        <div class="col-md-2 pull-right" [ngClass]="isOrderSuppression ? '' : 'mb-1 mt-1'">
+          <span>
+            <i class="mr-2"></i>
+            <i class="mr-2"></i>
+            <i class="mr-2"></i></span>
+          <span class="badge badge-success badge-pill w-80" ng-reflect-ng-class="badge badge-success  badge-pil"
+            [style]="{ 'margin-right': '20px' }">{{orderSuppressionCount}}</span>
+        </div>
+      </div>
+      <div
+        class="row mt-2 align-items-center"
+        style="font-size: small"
+        *ngFor="let selections of dto.selections; let i = index"
+        [ngStyle]="{
+          'background-color': i === selected_row ? 'lightgray' : ''
+        }"
+      >
+        <div class="col-md-1 mb-1 mt-1">
+          <i class="fa fa-times" (click)="onClearClick(selections)"></i>
+        </div>
+        <div class="col-md-9 mb-1 mt-1">
+          <span (click)="getSelections(selections, i)">
+            {{ getFieldDescription(selections) }}
+          </span>
+        </div>
+        <div class="col-md-2 pull-right mb-1 mt-1">
+          <span>
+            <i
+              [ngStyle]="{
+                display: displayNotIn(selections) ? 'auto' : 'none'
+              }"
+              [ngClass]="
+                selections.cValueOperator === 'NOT IN' || selections.cValueOperator === 'NOT LIKE'
+                  ? 'fa fa-thumbs-down'
+                  : 'fa fa-thumbs-up'
+              "
+              class="mr-2"
+              (click)="gridAddOmitClick(selections)"
+            ></i
+          ></span>
+          <span
+            [ngStyle]="{
+              'margin-left': displayNotIn(selections) ? '' : '20px'
+            }"
+            [ngClass]="
+              selections.cValueOperator === 'NOT IN' || selections.cValueOperator === 'NOT LIKE'
+                ? 'badge badge-warning badge-pill w-80'
+                : 'badge badge-success  badge-pill w-80'
+            "
+            >{{ getSelectedAttributeLength(selections) }}</span
+          >
+        </div>
+      </div>
+    </div>
+    <div class="card-footer text-muted mt-1" style="background-color: white">
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <button
+            class="btn btn-outline-primary btn-block"
+            type="button"
+            (click)="openModalPopup('CountReport')"
+          >
+            Instant Breakdown
+          </button>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-6">
+          <button
+            class="btn btn-success btn-block"
+            (click)="openModalPopup('SaveCount')"
+            [disabled]="
+              !permissionForSaveCount || Edit == 0 || !currentQuickCount
+            "
+            [ngStyle]="{ 'pointer-events': Edit == 0 ? 'none' : 'auto' }"
+          >
+            <span>{{ l("Save Count") }}</span>
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button
+            class="btn btn-warning btn-block"
+            type="button"
+            [disabled]="isPlaceOrderDisabled()"
+            (click)="openModalPopup('PlaceOrder')"
+          >
+            Place Order
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-page-loader *ngIf="isLoading"></app-page-loader>

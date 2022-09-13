@@ -1,0 +1,215 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h1 class="modal-title">
+            <span> {{ globalChangesTitle | localize}}</span>
+        </h1>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" [busyIf]="isFieldsLoading" style="padding-top:0px">
+        <form #globalChangesForm="ngForm" class="kt-form">
+            <div class="search-container mb-1 mt-2">
+                <div class="search-container__input">
+                    <div style="width: 99%;" class="form-group m-form__group align-items-center search-margin">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button [disabled]="isHelpDisabled" class="btn btn-primary help-button" type="button"
+                                    [popover]="notesTemplate" [popoverTitle]="helpData.header"
+                                    triggers="mouseenter:mouseleave">
+                                    <i class="fa fa-question-circle"></i>
+                                </button>
+                            </span>
+                            <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input"
+                                [placeholder]="l('SearchGlobalChanges')" type="text">
+                            <span class="input-group-btn">
+                                <button (click)="getSegments()" class="btn btn-primary" type="submit">
+                                    <i class="flaticon-search-1" [attr.aria-label]="l('Search')"></i>
+                                </button>
+                            </span>
+                            <label *ngIf="selectedAction == actionType.EditSegments" class="switch">
+                                <input [disabled]="saving" (change)="switchMode()" name="sortByCode" type="checkbox"
+                                    id="IsSortByCode" [(ngModel)]="showEditableGrid" />
+                                <span class="slider round">
+                                    <span class="on">{{l('InlineEditLabel')}}</span>
+                                    <span class="off">{{l('InlineEditLabel')}}</span>
+                                </span>
+                            </label>
+                            <ng-template #notesTemplate>
+                                <ol class="help-notes">
+                                    <ol class="help-notes" type="1">
+                                        <ul style="padding-left: 2px;">
+                                            <li *ngFor="let example of helpData.examples">{{example}}</li>
+                                        </ul>
+                                    </ol>
+                                </ol>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div [hidden]="showEditableGrid">
+                <div id="AdvanceSelectionGrids" class="primeng-datatable-container"
+                    [busyIf]="primengTableHelper.isLoading">
+                    <p-table #segmentTable [value]="primengTableHelper.records" (onLazyLoad)="getSegments($event)"
+                        rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="false" [lazy]="true"
+                        [scrollable]="true" ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive"
+                        [resizableColumns]="primengTableHelper.resizableColumns">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 6%" pSortableColumn="iDedupeOrderSpecified">
+                                    {{l('iDedupeOrderSpecified')}}
+                                    <p-sortIcon field="iDedupeOrderSpecified"></p-sortIcon>
+                                </th>
+                                <th style="width: 28%" pSortableColumn="cDescription">
+                                    {{l('cDescription')}}
+                                    <p-sortIcon field="cDescription"></p-sortIcon>
+                                </th>
+                                <th style="width: 17%; text-align: right;" pSortableColumn="iRequiredQty">
+                                    {{l('iRequiredQty')}}
+                                    <p-sortIcon field="iRequiredQty"></p-sortIcon>
+                                </th>
+                                <th style="width: 17%; text-align: right;" pSortableColumn="iProvidedQty">
+                                    {{l('iProvidedQty')}}
+                                    <p-sortIcon field="iProvidedQty"></p-sortIcon>
+                                </th>
+                                <th style="width: 17%; text-align: right;" pSortableColumn="iAvailableQty">
+                                    {{l('iAvailableQty')}}
+                                    <p-sortIcon field="iAvailableQty"></p-sortIcon>
+                                </th>
+                                <th style="width: 12%" pSortableColumn="cKeyCode1">
+                                    {{l('cKeyCode1')}}
+                                    <p-sortIcon field="cKeyCode1"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record="$implicit">
+                            <tr>
+                                <td style="width: 6%">
+                                    <span class="ui-column-title"> {{l('iDedupeOrderSpecified')}}</span>
+                                    {{record.iDedupeOrderSpecified}}
+                                </td>
+                                <td style="width: 28%">
+                                    <span class="ui-column-title"> {{l('cDescription')}}</span>
+                                    {{record.cDescription}}
+                                </td>
+                                <td style="width: 18%; text-align: right;">
+                                    <span class="ui-column-title"> {{l('iRequiredQty')}}</span>
+                                    {{record.iRequiredQty | number}}
+                                </td>
+                                <td style="width: 18%; text-align: right;">
+                                    <span class="ui-column-title"> {{l('iProvidedQty')}}</span>
+                                    {{record.iProvidedQty | number}}
+                                </td>
+                                <td style="width: 18%; text-align: right;">
+                                    <span class="ui-column-title"> {{l('iAvailableQty')}}</span>
+                                    {{record.iAvailableQty | number}}
+                                </td>
+                                <td style="width: 12%">
+                                    <span class="ui-column-title"> {{l('cKeyCode1')}}</span>
+                                    {{record.cKeyCode1}}
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                        {{l('NoData')}}
+                    </div>
+                    <div class="primeng-paging-container">
+                        <p-paginator rows="{{primengTableHelper.defaultRecordsCountPerPage}}" #paginator
+                            (onPageChange)="getSegments($event)" [totalRecords]="primengTableHelper.totalRecordsCount">
+                        </p-paginator>
+                        <span class="total-records-count">
+                            {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                        </span>
+                    </div>
+                </div>
+                <div *ngIf="selectedAction == actionType.FindReplace || selectedAction == actionType.EditSegments"
+                    style="margin: 10px 0px;width: 100%;" class="row">
+                    <div class="col-md-4">
+                        <label class="control-title">{{l('SearchFor')}} *</label>
+                        <textarea name="findControl" #findControl="ngModel" [required]="findRequired"
+                            class="form-control" [style]="{'width':'100%'}" [(ngModel)]="findText"></textarea>
+                        <div *ngIf="findRequired && findControl.errors && (findControl.dirty || findControl.touched)"
+                            class="form-control-feedback global-error">
+                            <div [hidden]="!findControl.errors.required">
+                                {{l("FindRequiredMessage")}}
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="selectedAction != actionType.BulkCampaignHistory" class="col-md-4">
+                        <label class="control-title">{{l('ReplaceWith')}} {{replaceRequired ? '*' : ''}}</label>
+                        <textarea name="replaceControl" #replaceControl="ngModel" [required]="replaceRequired"
+                            class="form-control" [style]="{'width':'100%'}" [(ngModel)]="replaceText"></textarea>
+                        <div *ngIf="replaceRequired && replaceControl.errors && (replaceControl.dirty || replaceControl.touched)"
+                            class="form-control-feedback global-error">
+                            <div [hidden]="!replaceControl.errors.required">
+                                {{l("ReplaceRequiredMessage")}}
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="selectedAction != actionType.BulkCampaignHistory" class="col-md-4">
+                        <label class="control-title">{{l('FieldDescription')}}</label>
+                        <p-dropdown [disabled]="isFieldDisabled" [filter]="true" #fieldControl="ngModel"
+                            [required]="fieldRequired" name="fieldControl" [options]="fields"
+                            [(ngModel)]="selectedField" [style]="{'width':'100%'}">
+                        </p-dropdown>
+                        <div *ngIf="fieldRequired && fieldControl.errors && (fieldControl.dirty || fieldControl.touched)"
+                            class="form-control-feedback global-error">
+                            <div [hidden]="!fieldControl.errors.required">
+                                {{l("FieldRequiredMessage")}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="selectedAction == actionType.BulkCampaignHistory" style="margin: 10px 0px;width: 100%;"
+                    class="row">
+                    <label class="control-title">{{l('SearchFor')}} *</label>
+                    <textarea name="historySearchControl" singleLineConverter #historySearchControl="ngModel"
+                        pattern="^\,*\s*\d+(\s*\,*\s*\d+)*\s*\,*$" [required]="historySearchRequired"
+                        class="form-control" [style]="{'width':'100%'}" [(ngModel)]="campaignSearchText"></textarea>
+                    <div *ngIf="historySearchControl && historySearchControl.errors && (historySearchControl.dirty || historySearchControl.touched) else noError"
+                        class="form-control-feedback global-error">
+                        <div [hidden]="!historySearchControl.errors.required">
+                            {{l("FindRequiredMessage")}}
+                        </div>
+                        <div [hidden]="!historySearchControl.errors.pattern">
+                            {{l("CampaignHistoryPatternMessage")}}
+                        </div>
+                    </div>
+                    <ng-template #noError>
+                        <div style="height: 20.6px;width: 100%;">
+                        </div>
+                    </ng-template>
+                </div>
+                <div *ngIf="selectedAction == actionType.BulkCampaignHistory" id="SICSelect"
+                    class="row history-controls ">
+                    <p-selectButton name="optionControl" [options]="historyActions" [(ngModel)]="option">
+                    </p-selectButton>
+                    <p-selectButton name="operatorControl" [options]="operatorTypes" [(ngModel)]="includeExclude">
+                    </p-selectButton>
+                    <p-selectButton name="levelControl" [options]="levelTypes" [(ngModel)]="compareFieldName">
+                    </p-selectButton>
+                </div>
+            </div>
+            <batch-edit-segment [databaseId]="databaseId" [buildId]="buildId" [hidden]="!showEditableGrid"
+                [currentStatus]="currentStatus" [splitType]="splitType">
+            </batch-edit-segment>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+        <button type="button" class="btn btn-primary blue" (click)="save(!showSaveAndClose)"
+            [disabled]="saving || savingFromSave || (editablaGrid?.primengTableHelper.records?.length == 0 && showEditableGrid) || ((primengTableHelper.records?.length == 0 || globalChangesForm?.invalid ) && !showEditableGrid)"
+            [buttonBusy]="savingFromSave" [busyText]="l('SavingWithThreeDot')">
+            <i class="fa fa-save"></i>
+            <span>{{l("Save")}}</span>
+        </button>
+        <button *ngIf="showSaveAndClose" type="button" class="btn btn-primary blue" (click)="save(showSaveAndClose)"
+            [disabled]="saving || savingFromSave || (editablaGrid?.primengTableHelper.records?.length == 0 && showEditableGrid) || ((primengTableHelper.records?.length == 0 || globalChangesForm?.invalid ) && !showEditableGrid)"
+            [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
+            <i class="fa fa-save"></i>
+            <span>{{l("SaveAndClose")}}</span>
+        </button>
+    </div>
+</div>

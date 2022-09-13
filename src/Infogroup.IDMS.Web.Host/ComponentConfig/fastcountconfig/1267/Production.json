@@ -1,0 +1,833 @@
+{
+  "campaign-reference": {
+    "comment": "E: Email, P: Postal, T: Telemarketing",
+    "E": "1412874",
+    "P": "1412875",
+    "T": "1455758"
+  },
+  "broker": {
+    "value": 1500,
+    "label": "Exact Data : 1500"
+  },
+  "default-output-layout": "10775",
+  "groups": [
+    "Geography",
+    "Demographics",
+    "Suppression",
+    "Output Options"
+  ],
+  "selection-fields": {
+    "Actualincome": {
+      "field": "Actualincome",
+      "fc-description": "Actual Income",
+      "group": "Demographics",
+      "default-input": "range",
+      "group-values": false,
+      "input-format": "Restricted 7 digits input, example: 0005000 or 0500000 or 1000000"
+    },
+    "AddressLine1": {
+      "field": "AddressLine1",
+      "fc-description": "Custom Suppression - Address Line",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "AGE": {
+      "field": "AGE",
+      "fc-description": "Age",
+      "group": "Demographics",
+      "default-input": "range",
+      "group-values": false,
+      "xtab-report": "MainTable.AGE",
+      "input-format": "Numeric input"
+    },
+    "Age_Code": {
+      "field": "Age_Code",
+      "fc-description": "Age Code",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Age_Code",
+      "skip-option-sorting": true
+    },
+    "Address_MC": {
+      "field": "Address_MC",
+      "fc-description": "Custom Suppression - Address MC",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "ailments_flags": {
+      "field": "ailments_flags",
+      "fc-description": "Ailments",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.ailments_flags",
+      "skip-option-sorting": true
+    },
+    "BIRTHMONTH": {
+      "field": "BIRTHMONTH",
+      "fc-description": "Birth Month",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.BIRTHMONTH",
+      "skip-option-sorting": true
+    },
+    "BIRTHYEARMONTH": {
+      "field": "BIRTHYEARMONTH",
+      "fc-description": "Birth Year-Month (YYYYMM)",
+      "group": "Demographics",
+      "default-input": "range",
+      "group-values": false,
+      "xtab-report": "MainTable.BIRTHYEARMONTH",
+      "input-format": "Supported formats YYYY or YYYYMM or YYYYMMDD"
+    },
+    "bus_functionalareacode": {
+      "field": "bus_functionalareacode",
+      "fc-description": "Job Function",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "tblChild16.bus_functionalareacode"
+    },
+    "bus_contactliteraltitlecode": {
+      "field": "bus_contactliteraltitlecode",
+      "fc-description": "Job Title",
+      "group": "Demographics",
+      "default-input": "textarea",
+      "group-values": false,
+      "xtab-report": "tblChild16.bus_contactliteraltitlecode"
+    },
+    "bus_rolecode": {
+      "field": "bus_rolecode",
+      "fc-description": "Role",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "tblChild16.bus_rolecode"
+    },
+    "bus_professionaltitle": {
+      "field": "bus_professionaltitle",
+      "fc-description": "Professional Title",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "tblChild16.bus_professionaltitle"
+    },
+    "bus_cottagecode": {
+      "field": "bus_cottagecode",
+      "fc-description": "Work from home (Cottage Code)",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "tblChild16.bus_cottagecode"
+    },
+    "CellPhone": {
+      "field": "CellPhone",
+      "fc-description": "Cell Available",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": false,
+      "exclude-omit-option": true,
+      "exclude-bulk-input": true,
+      "options": {
+        "Cell Available": {
+          "cValueOperator": ">",
+          "cValues": "0",
+          "cValueMode": "T"
+        }
+      }
+    },
+    "CellPhone_Donotcallflag": {
+      "field": "CellPhone_Donotcallflag",
+      "fc-description": "Cell Phone Do Not Call Flag",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": false
+    },
+    "CellPhone_Areacode": {
+      "field": "CellPhone_Areacode",
+      "fc-description": "Cell Phone Area Code",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "xtab-report": "MainTable.CellPhone_Areacode"
+    },
+    "Census_Average_Years_Attended_School_Code": {
+      "field": "Census_Average_Years_Attended_School_Code",
+      "fc-description": "Average Years Attended School",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Census_Average_Years_Attended_School_Code",
+      "skip-option-sorting": true
+    },
+    "Census_Phhasian_Code": {
+      "field": "Census_Phhasian_Code",
+      "fc-description": "Percent Household Asian",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Census_Phhasian_Code",
+      "skip-option-sorting": true
+    },
+    "Census_Phhblack_Code": {
+      "field": "Census_Phhblack_Code",
+      "fc-description": "Percent Household Black",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Census_Phhblack_Code",
+      "skip-option-sorting": true
+    },
+    "Census_State_Code_2010": {
+      "field": "Census_State_Code_2010",
+      "fc-description": "Census Tract",
+      "group": "Geography",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Census_State_Code_2010"
+    },
+    "City": {
+      "field": "City",
+      "fc-description": "City",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "xtab-report": "MainTable.City",
+      "modal-popup": true
+    },
+    "Cbsa_Code": {
+      "field": "Cbsa_Code",
+      "fc-description": "Core Based Statistical Area CBSA",
+      "group": "Geography",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Cbsa_Code"
+    },
+    "Countryoforign": {
+      "field": "Countryoforign",
+      "fc-description": "Country Of Origin",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Countryoforign",
+      "skip-option-sorting": true
+    },
+    "children_Age_by_gender": {
+      "field": "children_Age_by_gender",
+      "fc-description": "Children Age By Gender",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "tblChild14.children_Age_by_gender",
+      "skip-option-sorting": true
+    },
+    "children_age_presence_flag": {
+      "field": "children_age_presence_flag",
+      "fc-description": "Children Age Presence Flag",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.children_age_presence_flag",
+      "skip-option-sorting": true
+    },
+    "Company_MC": {
+      "field": "Company_MC",
+      "fc-description": "Custom Suppression - Household MC",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "donor_flags": {
+      "field": "donor_flags",
+      "fc-description": "Donor Flag",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.donor_flags"
+    },
+    "EDUCATION_MODEL": {
+      "field": "EDUCATION_MODEL",
+      "fc-description": "Education",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.EDUCATION_MODEL",
+      "skip-option-sorting": true
+    },
+    "FirstName": {
+      "field": "FirstName",
+      "fc-description": "Custom Suppression - First Name",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "Fips_Code": {
+      "field": "Fips_Code",
+      "fc-description": "County Code FIPS",
+      "comment": "Check if lookup can be provided",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "modal-popup": true,
+      "readonly": true
+    },
+    "Csa_Code": {
+      "field": "Csa_Code",
+      "fc-description": "CSA Codes",
+      "group": "Geography",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Csa_Code",
+      "skip-option-sorting": true
+    },
+    "Delivery_Unit_Size_Raw": {
+      "field": "Delivery_Unit_Size_Raw",
+      "fc-description": "Delivery Unit Size",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Delivery_Unit_Size_Raw",
+      "skip-option-sorting": true
+    },
+    "MARKETAREA": {
+      "field": "MARKETAREA",
+      "fc-description": "DMA Codes",
+      "group": "Geography",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.MARKETAREA"
+    },
+    "Email_Deliverable": {
+      "field": "Email_Deliverable",
+      "fc-description": "Email Deliverable",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": false
+    },
+    "Email_Marketable": {
+      "field": "Email_Marketable",
+      "fc-description": "Email Marketable",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": false
+    },
+    "Email_Deployable": {
+      "field": "Email_Deployable",
+      "fc-description": "Email Deployment Flag",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": false,
+      "exclude-bulk-input": true,
+      "mask-options": {
+        "YES": "Email Deployment Flag Present"
+      }
+    },
+    "EmailAddress": {
+      "field": "EmailAddress",
+      "fc-description": "Custom Suppression - Email",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "cInclude": {
+      "field": "cInclude",
+      "fc-description": "Email Available",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": false
+    },
+    "Fulfillmentflag": {
+      "field": "Fulfillmentflag",
+      "fc-description": "Fullfillment Flag",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": false
+    },
+    "Gender": {
+      "field": "Gender",
+      "fc-description": "Gender",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Gender"
+    },
+    "Grandparent_In_House": {
+      "field": "Grandparent_In_House",
+      "fc-description": "Grandparent In House",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Grandparent_In_House",
+      "exclude-bulk-input": true,
+      "mask-options": {
+        "YES": "Grandparent In House"
+      }
+    },
+    "HOH_Head_Of_Household": {
+      "field": "HOH_Head_Of_Household",
+      "fc-description": "Head Of Household",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.HOH_Head_Of_Household",
+      "exclude-bulk-input": true,
+      "mask-options": {
+        "YES": "Head Of Household"
+      }
+    },
+    "HomeOwner": {
+      "field": "HomeOwner",
+      "fc-description": "Home Owner",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.HomeOwner"
+    },
+    "Home_Sale_Date": {
+      "field": "Home_Sale_Date",
+      "fc-description": "Home Sale Date",
+      "group": "Demographics",
+      "default-input": "range",
+      "group-values": false,
+      "xtab-report": "MainTable.Home_Sale_Date",
+      "input-format": "Supported formats YYYY or YYYYMM or YYYYMMDD"
+    },
+    "Home_Value_Code": {
+      "field": "Home_Value_Code",
+      "fc-description": "Home Value",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Home_Value_Code",
+      "skip-option-sorting": true
+    },
+    "Income": {
+      "field": "Income",
+      "fc-description": "Income",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Income",
+      "skip-option-sorting": true
+    },
+    "Individual_MC": {
+      "field": "Individual_MC",
+      "fc-description": "Custom Suppression - Individual MC",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "InfogroupContact": {
+      "field": "InfogroupContact",
+      "fc-description": "Data Axle/Royalty Contact",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": false
+    },
+    "Infopersona_Cluster": {
+      "field": "Infopersona_Cluster",
+      "fc-description": "Infopersona Cluster",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Infopersona_Cluster"
+    },
+    "Infopersona_Supercluster": {
+      "field": "Infopersona_Supercluster",
+      "fc-description": "Infopersona Supercluster",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Infopersona_Supercluster"
+    },
+    "Area_Code": {
+      "field": "Area_Code",
+      "fc-description": "Landline Area Codes",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "xtab-report": "MainTable.Area_Code"
+    },
+    "Has_Primary_Telephone": {
+      "field": "Has_Primary_Telephone",
+      "fc-description": "Landline Phone Available",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": false
+    },
+    "Do_Not_Call_Flag": {
+      "field": "Do_Not_Call_Flag",
+      "fc-description": "Landline Phone Do Not Call Flag",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": true
+    },
+    "Donotmailflag": {
+      "field": "Donotmailflag",
+      "fc-description": "Do Not Mail Flag",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": true
+    },
+    "Female_Occupation": {
+      "field": "Female_Occupation",
+      "fc-description": "Occupation Female",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": true,
+      "xtab-report": "MainTable.Female_Occupation"
+    },
+    "LastName": {
+      "field": "LastName",
+      "fc-description": "Custom Suppression - Last Name",
+      "group": "Suppression",
+      "default-input": "file",
+      "group-values": false,
+      "exclude-selection": true
+    },
+    "Last_Contribution_Date": {
+      "field": "Last_Contribution_Date",
+      "fc-description": "Last Contribution Date",
+      "group": "Demographics",
+      "default-input": "range",
+      "group-values": false,
+      "xtab-report": "MainTable.Last_Contribution_Date",
+      "input-format": "Supported formats YYYY or YYYYMM or YYYYMMDD"
+    },
+    "Location_Type": {
+      "field": "Location_Type",
+      "fc-description": "Location Type",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Location_Type"
+    },
+    "Loan_To_Value_Ratio_Ltv": {
+      "field": "Loan_To_Value_Ratio_Ltv",
+      "fc-description": "Mortgage Loan To Value Ratio Ltv",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Loan_To_Value_Ratio_Ltv",
+      "skip-option-sorting": true
+    },
+    "Male_Occupation": {
+      "field": "Male_Occupation",
+      "fc-description": "Occupation Male",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": true,
+      "xtab-report": "MainTable.Male_Occupation"
+    },
+    "Mail_Confidence": {
+      "field": "Mail_Confidence",
+      "fc-description": "Mail Confidence",
+      "group": "Output Options",
+      "default-input": "select",
+      "group-values": true,
+      "skip-option-sorting": true
+    },
+    "GeoMapping": {
+      "field": "GeoMapping",
+      "comment": "Value missing from parent config",
+      "fc-description": "Geo Mapping",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "modal-popup": true,
+      "xtab-report": "MainTable.GeoMapping",
+      "exclude-not-in-operator": true,
+      "exclude-add-omit-option": true,
+      "readonly": true
+    },
+    "lifestyle_flags": {
+      "field": "lifestyle_flags",
+      "fc-description": "Individual Interests",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.lifestyle_flags"
+    },
+    "Marital_Status": {
+      "field": "Marital_Status",
+      "fc-description": "Marital Status",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Marital_Status"
+    },
+    "Mortgage_Amount": {
+      "field": "Mortgage_Amount",
+      "fc-description": "Mortgage Amount",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Mortgage_Amount",
+      "skip-option-sorting": true
+    },
+    "Mortgage_Loan_Type": {
+      "field": "Mortgage_Loan_Type",
+      "fc-description": "Mortgage Loan Type",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Mortgage_Loan_Type"
+    },
+    "MortgagePresent": {
+      "field": "MortgagePresent",
+      "fc-description": "Mortgage Present",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.MortgagePresent"
+    },
+    "Nielsen_County_Rank": {
+      "field": "Nielsen_County_Rank",
+      "fc-description": "Nielsen County Rank",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Nielsen_County_Rank",
+      "skip-option-sorting": true
+    },
+    "Numberofchildren": {
+      "field": "Numberofchildren",
+      "fc-description": "Number Of Children",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Numberofchildren",
+      "skip-option-sorting": true
+    },
+    "Own_Rent_Indicator": {
+      "field": "Own_Rent_Indicator",
+      "fc-description": "Own / Rent Indicator",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Own_Rent_Indicator"
+    },
+    "Political_Party_Affiliation": {
+      "field": "Political_Party_Affiliation",
+      "fc-description": "Political Party Affiliation",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Political_Party_Affiliation"
+    },
+    "Pool_Type": {
+      "field": "Pool_Type",
+      "fc-description": "Pool Present",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Pool_Type",
+      "exclude-bulk-input": true,
+      "mask-options": {
+        "YES": "Pool Present",
+        "NO": "Pool Absent"
+      },
+      "exclude-options": [
+        "NO"
+      ]
+    },
+    "Potential_Investor_Consumer": {
+      "field": "Potential_Investor_Consumer",
+      "fc-description": "Potential Investor Consumer",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": true,
+      "xtab-report": "MainTable.Potential_Investor_Consumer",
+      "skip-option-sorting": true
+    },
+    "Presenceofchildren": {
+      "field": "Presenceofchildren",
+      "fc-description": "Presence Of Children",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Presenceofchildren",
+      "skip-option-sorting": true
+    },
+    "tw_flags": {
+      "field": "tw_flags",
+      "fc-description": "Household Interests",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.tw_flags"
+    },
+    "Length_Of_Residence": {
+      "field": "Length_Of_Residence",
+      "fc-description": "Residence Length",
+      "group": "Demographics",
+      "default-input": "range",
+      "group-values": false,
+      "xtab-report": "MainTable.Length_Of_Residence",
+      "input-format": "Two digits input Ranges from 01 to 60"
+    },
+    "Residence_Type": {
+      "field": "Residence_Type",
+      "fc-description": "Residence Type",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Residence_Type"
+    },
+    "State": {
+      "field": "State",
+      "fc-description": "State",
+      "group": "Geography",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.State"
+    },
+    "StateCity": {
+      "field": "StateCity",
+      "fc-description": "Fips - State City",
+      "group": "Geography",
+      "default-input": "textarea",
+      "exclude-selection": true
+    },
+    "StateCountyCode": {
+      "field": "StateCountyCode",
+      "fc-description": "Fips - State County",
+      "group": "Geography",
+      "default-input": "textarea"
+    },
+    "StateCityNeighborhood": {
+      "field": "StateCityNeighborhood",
+      "fc-description": "Fips- State City Neighbourhood",
+      "group": "Geography",
+      "default-input": "textarea",
+      "exclude-selection": true
+    },
+    "Time_Zone": {
+      "field": "Time_Zone",
+      "fc-description": "Time Zone",
+      "group": "Geography",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Time_Zone",
+      "skip-option-sorting": true
+    },
+    "Vacant_Indicator": {
+      "field": "Vacant_Indicator",
+      "fc-description": "Vacant Indicator",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Vacant_Indicator"
+    },
+    "Vendorethnicgroup": {
+      "field": "Vendorethnicgroup",
+      "fc-description": "Ethnic Group",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Vendorethnicgroup",
+      "mask-options": {
+        "South Asian": "Asian (South Asian)"
+      },
+      "skip-option-sorting": true
+    },
+    "Vendorethnicity": {
+      "field": "Vendorethnicity",
+      "fc-description": "Ethnicity",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Vendorethnicity"
+    },
+    "Vendorlanguage": {
+      "field": "Vendorlanguage",
+      "fc-description": "Language",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Vendorlanguage"
+    },
+    "Vendorreligion": {
+      "field": "Vendorreligion",
+      "fc-description": "Religion",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Vendorreligion"
+    },
+    "Veteran_Flag": {
+      "field": "Veteran_Flag",
+      "fc-description": "Veteran",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Veteran_Flag",
+      "exclude-bulk-input": true,
+      "mask-options": {
+        "Yes": "Veteran"
+      }
+    },
+    "Wealth_Finder": {
+      "field": "Wealth_Finder",
+      "fc-description": "Wealth Finder",
+      "group": "Demographics",
+      "default-input": "select",
+      "group-values": false,
+      "xtab-report": "MainTable.Wealth_Finder",
+      "skip-option-sorting": true
+    },
+    "SCF": {
+      "field": "SCF",
+      "fc-description": "SCF Code",
+      "group": "Geography",
+      "default-input": "textarea",
+      "xtab-report": "MainTable.SCF",
+      "add-override-operator": "LIKE",
+      "omit-override-operator": "NOT LIKE"
+    },
+    "Zip": {
+      "field": "Zip",
+      "fc-description": "ZIP Code",
+      "group": "Geography",
+      "default-input": "textarea",
+      "group-values": false,
+      "xtab-report": "MainTable.Zip"
+    }
+  },
+  "additional-fields": {
+    "Custom_Suppression": {
+      "field": "Custom_Suppression",
+      "fc-description": "Custom List",
+      "group": "Suppression",
+      "default-input": "none",
+      "group-values": false,
+      "modal-popup": true
+    },
+    "Placed_Order": {
+      "field": "Placed_Order",
+      "fc-description": "Orders Placed",
+      "group": "Suppression",
+      "default-input": "none",
+      "group-values": false,
+      "modal-popup": true
+    },
+    "Maxper": {
+      "field": "Maxper",
+      "fc-description": "Max Contacts Per",
+      "group": "Output Options",
+      "default-input": "none",
+      "group-values": false,
+      "modal-popup": true
+    }
+  }
+}

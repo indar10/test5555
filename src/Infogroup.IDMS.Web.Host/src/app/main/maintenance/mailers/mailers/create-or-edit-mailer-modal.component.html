@@ -1,0 +1,152 @@
+<div class="modal-content">
+    <form *ngIf="active" #mailerForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="mailer.id">{{l("EditMailer")}}</span>
+                <span *ngIf="!mailer.id">{{l("CreateMailer")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Mailer_id">{{l("ID")}} </label>
+                    <input type="text" id="Mailer_id" class="form-control" [(ngModel)]="mailer.id" name="id" [(hidden)]="!mailer.id" [disabled]="mailer.id" />
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Mailer_cCode">{{l("cCode")}} </label>
+                    <input type="text" id="Mailer_cCode" class="form-control" maxlength="15" [(ngModel)]="mailer.cCode" name="cCode" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Mailer_cCompany">{{l("cCompany")}} *</label>
+                    <input type="text" id="Mailer_cCompany" #companyInput="ngModel" maxlength="50" class="form-control" [(ngModel)]="mailer.cCompany" name="cCompany" noSpaceValidator="{{mailer.cCompany}}" />
+                    <div *ngIf="companyInput.errors && (companyInput.dirty || companyInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!companyInput.errors.noSpaceValidator">
+                            {{l('EnterCompany')}}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label>{{l("Broker")}} *</label>
+                    <p-dropdown [options]="brokers" [filter]="true"
+                                [(ngModel)]="mailer.brokerId" placeholder="Select Broker" tabindex="2" [style]="{'width':'100%'}" name="brokerId" required></p-dropdown>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Mailer_cAddress1">{{l("cAddress1")}}</label>
+                    <input type="text" id="Mailer_cAddress1" rows="1" class="form-control" maxlength="50" [(ngModel)]="mailer.cAddress1" name="cAddress1" />
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Mailer_cAddress2">{{l("cAddress2")}}</label>
+                    <input type="text" id="Mailer_cAddress2" rows="1" class="form-control" maxlength="50" [(ngModel)]="mailer.cAddress2" name="cAddress2" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Mailer_cCity">{{l("cCity")}}</label>
+                    <input type="text" id="Mailer_cCity" class="form-control" [(ngModel)]="mailer.cCity" maxlength="30" name="cCity" />
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Mailer_cState">{{l("cState")}}</label>
+                    <input type="text" id="Mailer_cState" class="form-control" #stateInput="ngModel" maxlength="2" [(ngModel)]="mailer.cState" name="cState" pattern="^[a-zA-Z ]{1,2}$" />
+                    <div *ngIf="stateInput.errors && (stateInput.dirty || stateInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!stateInput.errors.pattern">
+                            {{l("InvalidState")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Mailer_cZip">{{l("cZip")}}</label>
+                    <input type="text" id="Mailer_cZip" class="form-control" #zipInput="ngModel" maxlength="10" [(ngModel)]="mailer.cZip" name="cZip" pattern="^\d{5}(?:-\d{4})?$|^[a-zA-Z]\d[a-zA-Z]\s?\d[a-zA-Z]\d$" />
+                    <div *ngIf="zipInput.errors && (zipInput.dirty || zipInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!zipInput.errors.pattern">
+                            {{l("InvalidZip")}}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Mailer_cPhone">{{l("cPhone")}}</label>
+                    <input type="text" id="Mailer_cPhone" class="form-control" #phoneInput="ngModel" maxlength="20" [(ngModel)]="mailer.cPhone" name="cPhone" pattern="\d{3}\-\d{3}\-\d{4}" />
+                    <div *ngIf="phoneInput.errors && (phoneInput.dirty || phoneInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!phoneInput.errors.pattern">
+                            {{l("InvalidPhone")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Mailer_cFax">{{l("cFax")}}</label>
+                    <input type="text" id="Mailer_cFax" class="form-control" #faxInput="ngModel" maxlength="20" [(ngModel)]="mailer.cFax" name="cFax" pattern="\d{3}\-\d{3}\-\d{4}" />
+                    <div *ngIf="faxInput.errors && (faxInput.dirty || faxInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!faxInput.errors.pattern">
+                            {{l("InvalidFax")}}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Mailer_cNotes">{{l("cNotes")}}</label>
+                    <textarea type="text" id="Mailer_cNotes" rows="1" class="form-control" [(ngModel)]="mailer.cNotes" name="cNotes"></textarea>
+                </div>
+            </div>
+            <div class="row marginTop marginLeft5">
+                <div class="activeWidth row">
+                    <div class="form-group" [class]="activeWidth">
+                        <label class="switch">
+                            <input type="checkbox" id="Mailer_iIsActive" [(ngModel)]="mailer.iIsActive" name="iIsActive" checked />
+                            <span class="sSlider round">
+                                <span class="on">Active</span><span class="off">Inactive</span>
+                            </span>
+                        </label>
+                    </div>
+                    <div *ngIf="!mailer.id" class="form-group col-xs-7 col-sm-7 col-md-7">
+                        <label class="switchM">
+                            <input type="checkbox" id="Mailer_addPostalOffer" [(ngModel)]="mailer.addPostalOffer" name="addPostalOffer" />
+                            <span class="mSlider round">
+                                <span class="on textAllignM">{{l("AddPostalOffer")}}</span><span class="off textAllignM">{{l("AddPostalOffer")}}</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 row">
+                    <div *ngIf="!mailer.id" class="form-group col-xs-6 col-sm-6 col-md-6 marginLeftN5">
+                        <label class="switchPopup">
+                            <input type="checkbox" id="Mailer_addTelemarketingOffer" [(ngModel)]="mailer.addTelemarketingOffer" name="addTelemarketingOffer" />
+                            <span class="slider round">
+                                <span class="on textAllignL">{{l("AddTelemarketingOffer")}}</span><span class="off textAllignL">{{l("AddTelemarketingOffer")}}</span>
+                            </span>
+                        </label>
+                    </div>
+                    <div *ngIf="!mailer.id" class="form-group col-xs-6 col-sm-6 col-md-6 marginLeft5">
+                        <label class="switchPopup">
+                            <input type="checkbox" id="Mailer_autoApproveAllOffer" [(ngModel)]="mailer.autoApproveAllOffer" name="autoApproveAllOffer" />
+                            <span class="slider round">
+                                <span class="on textAllign">{{l("AutoApproveAllOffer")}}</span><span class="off textAllign">{{l("AutoApproveAllOffer")}}</span>
+                            </span>
+                        </label>
+                        <div style="width:110%; margin-top:8px;" *ngIf="!mailer.addPostalOffer && !mailer.addTelemarketingOffer && mailer.autoApproveAllOffer"
+                             class="form-control-feedback">
+                            {{l("AutoApproveValidation")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button type="submit" class="btn btn-primary blue" [disabled]="!mailerForm.form.valid || (!permission.isGranted('Pages.Mailers.Edit') && mailer.id || mailer.autoApproveAllOffer &&!mailer.addPostalOffer && !mailer.addTelemarketingOffer)" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,734 @@
+/* You can add global styles to this file, and also import other style files */
+.margin-left-5 {
+    margin-left: 5px !important;
+}
+
+.margin-right-5 {
+    margin-right: 5px !important;
+}
+
+.margin-top-5 {
+    margin-top: 5px !important;
+}
+
+.margin-top-15 {
+    margin-top: 15px !important;
+}
+
+.margin-bottom-5 {
+    margin-bottom: 5px !important;
+}
+
+.margin-bottom-5 {
+    margin-bottom: 5px !important;
+}
+
+.margin-bottom-15 {
+    margin-bottom: 15px !important;
+}
+
+.padding-left-5 {
+    padding-left: 5px !important;
+}
+
+.padding-right-5 {
+    padding-right: 5px !important;
+}
+
+.padding-top-5 {
+    padding-top: 5px !important;
+}
+
+.padding-bottom-5 {
+    padding-bottom: 5px !important;
+}
+
+.width-percent-5 {
+    width: 5%;
+}
+
+.width-percent-10 {
+    width: 10%;
+}
+
+.width-percent-15 {
+    width: 15%;
+}
+
+.width-percent-20 {
+    width: 20%;
+}
+
+.width-percent-30 {
+    width: 30%;
+}
+
+.width-percent-40 {
+    width: 40%;
+}
+
+.width-percent-50 {
+    width: 50%;
+}
+
+.width-percent-100 {
+    width: 100%;
+}
+
+/* Sweet alert */
+
+.swal2-title {
+    display: inline-block !important;
+}
+
+body.swal2-height-auto {
+    height: inherit !important;
+}
+
+.swal2-popup.swal2-toast {
+    padding: 10px 12px !important;
+    display: block !important;
+}
+
+.swal2-popup.swal2-toast .swal2-header,
+.swal2-popup.swal2-toast .swal2-title,
+.swal2-popup.swal2-toast .swal2-content {
+    text-align: left !important;
+    margin: 0 !important;
+}
+
+.swal2-popup.swal2-toast .swal2-title {
+    margin-bottom: 4px !important;
+}
+
+@keyframes glowing {
+    0% {
+        opacity: .3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: .3;
+    }
+}
+
+.glowing {
+    animation: glowing 2s infinite;
+}
+
+tabset.tab-container>ul.nav.nav-tabs {
+    margin-bottom: 0px !important;
+}
+
+.themeBackgroundColor {
+    margin-right: 6px;
+    outline: 1px solid #000000;
+    cursor: pointer;
+    vertical-align: sub;
+}
+
+.themeBackgroundColor.selected {
+    outline: 2px solid #F2C811;
+}
+
+.showcaseRadioContainer {
+    display: block;
+    position: relative;
+    padding-left: 26px;
+    margin: 4px 0;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.dropdown-menu>li>a,
+.dropdown-menu>.dropdown-item {
+    color: #575962;
+}
+
+.popover {
+    max-width: 60% !important;
+}
+
+.ui-inputtext {
+    line-height: initial !important;
+}
+
+body bs-dropdown-container {
+    z-index: 101;
+}
+
+/* SIC Search */
+/* Classes for adjusting modal width */
+.sicModalClass .modal-dialog {
+    max-width: 1200px;
+}
+
+.global-changes__modal .modal-dialog {
+    max-width: 1100px;
+}
+
+.bulk-edit-segment__modal .modal-dialog {
+    max-width: 90vw;
+}
+
+.multiFieldModalClass .modal-dialog {
+    max-width: 800px;
+}
+
+.cityModalClass .modal-dialog {
+    max-width: 550px;
+}
+
+/* ------------- */
+#SICTree .ui-tree .ui-treenode {
+    max-height: 230px !important;
+}
+
+#SICTree .ui-tree-empty-message {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 300;
+    font-family: Poppins;
+    -ms-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    color: #646c9a
+}
+
+#SICTree .ui-tree-container {
+    max-height: 230px !important;
+}
+
+#SICTree .ui-tree.ui-tree-loading {
+    min-height: 240px !important;
+}
+
+#AddControls .ui-selectbutton .ui-button {
+    background-color: transparent;
+    border: 1px solid #e2e5ec;
+    color: #000;
+}
+
+#AddControls .ui-selectbutton .ui-button.ui-state-active {
+    background-color: #5867dd;
+    border-color: #5867dd;
+    color: #fff;
+
+}
+
+#SICSelect .ui-selectbutton .ui-button {
+    background-color: transparent;
+    border: 1px solid #e2e5ec;
+    color: #000;
+    height: 38.391px !important;
+}
+
+#SICSelect .ui-selectbutton .ui-button.ui-state-active {
+    background-color: #5867dd;
+    border-color: #5867dd;
+    color: #fff;
+    height: 38.391px !important;
+}
+
+#SICSelect .ui-button.ui-button-text-only .ui-button-text {
+    padding: 0.529em 1em;
+}
+
+#MultiFieldSelect .ui-selectbutton .ui-button {
+    color: #fff;
+    background-color: #5867dd;
+    border-color: #5867dd;
+}
+
+#MultiFieldSelect .ui-selectbutton .ui-button.ui-state-active {
+    background-color: #0000cd !important;
+    font-weight: bold !important;
+    border-color: #293ccc;
+    color: #fff;
+}
+
+#MultiFieldSelect ui-selectbutton .ui-button.disabled,
+.ui-button:disabled {
+    color: #fff;
+    background-color: #5867dd;
+    border-color: #5867dd;
+}
+
+#AdvanceSelectionGrids .primeng-datatable-container .ui-table td {
+    font-family: "Poppins", "Roboto";
+    border: none !important;
+    padding: 4px 10px !important;
+}
+
+#AdvanceSelectionGrids .primeng-datatable-container .ui-table th {
+    font-family: "Poppins", "Roboto";
+    border: none !important;
+    padding: 5px 0px 5px 10px !important;
+    padding-top: 5px !important;
+    padding-right: 0px !important;
+    padding-bottom: 5px !important;
+    padding-left: 10px !important;
+    text-align: left;
+    font-weight: 600 !important;
+}
+
+#AdvanceSelectionGrids .ui-treenode .node-franchise {
+    color: red;
+}
+
+#AdvanceSelectionGrids .ui-treenode .node-industry {
+    color: green;
+}
+
+#AdvanceSelectionGrids .ui-treenode .node-bothfni {
+    color: blue;
+}
+
+#AdvanceSelectionGrids .ui-treenode .child-franchise {
+    color: red;
+}
+
+#AdvanceSelectionGrids .ui-treenode .child-industry {
+    color: green;
+}
+
+#AdvanceSelectionGrids .ui-treenode .child-bothfni {
+    color: blue;
+}
+
+#AdvanceSelectionGrids .ui-treenode .child-none {
+    color: #333;
+}
+
+#AdvanceSelectionGrids p-tree[selectionmode="checkbox"] .ui-tree .ui-tree-container .ui-treenode .node-franchise .ui-treenode-content .ui-treenode-label.ui-state-highlight {
+    color: red !important;
+}
+
+#AdvanceSelectionGrids p-tree[selectionmode="checkbox"] .ui-tree .ui-tree-container .ui-treenode .node-industry .ui-treenode-content .ui-treenode-label.ui-state-highlight {
+    color: green !important;
+}
+
+#AdvanceSelectionGrids p-tree[selectionmode="checkbox"] .ui-tree .ui-tree-container .ui-treenode .node-bothfni .ui-treenode-content .ui-treenode-label.ui-state-highlight {
+    color: blue !important;
+}
+
+#AdvanceSelectionGrids p-tree[selectionmode="checkbox"] .ui-tree .ui-tree-container .ui-treenode .child-franchise .ui-treenode-content .ui-treenode-label.ui-state-highlight {
+    color: red !important;
+}
+
+#AdvanceSelectionGrids p-tree[selectionmode="checkbox"] .ui-tree .ui-tree-container .ui-treenode .child-industry .ui-treenode-content .ui-treenode-label.ui-state-highlight {
+    color: green !important;
+}
+
+#AdvanceSelectionGrids p-tree[selectionmode="checkbox"] .ui-tree .ui-tree-container .ui-treenode .child-bothfni .ui-treenode-content .ui-treenode-label.ui-state-highlight {
+    color: blue !important;
+}
+
+#AdvanceSelectionGrids p-tree[selectionmode="checkbox"] .ui-tree .ui-tree-container .ui-treenode .child-none .ui-treenode-content .ui-treenode-label.ui-state-highlight {
+    color: #333 !important;
+}
+
+/* SIC Search */
+
+
+/* Saved Selection */
+.savedSelectionModalClass .modal-dialog {
+    max-width: 850px;
+}
+
+/* Saved Selection */
+
+
+/*  Main component slider css */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 151px;
+    height: 34px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 18px;
+    left: 0;
+    right: 0;
+    bottom: -18px;
+    background-color: #5867dd;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(119px);
+    -ms-transform: translateX(119px);
+    transform: translateX(119px);
+}
+
+
+/*------ ADDED CSS ---------*/
+.on {
+    display: none;
+}
+
+.on,
+.off {
+    color: white;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 46%;
+    font-size: 11px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked+.slider .on {
+    display: block;
+}
+
+input:checked+.slider .off {
+    display: none;
+}
+
+/*--------- END --------*/
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.fa-chevron-down:before,
+.fa-chevron-right:before {
+    color: #007ad9;
+}
+
+/* Main component slider css */
+
+/* Create or edit slider css*/
+.form-group {
+    margin-bottom: 1rem !important;
+}
+
+.switchPopup {
+    position: relative;
+    display: inline-block;
+    width: 151px;
+    height: 34px;
+    margin-top: 8px;
+}
+
+.switchPopup input {
+    display: none;
+}
+
+.switchMailer {
+    position: relative;
+    display: inline-block;
+    width: 151px;
+    height: 34px;
+    /*margin-left: 10px;*/
+    /*margin-top: 10px;*/
+}
+
+.switchMailer input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 18px;
+    left: 0;
+    right: 0;
+    bottom: -18px;
+    background-color: #5867dd;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(119px);
+    -ms-transform: translateX(119px);
+    transform: translateX(119px);
+}
+
+
+/*------ ADDED CSS ---------*/
+.on {
+    display: none;
+}
+
+.on,
+.off {
+    color: white;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 46%;
+    font-size: 11px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked+.slider .on {
+    display: block;
+}
+
+input:checked+.slider .off {
+    display: none;
+}
+
+/*--------- END --------*/
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.icons-edited-primary {
+    color: #2e40d4;
+}
+
+/* Create or edit slider css*/
+
+
+
+/*  Toggle color component slider css */
+
+.switchN {
+    position: relative;
+    display: inline-block;
+    width: 151px;
+    height: 34px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.switchN input {
+    display: none;
+}
+
+.sliderN {
+    position: absolute;
+    cursor: pointer;
+    top: 18px;
+    left: 0;
+    right: 0;
+    bottom: -18px;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.sliderN:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+
+
+input:focus+.sliderN {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.sliderN:before {
+    -webkit-transform: translateX(119px);
+    -ms-transform: translateX(119px);
+    transform: translateX(119px);
+}
+
+input:checked+.sliderN {
+    background-color: #5867dd;
+    border-color: #5867dd;
+}
+
+/*------ ADDED CSS ---------*/
+.on {
+    display: none;
+}
+
+.on,
+.off {
+    color: white;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 46%;
+    font-size: 11px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked+.sliderN .on {
+    display: block;
+}
+
+input:checked+.sliderN .off {
+    display: none;
+}
+
+/*--------- END --------*/
+/* Rounded sliders */
+.sliderN.round {
+    border-radius: 34px;
+}
+
+.sliderN.round:before {
+    border-radius: 50%;
+}
+
+.fa-chevron-down:before,
+.fa-chevron-right:before {
+    color: #007ad9;
+}
+
+/* Toggle color component slider css */
+
+.compact-grid .primeng-datatable-container .ui-table th {
+    font-family: "Poppins", "Roboto";
+    border: none !important;
+    padding: 4px 10px !important;
+}
+
+.compact-grid .primeng-datatable-container .ui-table td {
+    font-family: "Poppins", "Roboto";
+    border: none !important;
+    padding: 5px 0px 5px 10px !important;
+    padding-top: 5px !important;
+    padding-right: 0px !important;
+    padding-bottom: 5px !important;
+    padding-left: 10px !important;
+}
+
+.left-dropdown {
+    left: -60px !important;
+}
+
+.select__button-container .ui-selectbutton .ui-button {
+    background-color: transparent;
+    border: 1px solid #e2e5ec;
+    color: #000;
+    height: 38.391px !important;
+}
+
+.select__button-container .ui-selectbutton .ui-button.ui-state-active {
+    background-color: #5867dd;
+    border-color: #5867dd;
+    color: #fff;
+    height: 38.391px !important;
+}
+
+.select__button-container .ui-button.ui-button-text-only .ui-button-text {
+    padding: 0.529em 1em;
+}
+
+/******** Child Grid *******/
+/* Header Row */
+.child-grid .ui-table .ui-table-thead>tr>th {
+    background-color: #ced4da;
+}
+
+/* Header Row with Sorting */
+.child-grid .ui-table .ui-sortable-column:not(.ui-state-highlight):hover {
+    background-color: #b9bec4;
+}
+
+/* Header Row with Sorting */
+.child-grid .ui-table .ui-sortable-column.ui-state-highlight {
+    background-color: #007ad9;
+    color: #ffffff;
+}
+
+.child-grid .ui-table .ui-sortable-column .ui-sortable-column-icon {
+    color: #767676;
+}
+
+.child-grid .ui-table .ui-sortable-column:not(.ui-state-highlight):hover .ui-sortable-column-icon {
+    color: #ffffff;
+}
+
+/* Odd Row */
+.child-grid .ui-table .ui-table-tbody>tr {
+    background-color: #f8f9fA;
+}
+
+/* Even Row */
+.child-grid .ui-table .ui-table-tbody>tr:nth-child(even) {
+    background-color: #e9ecef;
+}
+
+/***************************/
+/* SIC Search */
+/* @media (min-width: 1500px) {
+    .bulk-edit-segment__modal .modal-dialog {
+        max-width: 77vw
+    }
+}
+
+@media (min-width: 1700px) {
+    .bulk-edit-segment__modal .modal-dialog {
+        max-width: 70vw
+    }
+} */
+
+@media (min-width: 1400px) {
+    .bulk-edit-segment__modal .modal-dialog {
+        max-width: 1250px
+    }
+}

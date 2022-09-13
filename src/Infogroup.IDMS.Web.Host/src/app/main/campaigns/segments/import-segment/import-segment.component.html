@@ -1,0 +1,69 @@
+<div class="modal-content">
+    <form *ngIf="active" #databaseForm="ngForm" novalidate autocomplete="off">
+        <div class="modal-header">
+            <h1 class="modal-title">
+                <span>{{l('ImportSegments')}}</span>
+            </h1>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+        </div>
+        <div class="modal-body">
+            <input class="form-control" type="text" hidden>
+
+            <div class="modal-body">
+                <fieldset ngModelGroup="mainForm">
+                    <div class="form-group">                       
+                        <div class="form-group">
+                            <label>{{l("CampaignID")}} *</label>
+                            <div class="row align-items-center mb-1">
+                                <div class="col-xl-12">
+                                    <div class="form-group m-form__group align-items-center search-margin">
+                                        <div class="input-group">
+
+                                            <input type="text" #campaignIDInput="ngModel" id="Segment_CampaignID" class="form-control" [(ngModel)]="fromcampaignId"
+                                                   name="campaignID" digitOnly (change)="onCampaignIdChange()" pattern="^[0-9]*$" maxlength="18" required />
+                                            <span class="input-group-btn">
+                                                <button (click)="validateCampaignId()" class="btn btn-primary" type="submit" [disabled]="campaignIDInput.errors" >
+                                                    <i class="flaticon-search-1" [attr.aria-label]="l('Search')"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>                                
+                            </div>   
+                            <div *ngIf="campaignIDInput.errors && (campaignIDInput.dirty || campaignIDInput.touched)" class="form-control-feedback">
+                                <div [hidden]="!campaignIDInput.errors.pattern">
+                                    {{l("EnterOnlyNumber")}}
+                                </div>                                
+                            </div>
+                        </div>
+                            <div class="form-group">
+                                <label>{{l("Description")}}</label>
+                                <input type="text" #descriptionInput="ngModel" id="Segment_Description" class="form-control" [(ngModel)]="importSegment.cSegmentDescription"
+                                       name="description" required disabled />
+                            </div>
+
+                            <div class="form-group">
+                                <label>{{l("NumberOfSegments")}}</label>
+                                <input type="text" #NumberofSegmentsInput="ngModel" id="Segment_NumberofSegments" class="form-control" [(ngModel)]="importSegment.numberOfSegments"
+                                       name="Numberofsegments" pattern="^[0-9]*$" required disabled />
+                            </div>
+
+                            <div class="form-group">
+                                <label>{{l("EnterRange")}} *</label>
+                                <input type="text" #segmentRangeInput="ngModel" id="Segment_segmentRange" class="form-control" [(ngModel)]="importSegment.sCommaSeparatedSegments"
+                                       name="segmentRange" maxlength="100" required />
+                            </div>
+                        </div>
+                    </fieldset>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button type="submit" class="btn btn-primary blue" [disabled]="!databaseForm.form.valid || saveDisabled" (click)="save()"
+                    [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+        </div>
+    </form>
+</div>

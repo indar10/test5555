@@ -1,0 +1,236 @@
+ <div id="editable-grid" class="primeng-datatable-container">
+     <p-table #editSegmentTable [totalRecords]="primengTableHelper.totalRecordsCount"
+         [value]="primengTableHelper.records" [busyIf]="primengTableHelper.isLoading" [scrollable]="true"
+         scrollHeight="400px" [responsive]="primengTableHelper.isResponsive" dataKey="id"
+         [resizableColumns]="primengTableHelper.resizableColumns" stateStorage="local" [style]="{'overflow':'visible'}">
+
+         <ng-template pTemplate="header">
+             <tr>
+                 <th class="segment-number__column" pSortableColumn="iDedupeOrderSpecified">
+                     {{'#' | localize}}
+                     <p-sortIcon field="iDedupeOrderSpecified"></p-sortIcon>
+                 </th>
+                 <th class="description__column" pSortableColumn="cDescription">
+                     {{'Description' | localize}}
+                     <p-sortIcon field="cDescription"></p-sortIcon>
+                 </th>
+                 <th class="required-quantity__column" pSortableColumn="iRequiredQty">
+                     <span tooltip="0 : All Available">
+                         {{'iRequiredQty' | localize}}
+                     </span>
+                     <p-sortIcon field="iRequiredQty"></p-sortIcon>
+                 </th>
+                 <th *ngIf="hasOutputQty" class="output-quantity__column" pSortableColumn="iDisplayOutputQty">
+                     {{'iOutputQty' | localize}}
+                     <p-sortIcon field="iDisplayOutputQty"></p-sortIcon>
+                 </th>
+                 <th class="keycode1__column" pSortableColumn="cKeyCode1">
+                     {{'KeyCode1Label' | localize}}
+                     <p-sortIcon field="cKeyCode1"></p-sortIcon>
+                 </th>
+                 <th class="max-per__column" pSortableColumn="cMaxPerGroup">
+                     {{'cMaxPerGroup' | localize}}
+                     <p-sortIcon field="cMaxPerGroup"></p-sortIcon>
+                 </th>
+                 <th class="net-group__column" pSortableColumn="iGroup">
+                     {{'NetGroupHeader' | localize}}
+                     <p-sortIcon field="iGroup"></p-sortIcon>
+                 </th>
+                 <th *ngIf="!isCalculateDistanceSet" class="random-radius__column" pSortableColumn="iIsRandomRadiusNth">
+                     {{'RandomRadiusNthLabel' | localize}}
+                     <p-sortIcon field="iIsRandomRadiusNth"></p-sortIcon>
+                 </th>
+                 <th *ngIf="hasDefaultRules" class="default-rules__column" pSortableColumn="iUseAutosuppress">
+                     {{'ApplyDefaultRulesHeader' | localize}}
+                     <p-sortIcon field="iUseAutosuppress"></p-sortIcon>
+                 </th>
+                 <th class="keycode2__column" pSortableColumn="cKeyCode2">
+                     {{'KeyCode2Label' | localize}}
+                     <p-sortIcon field="cKeyCode2"></p-sortIcon>
+                 </th>
+             </tr>
+         </ng-template>
+         <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+             <tr>
+                 <td class="segment-number__column">
+                     <span class="ui-column-title"> {{'#' | localize}}</span>
+                     {{record.iDedupeOrderSpecified}}
+                 </td>
+                 <td class="description__column" pEditableColumn>
+                     <p-cellEditor>
+                         <ng-template pTemplate="input">
+                             <input pInputText type="text" #descriptionInput="ngModel" [(ngModel)]="record.cDescription"
+                                 noSpaceValidator="{{record.cDescription}}" name="cDescription" maxlength="50"
+                                 (keydown.enter)="updateRowStatus(record,'cDescription',descriptionInput)"
+                                 (blur)="updateRowStatus(record,'cDescription',descriptionInput)" required>
+                             <div *ngIf="descriptionInput.errors && (descriptionInput.dirty || descriptionInput.touched)"
+                                 class="form-control-feedback">
+                                 <div [hidden]="!descriptionInput.errors.noSpaceValidator">
+                                     {{l("ThisFieldIsRequired")}}
+                                 </div>
+                             </div>
+                         </ng-template>
+                         <ng-template pTemplate="output">
+                             {{record.cDescription}}
+                         </ng-template>
+                     </p-cellEditor>
+                 </td>
+                 <td class="required-quantity__column" pEditableColumn>
+                     <p-cellEditor>
+                         <ng-template pTemplate="input">
+                             <input pInputText #requiredQuantityInput="ngModel" type="text" digitOnly
+                                 [(ngModel)]="record.iRequiredQty" name="iRequiredQty" required maxNumber="2147483647"
+                                 minNumber="0" pattern="^[0-9]*$"
+                                 (keydown.enter)="updateRowStatus(record,'iRequiredQty',requiredQuantityInput)"
+                                 (blur)="updateRowStatus(record,'iRequiredQty',requiredQuantityInput)">
+                             <div *ngIf="requiredQuantityInput.errors && (requiredQuantityInput.dirty || requiredQuantityInput.touched)"
+                                 class="form-control-feedback">
+                                 <div
+                                     [hidden]="!requiredQuantityInput.errors.minNumber && !requiredQuantityInput.errors.maxNumber && !requiredQuantityInput.errors.pattern && !requiredQuantityInput.errors.required">
+                                     {{l("RequiredQtyValidationMsg")}}
+                                 </div>
+                             </div>
+                         </ng-template>
+                         <ng-template pTemplate="output">
+                             {{record.iRequiredQty | number}}
+                         </ng-template>
+                     </p-cellEditor>
+                 </td>
+                 <td *ngIf="hasOutputQty" class="output-quantity__column" pEditableColumn>
+                     <p-cellEditor>
+                         <ng-template pTemplate="input">
+                             <input type="text" #outputQuantity="ngModel" maxNumber="{{record.iProvidedQty}}" digitOnly
+                                 name="outputQuantity" style="width:100%;height:50%"
+                                 [(ngModel)]="record.iDisplayOutputQty"
+                                 (keydown.enter)="updateRowStatus(record,'iDisplayOutputQty',outputQuantity)"
+                                 (blur)="updateRowStatus(record,'iDisplayOutputQty',outputQuantity)" />
+                             <div *ngIf="outputQuantity.errors && (outputQuantity.dirty || outputQuantity.touched)"
+                                 class="form-control-feedback">
+                                 <div [hidden]="record.maxNumber">
+                                     {{ record.iProvidedQty == 0 ? l("outputQuantityZero") : l("outputQuantityLimit", record.iProvidedQty)}}
+                                 </div>
+                             </div>
+                             <validation-messages [formCtrl]="outputQuantity"></validation-messages>
+                         </ng-template>
+                         <ng-template pTemplate="output">
+                             {{record.iDisplayOutputQty | number}}
+                         </ng-template>
+                     </p-cellEditor>
+                 </td>
+                 <td class="keycode1__column" pEditableColumn>
+                     <p-cellEditor>
+                         <ng-template pTemplate="input">
+                             <input pInputText #keyCode1Input="ngModel" type="text" [(ngModel)]="record.cKeyCode1"
+                                 name="cKeyCode1" maxlength="50"
+                                 (keydown.enter)="updateRowStatus(record,'cKeyCode1',keyCode1Input)"
+                                 (blur)="updateRowStatus(record,'cKeyCode1',keyCode1Input)" />
+                             <validation-messages [formCtrl]="keyCode1Input"></validation-messages>
+                         </ng-template>
+                         <ng-template pTemplate="output">
+                             {{record.cKeyCode1}}
+                         </ng-template>
+                     </p-cellEditor>
+                 </td>
+                 <td class="max-per__column" pEditableColumn>
+                     <p-cellEditor>
+                         <ng-template pTemplate="input">
+                             <div class="from-group">
+                                 <select #cMaxPerGroup="ngModel" name="cMaxPerGroup_input"
+                                     class="form-control bs-select" [(ngModel)]="record.cMaxPerGroup"
+                                     (change)="updateRowStatus(record,'cMaxPerGroup',cMaxPerGroup)">
+                                     <option *ngFor="let maxPer of maxPers" [value]="maxPer.value">
+                                         {{maxPer.label}}
+                                     </option>
+                                 </select>
+                             </div>
+                         </ng-template>
+                         <ng-template pTemplate="output">
+                             <div class="from-group">
+                                 {{maxPersMap[record.cMaxPerGroup]}}
+                             </div>
+                         </ng-template>
+                     </p-cellEditor>
+                 </td>
+                 <td class="net-group__column" pEditableColumn>
+                     <p-cellEditor>
+                         <ng-template pTemplate="input">
+                             <input pInputText #netGroupInput="ngModel" maxNumber="2147483647" minNumber="1"
+                                 (keydown.enter)="updateRowStatus(record,'iGroup',netGroupInput)" digitOnly
+                                 noSpaceValidator="{{record.iGroup}}"
+                                 (blur)="updateRowStatus(record,'iGroup',netGroupInput)" pattern="^[0-9]*$" type="text"
+                                 [(ngModel)]="record.iGroup" name="iGroup">
+                             <div *ngIf="netGroupInput.errors && (netGroupInput.dirty || netGroupInput.touched)"
+                                 class="form-control-feedback">
+                                 <div
+                                     [hidden]="!netGroupInput.errors.minNumber && !netGroupInput.errors.maxNumber && !netGroupInput.errors.pattern && !netGroupInput.errors.required && !netGroupInput.errors.noSpaceValidator ">
+                                     {{l("NetGroupMaxValueValidationMsg")}}
+                                 </div>
+                             </div>
+                         </ng-template>
+                         <ng-template pTemplate="output">
+                             {{record.iGroup | number}}
+                         </ng-template>
+                     </p-cellEditor>
+                 </td>
+                 <td *ngIf="!isCalculateDistanceSet" style="text-align: center;" class="random-radius__column"
+                     pEditableColumn>
+                     <p-cellEditor>
+                         <ng-template pTemplate="input">
+                             <p-checkbox #iIsRandomRadiusNth="ngModel" binary="true"
+                                 (onChange)="updateRowStatus(record,'iIsRandomRadiusNth',iIsRandomRadiusNth)"
+                                 [(ngModel)]="record.iIsRandomRadiusNth" name="iIsRandomRadiusNth">
+                             </p-checkbox>
+                         </ng-template>
+                         <ng-template pTemplate="output">
+                             <p-checkbox #iIsRandomRadiusNth="ngModel" binary="true"
+                                 (onChange)="updateRowStatus(record,'iIsRandomRadiusNth',iIsRandomRadiusNth)"
+                                 [(ngModel)]="record.iIsRandomRadiusNth" name="iIsRandomRadiusNth_out">
+                             </p-checkbox>
+                         </ng-template>
+                     </p-cellEditor>
+                 </td>
+                 <td *ngIf="hasDefaultRules" class="default-rules__column" style="text-align: center;" pEditableColumn>
+                     <p-cellEditor>
+                         <ng-template pTemplate="input">
+                             <p-checkbox (onChange)="updateRowStatus(record,'iUseAutosuppress',iUseAutosuppress)"
+                                 binary="true" #iUseAutosuppress="ngModel" [(ngModel)]="record.iUseAutosuppress"
+                                 name="iUseAutosuppress"></p-checkbox>
+                         </ng-template>
+                         <ng-template pTemplate="output">
+                             <p-checkbox (onChange)="updateRowStatus(record,'iUseAutosuppress',iUseAutosuppress)"
+                                 binary="true" #iUseAutosuppress="ngModel" [(ngModel)]="record.iUseAutosuppress"
+                                 name="iUseAutosuppress_out"></p-checkbox>
+                         </ng-template>
+                     </p-cellEditor>
+                 </td>
+                 <td class="keycode2__column" pEditableColumn>
+                     <p-cellEditor>
+                         <ng-template pTemplate="input">
+                             <input pInputText #cKeyCode2="ngModel" type="text" [(ngModel)]="record.cKeyCode2"
+                                 name="cKeyCode2" maxlength="15" (keydown.enter)="updateRowStatus(record,'cKeyCode2')"
+                                 (blur)="updateRowStatus(record,'cKeyCode2',cKeyCode2)" />
+                             <validation-messages [formCtrl]="cKeyCode2"></validation-messages>
+                         </ng-template>
+                         <ng-template pTemplate="output">
+                             {{record.cKeyCode2}}
+                         </ng-template>
+                     </p-cellEditor>
+                 </td>
+             </tr>
+         </ng-template>
+         <ng-template pTemplate="emptymessage">
+             <tr>
+                 <td [attr.colspan]="9">
+                     <div class="primeng-no-data">
+                         {{l('NoData')}}
+                     </div>
+                 </td>
+             </tr>
+         </ng-template>
+     </p-table>
+ </div>
+ <div class="primeng-paging-container">
+     <span class="total-records-count mt-2">
+         {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+     </span>
+ </div>

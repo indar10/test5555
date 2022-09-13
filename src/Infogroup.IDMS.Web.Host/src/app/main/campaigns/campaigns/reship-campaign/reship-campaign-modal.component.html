@@ -1,0 +1,44 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h1 class="modal-title">
+            <span> {{ 'ReshipTitle' | localize}}</span>
+        </h1>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form #favoritesForm="ngForm" class="kt-form">
+            <div class="form-group">
+                <label for="id">{{l("ReshipID")}}</label>
+                <input id="id" #idInput="ngModel" type="text" class="form-control" [(ngModel)]="campaignId"
+                    name="IdInput" [disabled]="true" />
+            </div>
+            <div class="form-group">
+                <label for="Description">{{l("cDescription")}}</label>
+                <input id="Description" #descriptionInput="ngModel" type="text" class="form-control"
+                    [(ngModel)]="campaignDescription" name="cDescription" [disabled]="true" />
+            </div>
+            <div class="form-group">
+                <label for="ReshipEmail">{{l("ReshipEmail")}}</label>
+                <input id="ReshipEmail" #reshipEmailInput="ngModel" type="text" maxlength="50" class="form-control"
+                    pattern="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" [(ngModel)]="reshipEmail"
+                    name="reshipEmail" />
+                <div *ngIf="reshipEmailInput.errors && (reshipEmailInput.dirty || reshipEmailInput.touched)"
+                    class="form-control-feedback">
+                    <div [hidden]="!reshipEmailInput.errors.pattern">
+                        {{l("InvalidEmailAddress")}}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+        <button type="button" class="btn btn-primary blue" (click)="save()"
+            [disabled]="saving || favoritesForm?.invalid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
+            <i class="fa fa-save"></i>
+            <span>{{l("Save")}}</span>
+        </button>
+    </div>
+</div>

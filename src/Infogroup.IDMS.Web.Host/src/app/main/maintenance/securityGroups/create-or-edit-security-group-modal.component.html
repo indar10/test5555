@@ -1,0 +1,55 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #securityGroupForm="ngForm" novalidate (ngSubmit)="save(securityGroupForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="securityGroup.id">{{l("EditGroup")}}</span>
+                <span *ngIf="!securityGroup.id">{{l("CreateGroup")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group col" *ngIf="securityGroup.id">
+                    <label for="securityGroup_cCode">{{l("ID")}} </label>
+                    <input type="text" id="securityGroup_id" class="form-control" [(ngModel)]="securityGroup.id" name="id" [(hidden)]="!securityGroup.id" [disabled]="securityGroup.id" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col">
+                    <label for="securityGroup_cGroupName">{{l("cGroupNameLabel")}} *</label>
+                    <input type="text" id="securityGroup_cGroupName" rows="1" #cGroupDescriptionInput="ngModel" class="form-control" maxlength="50" [(ngModel)]="securityGroup.cGroupName" name="cGroupName" noSpaceValidator="{{securityGroup.cGroupName}}" required/>
+                    <div *ngIf="cGroupDescriptionInput.errors && (cGroupDescriptionInput.dirty || cGroupDescriptionInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!cGroupDescriptionInput.errors.required && !cGroupDescriptionInput.errors.noSpaceValidator">
+                            {{l("EntercGroupName")}}
+                        </div>
+                    </div>
+                </div>
+            </div>            
+            <div class="row">
+                <div class="form-group col">
+                    <label for="securityGroup_cGroupDescription">{{l("cGroupDescription")}}</label>
+                    <textarea id="securityGroup_cGroupDescription" class="form-control"  [(ngModel)]="securityGroup.cGroupDescription" maxlength="200" name="cGroupDescription" ></textarea>
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col">
+                    <label class="switchPopup">
+                        <input type="checkbox" id="securityGroup_iIsActive" [(ngModel)]="securityGroup.iIsActive" name="iIsActive" checked />
+                        <span class="slider round">
+                            <span class="on">Active</span><span class="off">Inactive</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button type="submit" class="btn btn-primary blue" [disabled]="!securityGroupForm.form.valid || (!permission.isGranted('Pages.SecurityGroups.Edit') && securityGroup.id)" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+        </div>
+    </form>
+</div>
+

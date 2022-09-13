@@ -1,0 +1,114 @@
+﻿        <div class="modal-content">
+            <form *ngIf="active" #managerForm="ngForm" novalidate (ngSubmit)="save(managerForm)" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="manager.id">{{l("EditManager")}}</span>
+                        <span *ngIf="!manager.id">{{l("CreateManager")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Manager_cCode">{{l("ID")}} </label>
+                            <input type="text" id="Manager_id" class="form-control" [(ngModel)]="manager.id" name="id" [(hidden)]="!manager.id" [disabled]="manager.id" />
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Manager_cCode">{{l("cCode")}} </label>
+                            <input type="text" id="Manager_cCode" class="form-control" [(ngModel)]="manager.cCode" name="cCode" maxLength="15"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Manager_cCompany">{{l("cCompany")}} *</label>
+                            <input type="text" id="Manager_cCompany" #companyInput="ngModel" class="form-control" [(ngModel)]="manager.cCompany" maxLength="50" name="cCompany" noSpaceValidator="{{manager.cCompany}}" />
+                            <div *ngIf="companyInput.errors && (companyInput.dirty || companyInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!companyInput.errors.noSpaceValidator">
+                                    {{l('EnterCompany')}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Manager_cAddress1">{{l("cAddress1")}} </label>
+                            <input type="text" id="Manager_cAddress1" class="form-control" [(ngModel)]="manager.cAddress1"  maxLength="50" name="cAddress1" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Manager_cAddress2">{{l("cAddress2")}} </label>
+                            <input type="text" id="Manager_cAddress2" class="form-control" [(ngModel)]="manager.cAddress2"  maxLength="50" name="cAddress2" />
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Manager_cCity">{{l("cCity")}} </label>
+                            <input type="text" id="Manager_cCity" class="form-control" [(ngModel)]="manager.cCity"  maxLength="30" name="cCity" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Manager_cState">{{l("cState")}} </label>
+                            <input type="text" id="Manager_cState" class="form-control" #stateInput="ngModel" [(ngModel)]="manager.cState"  maxLength="2" name="cState" pattern="^[a-zA-Z ]{1,2}$"/>
+                            <div *ngIf="stateInput.errors && (stateInput.dirty || stateInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!stateInput.errors.pattern">
+                                    {{l("InvalidState")}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Manager_cZip">{{l("cZip")}} </label>
+                            <input type="text" id="Manager_cZip" class="form-control" #zipInput="ngModel" [(ngModel)]="manager.cZip"  maxLength="10" name="cZip" pattern="^\d{5}(?:-\d{4})?$|^[a-zA-Z]\d[a-zA-Z]\s?\d[a-zA-Z]\d$"/>
+                            <div *ngIf="zipInput.errors && (zipInput.dirty || zipInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!zipInput.errors.pattern">
+                                    {{l("InvalidZip")}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Manager_cPhone">{{l("cPhone")}} </label>
+                            <input type="text" id="Manager_cPhone" class="form-control" #phoneInput="ngModel" [(ngModel)]="manager.cPhone"  maxLength="20" name="cPhone" pattern="\d{3}\-\d{3}\-\d{4}"/>
+                            <div *ngIf="phoneInput.errors && (phoneInput.dirty || phoneInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!phoneInput.errors.pattern">
+                                    {{l("InvalidPhone")}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Manager_cFax">{{l("cFax")}} </label>
+                            <input type="text" id="Manager_cFax" class="form-control" #faxInput="ngModel" [(ngModel)]="manager.cFax"  maxLength="20" name="cFax" pattern="\d{3}\-\d{3}\-\d{4}" />
+                            <div *ngIf="faxInput.errors && (faxInput.dirty || faxInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!faxInput.errors.pattern">
+                                    {{l("InvalidFax")}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Manager_cNotes">{{l("cNotes")}} </label>
+                            <textarea type="text" id="Manager_cNotes" class="form-control" [(ngModel)]="manager.cNotes" name="cNotes"></textarea>
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label class="switchPopup">
+                                <input type="checkbox" id="Manager_iIsActive" [(ngModel)]="manager.iIsActive" name="iIsActive" checked />
+                                <span class="slider round">
+                                    <span class="on">Active</span><span class="off">Inactive</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!managerForm.form.valid || (!permission.isGranted('Pages.Managers.Edit') && manager.id)" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    

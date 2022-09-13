@@ -1,0 +1,244 @@
+
+    <div class="modal-content">
+        <p-blockUI [blocked]="blockedPanel">
+            <p-progressSpinner [style]="{'position':'absolute','top':'35%','left':'50%'}"></p-progressSpinner>
+        </p-blockUI>
+        <form class="horizontal-form" autocomplete="off">
+            <div class="modal-header">
+                <h5 class="modal-title" style="width: 100%;">
+                    <div class="segment-select">
+                        <div class="segment-label">
+                            <label class="segment-label__value">{{l('SelectSegment')}}</label>
+                        </div>
+                        <div class="segment-value">
+                            <p-dropdown id="segmentDropdown" [style]="{'width':'100%'}" [options]="segments" [filter]="true"
+                                        (onClick)="onSegmentChange(action.SegmentChange)" name="segmentDropdown"
+                                        [(ngModel)]="selectedSegment">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="action-select">
+                        <div class="btn-group dropdown" dropdown [isDisabled]="actionsDisabled" container="body">
+                            <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle
+                                    (click)="onSelectionActionButtonClick()">
+                                <i class="fa fa-cog"></i><span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" *dropdownMenu>
+                                <li>
+                                    <a href="javascript:;" *ngIf="canEditCampaign"
+                                       (click)="saveWhereClause(action.EditCampaign)">{{l('EditCampaignOnSelectionScreen')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="'Pages.SegmentPrevOrderses' | permission"
+                                       (click)="saveWhereClause(action.CampaignHistory)">{{l('CampaignHistoryOnSelectionScreen')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="permission.isGranted('Pages.Campaigns.Print')"
+                                       (click)="saveWhereClause(action.Print)">{{l('PrintOnSelectionScreen')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="isLayout && isGranted('Pages.CampaignExportLayouts')"
+                                       (click)="saveWhereClause(action.EditOutputLayout)">{{l('EditLayoutOnSelectionScreen')}}</a>
+                                </li>
+
+                                <li>
+                                    <a href="javascript:;" *ngIf="canAdd"
+                                       (click)="saveWhereClause(action.NewSegment)">{{l('NewSegmentOnSelectionScreen')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="canCopy"
+                                       (click)="saveWhereClause(action.CopySegment)">{{l('CopySegmentOnSelectionScreen')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="canEdit"
+                                       (click)="saveWhereClause(action.EditSegment)">{{l('EditSegmentOnSelectionScreen')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="canDelete"
+                                       (click)="saveWhereClause(action.DeleteSegment)">{{l('DeleteSegmentOnSelectionScreen')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="canImportSegments"
+                                       (click)="saveWhereClause(action.ImportSegments)">{{l('ImportSegmentsOnSelectionScreen')}}</a>
+                                </li>
+
+                                <li>
+                                    <a href="javascript:;" *ngIf="canEditSources"
+                                       (click)="saveWhereClause(action.Sources)">{{l('Sources')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="showSubsets"
+                                       (click)="saveWhereClause(action.Subsets)">{{l('SubsetsOnSelectionScreen')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="canDataPreview"
+                                       (click)="saveWhereClause(action.DataPreview)">{{l('DataPreviewOnSelectionScreen')}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <button class="btn help-button" style="padding: 0;"
+                                *ngIf="segmentSubSelectsSources.length || segmentSources.length"
+                                type="button" [popover]="showSubsetAndSourceSegments" [popoverTitle]=""
+                                triggers="mouseenter:mouseleave">
+                            <!--<i class="fa fa-question-circle"></i> -->
+                            <h6 style="color: dodgerblue;">Segments with Sources/Subsets</h6>
+                        </button>
+                        <ng-template #showSubsetAndSourceSegments>
+                            <div *ngIf="segmentSubSelectsSources.length">
+                                <h5><u>Subsets</u></h5>
+                                <ul>
+                                    <li *ngFor="let example of segmentSubSelectsSources">{{example}}</li>
+                                </ul>
+                            </div>
+                            <div *ngIf="segmentSources.length">
+                                <h5 style="alignment: left"><u>Sources</u></h5>
+                                <ul>
+                                    <li *ngFor="let example of segmentSources">{{example}}</li>
+                                </ul>
+                            </div>
+                        </ng-template>
+                        <div style="flex-grow:1" class="row m--margin-bottom-10" hidden>
+                            <div container="body" class="col-md-auto" [hidden]="!isTextBoxHidden">
+                                <button [hidden]="false" class="btn icons-edited-primary" (click)="onIconClick()"
+                                        style="outline:none;box-shadow:none;height:90%">
+                                    <i class="fa fa-user" [ngbTooltip]="tootlTip" placement="right"
+                                       style="color:red;height:50%"></i>
+                                </button>
+                            </div>
+                            <div id="adminEmailDiv" [hidden]="isTextBoxHidden" style="width:50%;outline:none !important"
+                                 container="body" class="col-md-auto" tabindex="1" (blur)="onDivFocus()">
+                                <input type="text" class="form-control" [disabled]="true" name="adminEmailText"
+                                       [ngModel]="adminEmail" id="adminEmailTextBox" style="height:90%">
+                            </div>
+                        </div>
+                        <div class="btn-group dropdown" dropdown [isDisabled]="saveDisabled" container="body">
+                            <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                                <i class="fa fa-filter"></i><span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" style="left: -120px;" *dropdownMenu>
+                                <li>
+                                    <a href="javascript:;" *ngIf="showCitySearch"
+                                       (click)="saveWhereClause(action.SelectCountyCity)">{{l('CountyCityTitle')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="showGeoRadiusSearch"
+                                       (click)="saveWhereClause(action.SearchGeoRadius)">{{l('GeoSearchTitle')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="showSICSearch"
+                                       (click)="saveWhereClause(action.SelectSIC)">{{l('IndustrySearchTitle')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="showOccupationSearch"
+                                       (click)="saveWhereClause(action.SelectOccupation)">{{l('OccupationSelectionTitle')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="showBulkSegmentUpload"
+                                       (click)="saveWhereClause(action.BulkSegmentUpload)">{{l('BulkSegmentLinkText')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="permission.isGranted('Pages.SavedSelections')"
+                                       (click)="saveWhereClause(action.SavedSelection)">{{l('SavedSelection')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;"
+                                       (click)="saveWhereClause(action.SelectMultiField)">{{l('MultiFieldTitle')}}</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" *ngIf="showGeoRadiusSearch"
+                                       (click)="saveWhereClause(action.SelectGeoMapping)">Geo Mapping</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </h5>
+
+            </div>
+            <div class="modal-body" [id]="queryBuilder">
+                <div class="form-group m-form__group">
+                    <div class="form-group">
+                        <div>
+                            <div class="row ml-1">
+                                <div>
+                                    {{l('SelectionsLabel')}}
+                                </div>
+                                <div *ngIf="currentStatusDescription.length>0" class="ml-auto mr-3">
+                                    {{l("CurrentStatusLabel")}}
+                                    {{currentStatusDescription}}
+                                </div>
+                            </div>
+                            <div [id]="builder"></div>
+                            <div class="btn-group">
+                                <button [disabled]="saveDisabled" class="btn btn-danger reset " [id]="reset">Reset</button>
+                            </div><br /><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <div class="btn-group dropdown" dropdown container="body">
+                        <div class="btn-group mr-3">
+                            <button [disabled]="!canExecute" type="button" class="btn btn-primary blue"
+                                    [buttonBusy]="validating" [busyText]="l('ValidatingWithThreeDot')"
+                                    (click)="saveWhereClause(action.Execute)">
+                                {{l("Execute")}}
+                            </button>
+                            <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
+                                <button [disabled]="!IsShowQuickCountButton" class="btn btn-primary dropdown-toggle-split"
+                                        ngbDropdownToggle></button>
+                                <div class="dropdown-menu" ngbDropdownMenu>
+                                    <button (click)="saveWhereClause(action.QuickCount)" ngbDropdownItem>
+                                        {{l('QuickCount')}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <label class="quick-count__value">{{quickCount}}</label>
+                </div>
+                <div>
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">
+                        {{l("Cancel")}}
+                    </button>
+                    <div style="margin-left: 2px;" class="btn-group dropdown" dropdown container="body">
+                        <div class="btn-group">
+                            <button [disabled]="saveDisabled" (click)="saveWhereClause(action.SaveOnly)" type="submit"
+                                    class="btn btn-primary blue parse-sql" [buttonBusy]="saving"
+                                    [busyText]="l('SavingWithThreeDot')">
+                                <i class="fa fa-save"></i> <span>{{l("Save")}}</span>
+                            </button>
+                            <div class="btn-group" ngbDropdown role="group">
+                                <button [disabled]="saveDisabled" data-toggle="tooltip"
+                                        title="{{'BulkOperationsTooltip' | localize}}"
+                                        class="btn btn-primary dropdown-toggle-split" ngbDropdownToggle></button>
+                                <div class="dropdown-menu" ngbDropdownMenu>
+                                    <button (click)="saveWhereClause(action.AddToFavorites)" ngbDropdownItem>
+                                        {{l('AddToFavoritesTitle')}}
+                                    </button>
+                                    <button (click)="saveWhereClause(action.AppendRules)" ngbDropdownItem>
+                                        {{l('AppendRulesTitle')}}
+                                    </button>
+                                    <button (click)="saveWhereClause(action.BulkCampaignHistory)" ngbDropdownItem>
+                                        {{l('BulkCamapignHistoryTitle')}}
+                                    </button>
+                                    <button (click)="saveWhereClause(action.DeleteRules)" ngbDropdownItem>
+                                        {{l('DeleteRulesTitle')}}
+                                    </button>
+                                    <button (click)="saveWhereClause(action.DeleteSegments)" ngbDropdownItem>
+                                        {{l('DeleteSegmentsTitle')}}
+                                    </button>
+                                    <button (click)="saveWhereClause(action.EditSegments)" ngbDropdownItem>
+                                        {{l('EditSegmentsTitle')}}
+                                    </button>
+                                    <button (click)="saveWhereClause(action.FindReplace)" ngbDropdownItem>
+                                        {{l('FindReplaceTitle')}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>

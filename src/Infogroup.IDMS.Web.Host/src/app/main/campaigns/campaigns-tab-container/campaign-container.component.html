@@ -1,0 +1,31 @@
+<tabset>
+    <tab #campaign heading="Campaigns" style="margin-top:1.6%">
+        <campaigns (openSelection)="openSelectionTab($event)" (editCampaignCompleted)="updateCampaign($event)"
+            (editExportLayout)="onEditExportLayout($event)">
+        </campaigns>
+    </tab>
+    <tab #personEdit *ngFor="let tabz of tabs" [active]="tabz.active" (select)="tabz.active = true"
+        (deselect)="tabz.active = false" [disabled]="tabz.disabled" [removable]="tabz.removable"
+        (removed)="removeTabHandler(tabz)" [customClass]="tabz.customClass">
+        <ng-template tabHeading>
+            <span [tooltip]="tabz.databaseName">{{tabz.title}}</span>
+        </ng-template>
+        <selection [campaignId]="tabz.campaignId" [segmentId]="tabz.segmentId" [buildId]="tabz.buildId"
+            [splitType]="tabz.splitType" [mailerId]="tabz.mailerId" [divisionId]="tabz.divisionId" [databaseId]="tabz.databaseId"
+            [build]="tabz.build" (reloadCampaign)="onReloadCampaign()" (cancelSelection)="onCancelSelection()"
+            (excuteCampaign)="onExcuteCampaign()" (editExportLayout)="onEditExportLayout($event)"
+            (editCampaignCompleted)="updateCampaign($event)" (favouritesChanged)="onFavouriteChanged()"
+            (onEditSegmentComplete)="refreshSegment($event)">
+        </selection>
+    </tab>
+    <tab #exportLayout *ngFor="let tabzExportLayout of tabsExportLayout" [heading]="tabzExportLayout.title"
+        [active]="tabzExportLayout.active" (select)="tabzExportLayout.active = true"
+        (deselect)="tabzExportLayout.active = false" [disabled]="tabzExportLayout.disabled"
+        [removable]="tabzExportLayout.removable" (removed)="removeTabHandlerExportLayout(tabzExportLayout)"
+        [customClass]="tabzExportLayout.customClass">
+        <CreateOrEditExportLayout [isCampaign]="tabzExportLayout.isCampaign"
+            [currentStatus]="tabzExportLayout.currentStatus" [campaignId]="tabzExportLayout.campaignId"
+            (closeExportLayout)="onCancelSelectionExportLayout()" (reloadCampaign)="onReloadCampaign()">
+        </CreateOrEditExportLayout>
+    </tab>
+</tabset>

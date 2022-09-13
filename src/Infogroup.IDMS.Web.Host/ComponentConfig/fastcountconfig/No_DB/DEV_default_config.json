@@ -1,0 +1,42 @@
+{
+  "dashboard": {
+    "databases": [
+      1267,1295
+    ]
+  },
+  "broker": {
+    "value": 1500,
+    "label": "Exact Data : 1500"
+  },
+  "groups": [
+    "Demographics",
+    "Suppression",
+    "Output Options"
+  ],
+  "additional-fields": {
+    "Saved_Order": {
+      "field": "Saved_Order",
+      "fc-description": "Saved Counts",
+      "group": "Suppression",
+      "default-input": "none",
+      "group-values": false,
+      "modal-popup": true
+    },
+    "Placed_Order": {
+      "field": "Placed_Order",
+      "fc-description": "Orders Placed",
+      "group": "Suppression",
+      "default-input": "none",
+      "group-values": false,
+      "modal-popup": true
+    },
+    "Maxper": {
+      "field": "Maxper",
+      "fc-description": "All/one per",
+      "group": "Output Options",
+      "default-input": "none",
+      "group-values": false,
+      "modal-popup": true
+    }
+  }
+}

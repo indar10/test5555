@@ -1,0 +1,94 @@
+
+    <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+
+        <p-table #dataTable
+                 [value]="primengTableHelper.records"
+                 [busyIf]="primengTableHelper.isLoading"
+                 [scrollable]="true"
+                 scrollHeight="200px"
+                 [responsive]="primengTableHelper.isResponsive"
+                 dataKey="campaignId"
+                 [resizableColumns]="primengTableHelper.resizableColumns">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 15%" pSortableColumn="id">
+                        {{l('ID')}}
+                        <p-sortIcon field="id"></p-sortIcon>
+                    </th>
+                    <th style="width:20%" pSortableColumn="iStatus">
+                        {{l('Status')}}
+                        <p-sortIcon field="iStatus"></p-sortIcon>
+                    </th>
+                    <th style="width: 20%" pSortableColumn="iStopRequested">
+                        {{l('Stop Requested?')}}
+                        <p-sortIcon field="iStopRequested"></p-sortIcon>
+                    </th>
+                    <th style="width: 20%" pSortableColumn="cCreatedBy">
+                        {{l('Created By')}}
+                        <p-sortIcon field="cCreatedBy"></p-sortIcon>
+                    </th>
+                    <th style="width: 15%" pSortableColumn="dCreatedDate">
+                        {{l('Date')}}
+                        <p-sortIcon field="dCreatedDate"></p-sortIcon>
+                    </th>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-record="$implicit" let-expanded="expanded">
+
+                <tr>
+                    <td style="width:15%">
+                        <span class="ui-column-title"> {{l('id')}}</span>
+                        {{record.id}}
+                    </td>
+                    <td style="width:20%">
+                        <span class="ui-column-title"> {{l('iStatus')}}</span>
+                        {{record.iStatus | statusTransform}}
+                    </td>
+                    <td style="width:20%">
+                        <span class="ui-column-title"> {{l('iStopRequested')}}</span>
+                        {{record.iStopRequested}}
+                    </td>
+                    <td style="width:20%">
+                        <span class="ui-column-title"> {{l('cCreatedBy')}}</span>
+                        {{record.cCreatedBy }}
+                    </td>
+                    <td style="width:15%">
+                        <span class="ui-column-title"> {{l('dCreatedDate')}}</span>
+                        {{record.dCreatedDate}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>        
+    </div>
+<br />
+<hr />
+    <div *ngIf="campaignStatus === 30">
+        <p-fieldset legend="More Details"  [toggleable]="true" [collapsed]="true" (onAfterToggle)="getRealTimeStatus($event)"  tooltip="Click here for more details">     
+            <div class="primeng-datatable-container" [busyIf]="primengTableHelperActiveStatus.isLoading">
+                <p-table #dataTable
+                         [value]="primengTableHelperActiveStatus.records"
+                         [busyIf]="primengTableHelperActiveStatus.isLoading"
+                         [scrollable]="true"
+                         scrollHeight="100px"
+                         [responsive]="primengTableHelperActiveStatus.isResponsive"
+                         dataKey="campaignId"
+                         [resizableColumns]="primengTableHelperActiveStatus.resizableColumns">
+                    <ng-template pTemplate="body" let-record="$implicit" let-expanded="expanded">
+                        <tr>
+                            <td style="width:15%">
+                                <span class="ui-column-title"> {{l('id')}}</span>
+                                {{record}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                <div class="primeng-no-data" *ngIf="primengTableHelperActiveStatus.totalRecordsCount == 0">
+                    {{l('NoData')}}
+                </div>
+            </div>
+        </p-fieldset>
+    </div>
+   
+
+    

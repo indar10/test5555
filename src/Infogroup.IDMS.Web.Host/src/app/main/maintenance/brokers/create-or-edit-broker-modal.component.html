@@ -1,0 +1,117 @@
+<div class="modal-content">
+    <form *ngIf="active" #brokerForm="ngForm" novalidate (ngSubmit)="save(brokerForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="broker.id">{{l("EditBrokers")}}</span>
+                <span *ngIf="!broker.id">{{l("CreateBroker")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Broker_cCode">{{l("ID")}} </label>
+                    <input type="text" id="Broker_id" class="form-control" [(ngModel)]="broker.id" name="id" [(hidden)]="!broker.id" [disabled]="broker.id" />
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Broker_cCode">{{l("cCode")}} </label>
+                    <input type="text" id="Broker_cCode" class="form-control" maxlength="15" [(ngModel)]="broker.cCode" name="cCode" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Broker_cCompany">{{l("cCompany")}} *</label>
+                    <input type="text" id="Broker_cCompany" #companyInput="ngModel" maxlength="50" class="form-control" [(ngModel)]="broker.cCompany" name="cCompany" noSpaceValidator="{{broker.cCompany}}" />
+                    <div *ngIf="companyInput.errors && (companyInput.dirty || companyInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!companyInput.errors.noSpaceValidator">
+                            {{l('EnterCompany')}}
+                        </div>
+                    </div>                   
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Broker_cAddress1">{{l("cAddress1")}}</label>
+                    <input type="text" id="Broker_cAddress1" rows="1" class="form-control" maxlength="50" [(ngModel)]="broker.cAddress1" name="cAddress1" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Broker_cAddress2">{{l("cAddress2")}}</label>
+                    <input type="text" id="Broker_cAddress2" rows="1" class="form-control" maxlength="50" [(ngModel)]="broker.cAddress2" name="cAddress2" />
+                </div>
+
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Broker_cCity">{{l("cCity")}}</label>
+                    <input type="text" id="Broker_cCity" class="form-control" [(ngModel)]="broker.cCity" maxlength="30" name="cCity" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Broker_cState">{{l("cState")}}</label>
+                    <input type="text" id="Broker_cState" class="form-control" #stateInput="ngModel" maxlength="2" [(ngModel)]="broker.cState" name="cState" pattern="^[a-zA-Z ]{1,2}$" />
+                    <div *ngIf="stateInput.errors && (stateInput.dirty || stateInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!stateInput.errors.pattern">
+                            {{l("InvalidState")}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Broker_cZip">{{l("cZip")}}</label>
+                    <input type="text" id="Broker_cZip" class="form-control" #zipInput="ngModel" maxlength="10" [(ngModel)]="broker.cZip" name="cZip" pattern="^\d{5}(?:-\d{4})?$|^[a-zA-Z]\d[a-zA-Z]\s?\d[a-zA-Z]\d$" />
+                    <div *ngIf="zipInput.errors && (zipInput.dirty || zipInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!zipInput.errors.pattern">
+                            {{l("InvalidZip")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Broker_cPhone">{{l("cPhone")}}</label>
+                    <input type="text" id="Broker_cPhone" class="form-control" #phoneInput="ngModel" maxlength="20" [(ngModel)]="broker.cPhone" name="cPhone" pattern="\d{3}\-\d{3}\-\d{4}" />
+                    <div *ngIf="phoneInput.errors && (phoneInput.dirty || phoneInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!phoneInput.errors.pattern">
+                            {{l("InvalidPhone")}}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Broker_cFax">{{l("cFax")}}</label>
+                    <input type="text" id="Broker_cFax" class="form-control" #faxInput="ngModel" maxlength="20" [(ngModel)]="broker.cFax" name="cFax" pattern="\d{3}\-\d{3}\-\d{4}" />
+                    <div *ngIf="faxInput.errors && (faxInput.dirty || faxInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!faxInput.errors.pattern">
+                            {{l("InvalidFax")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Broker_cNotes">{{l("cNotes")}}</label>
+                    <textarea type="text" id="Broker_cNotes" rows="1" class="form-control" [(ngModel)]="broker.cNotes" name="cNotes"></textarea>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label class="switchPopup">
+                        <input type="checkbox" id="Broker_iIsActive" [(ngModel)]="broker.iIsActive" name="iIsActive" checked />
+                        <span class="slider round">
+                            <span class="on">Active</span><span class="off">Inactive</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button type="submit" class="btn btn-primary blue" [disabled]="!brokerForm.form.valid || (!permission.isGranted('Pages.Brokers.Edit') && broker.id)" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+        </div>
+    </form>
+</div>

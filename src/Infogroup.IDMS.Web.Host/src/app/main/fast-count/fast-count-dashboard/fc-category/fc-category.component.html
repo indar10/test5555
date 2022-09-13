@@ -1,0 +1,23 @@
+<div class="mb-4">
+    <div class="kt-subheader kt-grid__item">
+        <div>
+            <div class="kt-subheader__main">
+                <h3 class="kt-subheader__title">
+                    <span>Browse by Category</span>
+                </h3>
+            </div>
+        </div>
+    </div>
+    <p-table [value]="category">
+        <ng-template pTemplate="body" let-category>
+        <tr (click)="getCampaignForCopy(category.copyId)" style="cursor: pointer;">
+            <td style="width: 5%;" class="text-center">{{category.index}}</td>
+            <td>
+                <span style="width: 300px;">{{category.title}}</span>
+                <span>{{category.description}}</span>
+            </td>
+        </tr>
+    </ng-template>
+    </p-table>
+</div>
+<app-page-loader *ngIf="isLoading"></app-page-loader>

@@ -1,0 +1,147 @@
+<div class="modal-content">
+    <form *ngIf="active" #contactForm="ngForm" novalidate (ngSubmit)="save(contactForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="contact.id">{{l("EditContacts")}}</span>
+                <span *ngIf="!contact.id">{{l("CreateContact")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cCode">{{l("ID")}} </label>
+                    <input type="text" id="Contact_id" class="form-control" [(ngModel)]="contact.id" name="id" [(hidden)]="!contact.id" [disabled]="contact.id" />
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cCode">{{l("cCompany")}} </label>
+                    <input type="text" id="Contact_cCompany" class="form-control" [(ngModel)]="contact.cCompany" disabled name="cCompany" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cFirstName">{{l("cFirstName")}} *</label>
+                    <input type="text" id="Contact_cFirstName" class="form-control" #cFirstNameInput="ngModel" [(ngModel)]="contact.cFirstName" maxlength="50" name="cFirstName" noSpaceValidator="{{contact.cFirstName}}" />
+                    <div *ngIf="cFirstNameInput.errors && (cFirstNameInput.dirty || cFirstNameInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!cFirstNameInput.errors.noSpaceValidator">
+                            {{l("EnterFirstName")}}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cLastName">{{l("cLastName")}} *</label>
+                    <input type="text" id="Contact_cLastName" class="form-control" #cLastNameInput="ngModel" [(ngModel)]="contact.cLastName" maxlength="50" name="cLastName" noSpaceValidator="{{contact.cLastName}}" />
+                    <div *ngIf="cLastNameInput.errors && (cLastNameInput.dirty || cLastNameInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!cLastNameInput.errors.noSpaceValidator">
+                            {{l("EnterLastName")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cTitle">{{l("cTitle")}}</label>
+                    <input type="text" id="Contact_cTitle" class="form-control" [(ngModel)]="contact.cTitle" name="cTitle" maxlength="50" />
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cAddress1">{{l("cAddress1")}}</label>
+                    <input type="text" id="Contact_cAddress1" class="form-control" [(ngModel)]="contact.cAddress1" name="cAddress1" maxlength="50" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cAddress2">{{l("cAddress2")}}</label>
+                    <input type="text" id="Contact_cAddress2" class="form-control" [(ngModel)]="contact.cAddress2" name="cAddress2" maxlength="50" />
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cCity">{{l("cCity")}}</label>
+                    <input type="text" id="Contact_cCity" class="form-control" [(ngModel)]="contact.cCity" name="cCity" maxlength="30" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cState">{{l("cState")}}</label>
+                    <input type="text" id="Contact_cState" class="form-control" [(ngModel)]="contact.cState" name="cState" maxlength="2" />
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cZIP">{{l("cZip")}}</label>
+                    <input type="text" id="Contact_cZIP" class="form-control" #zipInput="ngModel" [(ngModel)]="contact.cZIP" name="cZIP" maxlength="10" pattern="^\d{5}(?:-\d{4})?$|^[a-zA-Z]\d[a-zA-Z]\s?\d[a-zA-Z]\d$" />
+                    <div *ngIf="zipInput.errors && (zipInput.dirty || zipInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!zipInput.errors.pattern">
+                            {{l("InvalidZip")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cPhone1">{{l("cPhone1")}}</label>
+                    <input type="text" id="Contact_cPhone1" class="form-control" [(ngModel)]="contact.cPhone1" #phone1Input="ngModel" name="cPhone1" maxlength="20" pattern="\d{3}\-\d{3}\-\d{4}" />
+                    <div *ngIf="phone1Input.errors && (phone1Input.dirty || phone1Input.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!phone1Input.errors.pattern">
+                            {{l("InvalidPhone")}}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cPhone2">{{l("cPhone2")}}</label>
+                    <input type="text" id="Contact_cPhone2" class="form-control" [(ngModel)]="contact.cPhone2" #phone2Input="ngModel" name="cPhone2" maxlength="20" pattern="\d{3}\-\d{3}\-\d{4}" />
+                    <div *ngIf="phone2Input.errors && (phone2Input.dirty || phone2Input.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!phone2Input.errors.pattern">
+                            {{l("InvalidPhone")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cFax">{{l("cFax")}}</label>
+                    <input type="text" id="Contact_cFax" class="form-control" #faxInput="ngModel" pattern="\d{3}\-\d{3}\-\d{4}" [(ngModel)]="contact.cFax" name="cFax" maxlength="20" />
+                    <div *ngIf="faxInput.errors && (faxInput.dirty || faxInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!faxInput.errors.pattern">
+                            {{l("InvalidFax")}}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Contact_cEmailAddress">{{l("cEmailAddress")}} *</label>
+                    <input type="text" id="Contact_cEmailAddress" class="form-control" #emailInput="ngModel" [(ngModel)]="contact.cEmailAddress" name="cEmailAddress" maxlength="80"
+                           pattern="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" noSpaceValidator="{{contact.cEmailAddress}}" required />
+                    <div *ngIf="emailInput.errors && (emailInput.dirty || emailInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!emailInput.errors.pattern">
+                            {{l("InvalidEmailAddress")}}
+                        </div>
+                    </div>
+                    <div *ngIf="emailInput.errors && (emailInput.dirty || emailInput.touched)"
+                         class="form-control-feedback">
+                        <div [hidden]="!emailInput.errors.required">
+                            {{l("EnterEmail")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="switchPopup">
+                    <input type="checkbox" id="Contact_iIsActive" [(ngModel)]="contact.iIsActive" name="iIsActive" checked />
+                    <span class="slider round">
+                        <span class="on">Active</span><span class="off">Inactive</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button type="submit" class="btn btn-primary blue" [disabled]="!contactForm.form.valid || (!permission.isGranted(permissionName) && contact.id || !isEdit)" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+        </div>
+    </form>
+</div>

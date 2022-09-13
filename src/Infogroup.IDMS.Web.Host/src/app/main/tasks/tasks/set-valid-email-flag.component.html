@@ -1,0 +1,53 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #setValidEmailFlagForm="ngForm" novalidate (ngSubmit)="save(setValidEmailFlagForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="taskId">{{l("setValidEmailFlagForm")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body ">                           
+                <general-database-build (taskGeneral)="storeTaskGeneralFrom($event)"></general-database-build>
+            
+                <general-database-build (taskGeneral)="storeTaskGeneralTo($event)"></general-database-build>
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label for="scheduledDate">{{l("scheduledDate")}} *</label>
+                        <div class="ui-fluid">
+                            <p-calendar [(ngModel)]="scheduledDate" dateFormat="mm/dd/yy" name="scheduledDate" [selectOtherMonths]="true" [minDate]="currentDate" [required]="true">
+                                <ng-template pTemplate="date" let-date class="form-control">
+                                    <span style="display:block">{{date.day}}</span>
+                                </ng-template>
+                            </p-calendar>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label for="scheduledTime">{{l("scheduledTime")}} *</label>
+                        <div class="ui-fluid">
+                            <p-inputMask [(ngModel)]="task.scheduledTime" #timeInput="ngModel" timeFormat="HH:MM" mask="99:99" name="scheduledTime" [required]="true"
+                                         placeholder="HH:MM" slotChar="HH:MM" pattern="^(([0-1][0-9])|([1-2][0-3])):([0-5][0-9])$"></p-inputMask>
+                            <div *ngIf="timeInput.errors && (timeInput.dirty || timeInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!timeInput.errors.pattern">
+                                    {{l("InvalidTime")}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+            <div class="modal-footer">
+                <div>
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue"
+                            [disabled]="!setValidEmailFlagForm.form.valid" [buttonBusy]="saving"
+                            [busyText]="l('SavingWithThreeDot')">
+                        <i class="fa fa-save"></i>
+                        <span>{{l("Save")}}</span>
+                    </button>
+                </div>
+            </div>
+    </form>
+</div>

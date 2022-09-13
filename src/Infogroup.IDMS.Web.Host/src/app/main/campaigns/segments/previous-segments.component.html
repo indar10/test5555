@@ -1,0 +1,60 @@
+<div class="row align-items-center child">
+    
+    <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+        <p-table #segmentDataTable (onLazyLoad)="getSegment($event)" [value]="primengTableHelper.records" class="segmentHistoryTable"
+                 rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="false" [lazy]="true"
+                 [scrollable]="true" ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive"
+                 [resizableColumns]="primengTableHelper.resizableColumns" selectionMode="multiple" [(selection)]="addRows" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width:2%">
+                        <p-tableHeaderCheckbox hidden></p-tableHeaderCheckbox>
+                    </th>
+                    <th style="width:1%"></th>
+                    <th style="width: 5%" pSortableColumn="iDedupeOrderSpecified">
+                        {{l('iDedupeOrderSpecified')}}
+                        <p-sortIcon field="iDedupeOrderSpecified"></p-sortIcon>
+                    </th>
+                    <th style="width: 40%" pSortableColumn="cDescription">
+                        {{l('cDescription')}}
+                        <p-sortIcon field="cDescription"></p-sortIcon>
+                    </th>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-record="$implicit">
+                <tr [pSelectableRow]="record">
+                    <td style="width: 2%">
+                        <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                    </td>
+                    <td style="width:1%"></td>
+                    <td style="width: 5%">
+                        <span class="ui-column-title"> {{l('iDedupeOrderSpecified')}}</span>
+                        {{record.iDedupeOrderSpecified}}
+                    </td>
+                    <td style="width: 40%">
+                        <span class="ui-column-title"> {{l('cDescription')}}</span>
+                        {{record.description}}
+                    </td>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                    {{l('NoData')}}
+                </div>
+            </ng-template>
+        </p-table>
+       
+        <div class="primeng-paging-container">
+            <p-paginator rows="{{primengTableHelper.defaultRecordsCountPerPage}}" #paginator
+                (onPageChange)="getSegment($event)" [totalRecords]="primengTableHelper.totalRecordsCount"
+                [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+            </p-paginator>
+            <span class="total-records-count">
+                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+            </span>
+        </div>
+    </div>
+        
+</div>

@@ -1,0 +1,52 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h1 class="modal-title">
+            <span> {{ 'AddToFavoritesTitle' | localize}}</span>
+        </h1>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form #favoritesForm="ngForm" class="kt-form">
+            <div class="form-group">
+                <label for="Description">{{l("UserSelectionName")}} *</label>
+                <input id="Description" maxlength="50" #descriptionInput="ngModel" type="text" class="form-control"
+                    [(ngModel)]="input.cDescription" name="cDescription" required />
+                <validation-messages [formCtrl]="descriptionInput"></validation-messages>
+            </div>
+            <div class="form-group">
+                <label for="Channel">{{l("UserSelectionChannel")}} *</label>
+                <div>
+                    <p-radioButton name="cChannelType" value="P" label="Postal" [(ngModel)]="input.cChannelType"
+                        [style]="{'margin':'8px'}" inputId="cChannelType1">
+                    </p-radioButton>
+                    <p-radioButton name="cChannelType" [style]="{'margin':'8px'}" value="T" label="Tele-marketing"
+                        [(ngModel)]="input.cChannelType" inputId="cChannelType2">
+                    </p-radioButton>
+                    <p-radioButton name="cChannelType" [style]="{'margin':'8px'}" value="E" label="Email "
+                        [(ngModel)]="input.cChannelType" inputId="cChannelType3">
+                    </p-radioButton>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="switchDefault">
+                    <input type="checkbox" id="iIsDefault" [(ngModel)]="input.iIsDefault" tabindex="17"
+                        name="IsActive" />
+                    <span class="slider round">
+                        <span class="on txt-style">Default</span>
+                        <span class="off txt-style">Default</span>
+                    </span>
+                </label>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+        <button type="button" class="btn btn-primary blue" (click)="save()"
+            [disabled]="saving || favoritesForm?.invalid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
+            <i class="fa fa-save"></i>
+            <span>{{l("Save")}}</span>
+        </button>
+    </div>
+</div>

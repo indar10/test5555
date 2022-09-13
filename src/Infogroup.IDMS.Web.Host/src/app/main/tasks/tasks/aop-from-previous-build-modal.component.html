@@ -1,0 +1,41 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #AOPFromPreviousBuildForm="ngForm" novalidate (ngSubmit)="save(AOPFromPreviousBuildForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="taskId">{{l("AOPFromPreviousBuildForm")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <general-database-build (taskGeneral)="storeTaskGeneral($event)"></general-database-build>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="Build">{{l("newBuild")}} *</label>
+                    <div class="ui-fluid">
+                        <p-dropdown [required]="true" [options]="newBuildList"
+                                    [filter]="true" [(ngModel)]="task.newBuildID" name="newBuildID"></p-dropdown>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="listId">{{l("ListId")}} *</label>
+                    <div class="ui-fluid">
+                        <textarea class="form-control" id="listId" [(ngModel)]="task.listId" name="listId" required></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                <button type="submit" class="btn btn-primary blue"
+                        [disabled]="!AOPFromPreviousBuildForm.form.valid" [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')">
+                    <i class="fa fa-save"></i>
+                    <span>{{l("Execute")}}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

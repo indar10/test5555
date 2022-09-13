@@ -1,0 +1,49 @@
+<div [@routerTransition]>
+    <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+        <div class="kt-subheader kt-grid__item">
+            <div [class]="containerClass">
+                <div class="kt-subheader__main">
+                    <h3 class="kt-subheader__title">
+                        <span>{{"RedisCache" | localize}}</span>
+                    </h3>
+                    <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                    <span class="kt-subheader__desc">
+                        {{"CachesHeaderInfo" | localize}}
+                    </span>
+                </div>
+                <div style="padding:0.25rem 0">
+                    <button class="btn btn-primary" (click)="clearAllCaches()">
+                        <i class="fa fa-recycle"></i>
+                        {{"ClearAll" | localize}}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid'">
+            <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__body">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <table class="table table-striped table-hover table-bordered">
+                                <tbody>
+                                    <tr *ngFor="let cache of caches">
+                                        <td class="cache-label">
+                                            <span>{{cache.label}}</span>                                                                                       
+                                        </td>
+                                        <td class="cache-count"> <span  name="count">{{cache.count}}</span></td>
+                                        <td class="cache-action">
+                                            <button class="btn btn-primary btn-sm pull-right"
+                                            (click)="clearCache(cache.value)">
+                                                  {{"Clear" | localize}}
+                                              </button>
+                                         </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

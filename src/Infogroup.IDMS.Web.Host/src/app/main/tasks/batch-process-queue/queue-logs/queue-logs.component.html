@@ -1,0 +1,45 @@
+<div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+
+        <p-table #dataTable
+             [value]="primengTableHelper.records"
+             [busyIf]="primengTableHelper.isLoading"
+             [scrollable]="true"
+             scrollHeight="200px"
+             [responsive]="primengTableHelper.isResponsive"
+             dataKey="campaignId"
+             [resizableColumns]="primengTableHelper.resizableColumns">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 6% !important" pSortableColumn="id">
+                    {{l('ID')}}
+                    <p-sortIcon field="id"></p-sortIcon>
+                </th>
+                <th style="width:10%" pSortableColumn="ProcessTypeDescription">
+                 {{l('ProcessTypeDescription')}}
+                    <p-sortIcon field="iStatus"></p-sortIcon>
+                </th>
+                <th style="width:10%" pSortableColumn="result">
+                  {{l('Result')}}
+                    <p-sortIcon field="iStopRequested"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-record="$implicit" let-expanded="expanded">
+
+            <tr>
+                <td style="width:6%">
+                    <span class="ui-column-title"> {{l('id')}}</span>
+                    {{record.id}}
+                </td>
+                <td style="width:10%">
+                    <span class="ui-column-title">{{l('ProcessTypeDescription')}}</span>
+                   {{record.processTypeDescription}}
+                </td>
+                <td style="width:10%">
+                    <span class="ui-column-title">{{l('Result')}}</span>
+                    {{record.result}}
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>        
+</div> 

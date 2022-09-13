@@ -1,0 +1,32 @@
+﻿.rules-groups-container {
+    position: relative;
+    margin: 4px 0;
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid #EEE;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.rules-groups-container {
+    padding: 10px;
+    padding-bottom: 6px;
+    border: 1px solid #A9A9A9;
+    background: rgba(242, 243, 248, 0.6);
+    width: 100%;
+}
+
+
+.btn-primary:not(:disabled):not(.disabled).active {
+    background-color: #0000cd !important;
+    font-weight: bold !important;
+}
+
+.btn-success-addrule {
+    background-color: #FBD46D !important;
+    color: #ffffff !important;
+}
+
+    .btn-success-addrule:hover {
+        background-color: #f0cb69 !important;
+        color: #ffffff !important;
+    }

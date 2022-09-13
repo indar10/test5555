@@ -1,0 +1,30 @@
+.kt-portlet .kt-portlet__body {
+    padding: 0rem 0.1rem 0.1rem 0.1rem !important;
+    min-height: 242px !important;
+}
+
+.portlet-body__grey {
+    background-color: #f4f4f4 !important;
+}
+
+
+.primeng-datatable-container .primeng-no-data {
+    border-color: white !important;
+}
+
+.multiField-container {
+    padding-right: 2px;
+    padding-left: 3px;
+}
+
+
+
+
+
+
+
+
+
+
+
+

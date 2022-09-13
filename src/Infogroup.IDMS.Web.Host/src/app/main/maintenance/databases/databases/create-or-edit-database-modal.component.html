@@ -1,0 +1,93 @@
+
+        <div class="modal-content">
+            <form *ngIf="active" #databaseForm="ngForm" novalidate (ngSubmit)="save(databaseForm)" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="database.id">{{l("EditDatabase")}}</span>
+                        <span *ngIf="!database.id">{{l("CreateNewDatabaseLabel")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Database_id">{{l("ID")}}</label>
+                            <input type="text" id="Database_id" class="form-control" [(ngModel)]="database.id" [(hidden)]="!database.id" [disabled]="database.id" name="cDatabaseId" />
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Database_cDatabaseName">{{l("Name")}} *</label>
+                            <input type="text" id="Database_cDatabaseName" #nameInput="ngModel" class="form-control" 
+                                   [(ngModel)]="database.cDatabaseName" name="cDatabaseName" maxlength="80" noSpaceValidator="{{database.cDatabaseName}}" />
+                            <div *ngIf="nameInput.errors && (nameInput.dirty || nameInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!nameInput.errors.noSpaceValidator">
+                                    {{l("EnterdatabaseName")}}
+                                </div>
+                            </div>
+                            <validation-messages [formCtrl]="nameInput"></validation-messages>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group m-form__group  col-xs-6 col-sm-6 col-md-6">
+                            <label for="Database_LK_DatabaseType">{{l("LK_DatabaseType")}} *</label>
+                            <p-dropdown [options]="databaseTypes" [filter]="true"
+                                        [(ngModel)]="database.lK_DatabaseType"  [style]="{'width':'100%'}" name="lK_DatabaseType"></p-dropdown>
+                        </div>
+                        <div class="form-group m-form__group  col-xs-6 col-sm-6 col-md-6">
+                            <label for="DivisioncDivisionName">{{l("Division")}} *</label>
+                            <p-dropdown [options]="divisions" [filter]="true"
+                                        [(ngModel)]="database.divisionId" placeholder="Select Division" [style]="{'width':'100%'}" name="divisionId" required></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group m-form__group  col-xs-6 col-sm-6 col-md-6">
+                            <label for="Database_LK_AccountingDivisionCode">{{l("LK_AccountingDivisionCode")}} *</label>
+                            <p-dropdown [options]="divisionCodes" [filter]="true"
+                                        [(ngModel)]="database.lK_AccountingDivisionCode" placeholder="Select Division Code" [style]="{'width':'100%'}" name="LK_AccountingDivisionCode" required></p-dropdown>
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Database_cAdministratorEmail">{{l("cAdministratorEmail")}} *</label>
+                            <input type="text" id="Database_cAdministratorEmail" class="form-control" #emailInput="ngModel" [(ngModel)]="database.cAdministratorEmail" name="cAdministratorEmail" maxlength="80" pattern="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" required />
+                            <div *ngIf="emailInput.errors && (emailInput.dirty || emailInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!emailInput.errors.pattern">
+                                    {{l("InvalidEmail")}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Database_cListReadyToLoadPath">{{l("cListReadyToLoadPath")}} *</label>
+                        <textarea type="text" #loadInput="ngModel" class="form-control" [(ngModel)]="database.cListReadyToLoadPath" name="cListReadyToLoadPath" pattern="[\s\S]{1,200}" noSpaceValidator="{{database.cListReadyToLoadPath}}"></textarea>
+                        <div *ngIf="loadInput.errors && (loadInput.dirty || loadInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!loadInput.errors.noSpaceValidator">
+                                {{l("EnterLoadPath")}}
+                            </div>
+                            <div [hidden]="!loadInput.errors.pattern">
+                                {{l("InvalidLoadPath")}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Database_cListFileUploadedPath">{{l("cListFileUploadedPath")}} *</label>
+                        <textarea type="text" #uploadInput="ngModel" class="form-control" [(ngModel)]="database.cListFileUploadedPath" name="cListFileUploadedPath" pattern="[\s\S]{1,200}" noSpaceValidator="{{database.cListFileUploadedPath}}"></textarea>
+                        <div *ngIf="uploadInput.errors && (uploadInput.dirty || uploadInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!uploadInput.errors.noSpaceValidator">
+                                {{l("EnterUploadPath")}}
+                            </div>
+                            <div [hidden]="!uploadInput.errors.pattern">
+                                {{l("InvalidUploadPath")}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!databaseForm.form.valid || (!permission.isGranted('Pages.Databases.Edit') && database.id)" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>

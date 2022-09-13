@@ -1,0 +1,77 @@
+<div class="modal-content" [busyIf]="isLoading">
+    <div class="modal-header">
+        <h1 class="modal-title">
+            <span>Select City</span>
+        </h1>
+
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div><h3 style="font-size:inherit;color:firebrick;">NOTE: Cancel/Close Pop-Up for bulk upload option</h3></div>
+        <div style="
+        display: grid;
+        grid-template-columns: 2fr auto 1.5fr;
+        grid-auto-flow: column;
+        gap: 1rem;
+        height: 400px;
+      ">
+            <div>
+                <div class="form-group">
+                    <label for="states">State</label>
+                    <div class="ui-fluid">
+                        <p-dropdown [options]="states" [filter]="true" [style]="{ width: '100%' }"
+                            (onChange)="getCity()" name="states" id="states" [(ngModel)]="selectedState">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="cities && cities.length">
+                    <label for="cities">City</label>
+                    <div class="ui-fluid">
+                        <p-listbox [options]="cities" [(ngModel)]="selectedCities" [multiple]="true" [filter]="true"
+                            [style]="{ width: '100%' }" name="cities" id="cities" [checkbox]="true"
+                            [listStyle]="{'max-height':'250px'}"></p-listbox>
+                    </div>
+                </div>
+            </div>
+            <div style="border-right: 1px solid #ccc;"></div>
+            <div style="max-height: 400px; overflow-y: auto">
+                <div class="form-group">
+                    <label for="txtSearch">Search</label>
+                    <input type="search" class="form-control" id="txtSearch" name="txtSearch" placeholder="Search..."
+                        [(ngModel)]="searchText" />
+                </div>
+                <ul class="list-group">
+                    <ng-container *ngIf="getSearchedCities(); let cities; else noItems">
+                        <li *ngFor="let city of cities" class="list-group-item">
+                            <span class="name">{{ city }}</span>
+                            <button class="btn btn-default btn-xs pull-right remove-item" style="padding: 1px 6px"
+                                (click)="deleteCity(city)">
+                                <i class="far fa-times p-0"></i>
+                            </button>
+                        </li>
+                    </ng-container>
+                    <ng-template #noItems>
+                        <div class="text-center">Selected cities will appear here</div>
+                    </ng-template>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button [disabled]="isLoading" type="button" class="btn btn-default" (click)="close()">
+            {{ l("Cancel") }}
+        </button>
+        <button class="btn btn-outline-warning" [disabled]="!(selectedCities && selectedCities.length)"
+            (click)="save(false)">
+            <i class="fa fa-thumbs-down"></i>
+            <span>{{ selectedCities.length > 1 ? "Omit All" : "Omit" }}</span>
+        </button>
+        <button class="btn btn-outline-success" [disabled]="!(selectedCities && selectedCities.length)"
+            (click)="save(true)">
+            <i class="fa fa-thumbs-up"></i>
+            <span>{{ selectedCities.length > 1 ? "Add All" : "Add" }}</span>
+        </button>
+    </div>
+</div>

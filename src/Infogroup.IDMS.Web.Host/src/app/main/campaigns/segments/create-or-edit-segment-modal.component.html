@@ -1,0 +1,202 @@
+<div class="modal-content" style= "min-width: 700px;"  [busyIf]="isLoading">
+  <form *ngIf="active" #databaseForm="ngForm" novalidate (ngSubmit)="save(databaseForm)" autocomplete="off">
+    <div class="modal-header">
+      <h1 class="modal-title">
+        <span *ngIf="segment.id">{{ l("EditSegmentLabel") }}</span>
+        <span *ngIf="!segment.id">{{ l("AddSegment") }}</span>
+      </h1>
+      <button type="button" class="close" (click)="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <fieldset ngModelGroup="mainForm">
+        <div class="form-group">
+          <div class="form-group">
+            <label>{{ l("#") }}</label>
+            <input type="number" id="Segment_ID" class="form-control" [(ngModel)]="segment.iDedupeOrderSpecified"
+              name="ID" disabled />
+          </div>
+
+          <div class="form-group">
+            <label>{{ l("cDescription") }} *</label>
+            <input type="text" #descriptionInput="ngModel" id="Segment_cDescription" class="form-control"
+              [(ngModel)]="segment.cDescription" name="cDescription" maxLen="50" required />
+            <div *ngIf="
+                descriptionInput.errors &&
+                (descriptionInput.dirty || descriptionInput.touched)
+              " class="form-control-feedback">
+              <div [hidden]="!descriptionInput.errors.maxLen">
+                {{ l("maxLength50") }}
+              </div>
+            </div>
+            <validation-messages [formCtrl]="descriptionInput"></validation-messages>
+          </div>
+          <div class="form-group">
+            <label>{{ l("RequiredQuantity") }} *</label>
+            <input type="text" maxNumber="2147483647" #requiredQuantityInput="ngModel" id="Segment_iRequiredQty"
+              class="form-control" [(ngModel)]="irequiredQuantityValue" valueValidator="^\bALL AVAILABLE\b$|^\d+$"
+              name="iRequiredQty" (keydown)="onRequiredQuantityKeyDown($event)" required />
+            <div *ngIf="
+                requiredQuantityInput.errors &&
+                (requiredQuantityInput.dirty || requiredQuantityInput.touched)
+              " class="form-control-feedback">
+              <div [hidden]="!requiredQuantityInput.errors.valueValidator">
+                {{ l("enterValidValue") }}
+              </div>
+            </div>
+            <div *ngIf="
+                requiredQuantityInput.errors &&
+                (requiredQuantityInput.dirty || requiredQuantityInput.touched)
+              " class="form-control-feedback">
+              <div [hidden]="!requiredQuantityInput.errors.maxNumber">
+                {{ l("maxIntSize") }}
+              </div>
+            </div>
+            <validation-messages [formCtrl]="requiredQuantityInput"></validation-messages>
+          </div>
+          <div class="form-group">
+            <div class="row m--margin-bottom-10">
+              <div class="col-md-8">
+                <label for="segment_cNthPriorityFieldName">Nth Priority Field</label>
+                <div class="ui-fluid">
+                  <p-autoComplete [minLength]="3" [suggestions]="databaseFields" [dropdown]="true" (completeMethod)="searchFields($event, false)" [placeholder]="'Search Fields'" [forceSelection]="true" name="cNthPriorityFieldName" id="segment_cNthPriorityFieldName" field="label" [(ngModel)]="cNthPriorityField" (onDropdownClick)="searchFields($event, true)" dropdownMode="current" (onSelect)="onFieldSelect($event)" (onBlur)="onFieldSelect($event)">
+                  </p-autoComplete>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="segment_cPriorityOrder">Nth Priority Field Order</label>
+                <p-dropdown [options]="pFieldOrder" [style]="{ width: '100%' }" name="segment_cPriorityOrder"
+                  id="segment_cPriorityOrder" [(ngModel)]="segment.cNthPriorityFieldOrder" [disabled]="disabledPriorityOrderField || !cNthPriorityField">
+                </p-dropdown>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row m--margin-bottom-10">
+              <div class="col-md-8">
+                <label>{{ l("KeyCode1Label") }}</label>
+                <input type="text" #keyCode1Input="ngModel" id="Segment_cKeyCode1" class="form-control"
+                  [(ngModel)]="segment.cKeyCode1" name="cKeyCode1" maxLen="50" />
+                <div *ngIf="
+                    keyCode1Input.errors &&
+                    (keyCode1Input.dirty || keyCode1Input.touched)
+                  " class="form-control-feedback">
+                  <div [hidden]="!keyCode1Input.errors.maxLen">
+                    {{ l("maxLength50") }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label>{{ l("KeyCode2Label") }}</label>
+                <input type="text" #keycode2Input="ngModel" id="Segment_cKeyCode2" class="form-control"
+                  [(ngModel)]="segment.cKeyCode2" name="cKeyCode2" maxLen="15" />
+                <div *ngIf="
+                    keycode2Input.errors &&
+                    (keycode2Input.dirty || keycode2Input.touched)
+                  " class="form-control-feedback">
+                  <div [hidden]="!keycode2Input.errors.maxLen">
+                    {{ l("maxLength15") }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row m--margin-bottom-10">
+              <div class="col-md-8">
+                <label>{{ l("cMaxPerGroup") }}</label> <br />
+                <p-dropdown [options]="maxPerDrop" [filter]="true" [(ngModel)]="maxPerGroup" name="maxPerDrop"
+                  [style]="{ width: '100%' }" (onChange)="change()"></p-dropdown>
+              </div>
+              <div class="col-md-4" *ngIf="splitType !== 4">
+                <label>{{ l("outputQuantity") }}</label><br />
+                <input type="text" #outputQuantity="ngModel" class="form-control" maxNumber="{{ segment.iProvidedQty }}"
+                  digitOnly name="outputQuantity" style="width: 100%; height: 50%" [disabled]="outputQuantityDisabled"
+                  [(ngModel)]="segment.iOutputQty" />
+                <div *ngIf="
+                    outputQuantity.errors &&
+                    (outputQuantity.dirty || outputQuantity.touched)
+                  " class="form-control-feedback">
+                  <div [hidden]="!outputQuantity.errors.maxNumber">
+                    {{ l("outputQuantityMax") }}
+                  </div>
+                </div>
+                <validation-messages [formCtrl]="outputQuantity"></validation-messages>
+              </div>
+              <div class="col-md-4" *ngIf="splitType === 4">
+                <label>{{ l("outputQuantity") }}</label><br />
+                <input type="text" #outputQuantity="ngModel" class="form-control" data-toggle="tooltip"
+                  title="You cannot change the output quantity at this point since the Spilt into N Parts option is selected."
+                  name="outputQuantity" style="width: 100%; height: 50%" [disabled]="true"
+                  [(ngModel)]="segment.iOutputQty" />
+              </div>
+            </div>
+          </div>
+          <div class="row m--margin-bottom-10">
+            <div class="form-group" [class]="NetGroupWidth">
+              <label>{{ l("NetGroup") }} *</label>
+              <input type="text" #netGroupInput="ngModel" id="Segment_iGroup" class="form-control"
+                [(ngModel)]="segment.iGroup" name="iGroup" maxNumber="2147483647" minNumber="1" pattern="^[0-9]*$"
+                required />
+              <div *ngIf="
+                  netGroupInput.errors &&
+                  (netGroupInput.dirty || netGroupInput.touched)
+                " class="form-control-feedback">
+                <div [hidden]="
+                    !netGroupInput.errors.maxNumber &&
+                    !netGroupInput.errors.pattern
+                  ">
+                  {{ l("NetGroupMaxValueValidationMsg") }}
+                </div>
+                <div [hidden]="!netGroupInput.errors.minNumber">
+                  {{ l("NetGroupMinValueValidationMsg") }}
+                </div>
+                <div [hidden]="!netGroupInput.errors.required">
+                  {{ l("NetGroupReuiredMsg") }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-xs-4 col-sm-4 col-md-4 marginTop8" *ngIf="segment.applyDefaultRules">
+              <label class="switchL" style="margin: 0px">
+                <input type="checkbox" id="iUseAutosuppress" [(ngModel)]="segment.iUseAutosuppress" tabindex="17"
+                  name="iUseAutosuppress" />
+                <span class="sliderl round">
+                  <span class="on textAllignL">{{
+                    l("ApplyDefaultRules")
+                    }}</span><span class="off textAllignL">{{
+                    l("ApplyDefaultRules")
+                    }}</span>
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-xs-6 col-sm-6 col-md-6">
+              <label class="switchL">
+                <input type="checkbox" id="togBtn" name="toggle" [(ngModel)]="segment.iIsRandomRadiusNth"
+                  [disabled]="iIsRadiusDisabled" />
+                <div class="sliderl round">
+                  <span class="on textAllignL">{{
+                    l("RandomRadiusNthLabel")
+                    }}</span><span class="off textAllignL">{{
+                    l("RandomRadiusNthLabel")
+                    }}</span>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div class="modal-footer">
+      <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">
+        {{ l("Cancel") }}
+      </button>
+      <button type="submit" class="btn btn-primary blue" [disabled]="!databaseForm.form.valid || saveDisabled"
+        [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
+        <i class="fa fa-save"></i> <span>{{ l("Save") }}</span>
+      </button>
+    </div>
+  </form>
+</div>

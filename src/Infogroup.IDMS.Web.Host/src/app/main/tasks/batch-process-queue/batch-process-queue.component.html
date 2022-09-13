@@ -1,0 +1,194 @@
+<div [@routerTransition]>
+    <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+        <div class="kt-subheader kt-grid__item">
+            <div [class]="containerClass">
+               
+            </div>
+        </div>
+        <div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid'">
+            <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__body">
+                    <form class="kt-form" autocomplete="off">
+                        <div>
+                            <div class="row align-items-center">
+                                <div class="col-xl-12">
+                                    <div class="form-group m-form__group align-items-center">
+                                        <div class="input-group">
+                                            <span class="input-group-btn" style="margin-right: 2px;">
+                                                <button [disabled]="isHelpDisabled"
+                                                        class="btn btn-primary help-button" containerClass="notesTemplate"
+                                                        type="button" [popover]="notesTemplate" placement="right"
+                                                        [popoverTitle]="helpData.header" triggers="mouseenter:mouseleave">
+                                                    <i class="fa fa-question-circle"></i>
+                                                </button>
+                                            </span>
+                                            <input [(ngModel)]="filterText" name="filterText" autoFocus
+                                                   class="form-control m-input" [placeholder]="l('SearchWithThreeDot')"
+                                                   type="text">
+                                            <span class="input-group-btn">
+                                                <button (click)="getAll()" class="btn btn-primary" type="submit">
+                                                    <i class="flaticon-search-1"></i>
+                                                </button>
+                                            </span>
+                                            <ng-template #notesTemplate>
+                                                <ol class="help-notes">
+                                                    <ol class="help-notes" type="1">
+                                                        <ul style="padding-left: 2px;">
+                                                            <li *ngFor="let example of helpData.examples">
+                                                                {{example}}
+                                                            </li>
+                                                        </ul>
+                                                    </ol>
+                                                </ol>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="ml-auto mr-3">
+                        <span class="clickable-item text-muted"
+                              (click)="getTasks()">
+                            Show Tasks
+                        </span>
+                    </div>
+                    <div class="row align-items-center">
+                        <!-- <Primeng-Datatable-Start> -->
+                        <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable [value]="primengTableHelper.records"
+                                     (onLazyLoad)="getAll($event)"
+                                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="false"
+                                     [lazy]="true" [scrollable]="true" ScrollWidth="100%"
+                                     [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns" dataKey="id">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 8%" pSortableColumn="id">
+                                            {{l('QueueID')}}
+                                            <p-sortIcon field="ID"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 10%" pSortableColumn="processTypeDescription">
+                                            {{l('ProcessTypeDescription')}}
+
+                                            <p-sortIcon field="processTypeDescription"></p-sortIcon>
+                                        </th>
+                                        <th style="width:7%" pSortableColumn="status">
+                                            {{l('StatusDescriptions')}}
+                                            <p-sortIcon field="status"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 8%" pSortableColumn="Auditkey">
+                                           {{l('Auditkey')}}
+                                            <p-sortIcon field="Auditkey"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 7%" pSortableColumn="parmData">
+                                            {{l('CountID')}}
+                                            <p-sortIcon field="parmData"></p-sortIcon>
+                                        </th>
+
+                                        <th style="width: 11%" pSortableColumn="cDatabaseName">
+                                            {{l('cDatabaseName')}}
+                                            <p-sortIcon field="cDatabaseName"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 10%" pSortableColumn="build">
+                                            {{l('BuildDescription')}}
+                                            <p-sortIcon field="build"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 10%" pSortableColumn="cScheduledBy">
+                                            {{l('cScheduledBy')}}
+                                            <p-sortIcon field="cScheduledBy"></p-sortIcon>
+                                        </th>
+                                        <th style="width:8%" pSortableColumn="dScheduled">
+                                            {{l('dScheduled')}}
+                                            <p-sortIcon field="dScheduled"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 7%" pSortableColumn="dDuration">
+                                            {{l('dDuration')}}
+                                            <p-sortIcon field="dDuration"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 7%">
+                                            {{l('View Log')}}
+                                        </th>
+                                        <th style="width: 5%">
+                                            {{l('Cancel')}}
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+                                        <td style="width:8%">
+                                            <span class="ui-column-title"> {{l('ID')}}</span>
+                                            {{record.id}}
+                                        </td>
+                                        <td style="width:10%">
+                                            <span class="ui-column-title">  {{l('ProcessTypeDescription')}}</span>
+                                            {{record.processTypeDescription}}
+                                        </td>
+                                        <td style="width:8%">
+                                            <span class="ui-column-title">{{l('StatusDescriptions')}}</span>
+                                            {{record.statusDescription}}
+                                        </td>
+                                        <td style="width:8%">
+                                            <span class="ui-column-title"> {{l('Auditkey')}}</span>
+                                            {{record.fieldName}}
+                                        </td>
+                                        <td style="width:7%">
+                                            <span class="ui-column-title">{{l('CountID')}}</span>
+                                            {{record.parmData}}
+                                        </td>
+
+                                        <td style="width:11%">
+                                            <span class="ui-column-title"> {{l('cDatabaseName')}}</span>
+                                            {{record.dataBaseName}}
+                                        </td>
+                                        <td style="width:10%">
+                                            <span class="ui-column-title"> {{l('BuildDescription')}}</span>
+                                            {{record.buildDescription}}
+                                        </td>
+                                        <td style="width:10%">
+                                            <span class="ui-column-title"> {{l('cScheduledBy')}}</span>
+                                            {{record.cScheduleBy}}
+                                        </td>
+                                        <td style="width:8%">
+                                            <span class="ui-column-title">{{l('dScheduled')}}</span>
+                                            {{record.dScheduled | date: 'short' }}
+                                        </td>
+                                        <td style="width:7%">
+                                            <span class="ui-column-title"> {{l('dDuration')}}</span>
+                                            {{record.duration}}
+                                        </td>
+                                        <td class="status__column" style="width: 7%;">
+                                            <span class="ui-column-title">  {{l('View Log')}}</span>
+                                            <span [popover]="popover"
+                                                  popoverTitle="Batch Process Queue"
+                                                  container="body" [outsideClick]="true" data-toggle="popover"
+                                                  placement="auto" id="statusHover"> {{l('View Log')}}</span>
+                                            <ng-template #popover placement="auto">
+                                                <app-queue-logs [queueId]="record.id"></app-queue-logs>
+                                            </ng-template>
+                                        </td>
+                                        <td style="width: 5%">
+                                            <i class="fa fa-times" placement="left" ngbTooltip="{{record.statusDescription=='Waiting' ? 'Click To Cancel' : 'Cancel not allowed' }}" (click)="OnCancelClick(record.id,record.statusDescription)"></i>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+
+                            <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                                {{l('NoData')}}
+                            </div>
+                            <div class="primeng-paging-container">
+                                <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                                             (onPageChange)="getAll($event)"
+                                             [totalRecords]="primengTableHelper.totalRecordsCount"
+                                             [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                                </p-paginator>
+                                <span class="total-records-count">
+                                    {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>

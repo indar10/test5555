@@ -1,0 +1,297 @@
+
+.switchPopup {
+    position: relative;
+    display: inline-block;
+    width: 211px;
+    height: 34px;
+    margin-top: 8px;
+}
+
+    .switchPopup input {
+        display: none;
+    }
+
+
+/* For small switch and sliders */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 121px;
+    height: 34px;
+    margin-top: 8px;
+}
+
+    .switch input {
+        display: none;
+    }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 18px;
+    left: 0;
+    right: 0;
+    bottom: -18px;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 2px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(180px);
+    -ms-transform: translateX(180px);
+    transform: translateX(180px);
+}
+
+
+/*------ ADDED CSS ---------*/
+.on {
+    display: none;
+}
+
+.on,
+.off {
+    color: white;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 46%;
+    font-size: 11px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked + .slider .on {
+    display: block;
+}
+
+input:checked + .slider .off {
+    display: none;
+}
+
+/*--------- END --------*/
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+.icons-edited-primary {
+    color: #2e40d4;
+}
+
+/*--------- END --------*/
+
+.sSlider {
+    position: absolute;
+    cursor: pointer;
+    top: 18px;
+    left: 0;
+    right: 0;
+    bottom: -18px;
+    background-color: #5867dd;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .sSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 2px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+
+
+input:focus + .sSlider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .sSlider:before {
+    -webkit-transform: translateX(89px);
+    -ms-transform: translateX(89px);
+    transform: translateX(89px);
+}
+
+
+/*------ ADDED CSS ---------*/
+.on {
+    display: none;
+}
+
+.on,
+.off {
+    color: white;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 46%;
+    font-size: 11px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked + .sSlider .on {
+    display: block;
+}
+
+input:checked + .sSlider .off {
+    display: none;
+}
+
+/*--------- END --------*/
+/* Rounded sliders */
+.sSlider.round {
+    border-radius: 34px;
+}
+
+    .sSlider.round:before {
+        border-radius: 50%;
+    }
+
+input:checked + .sSlider {
+    background-color: #5867dd;
+    border-color: #5867dd;
+}
+
+/*--------- END --------*/
+/* For medium switch and sliders */
+
+.switchM {
+    position: relative;
+    display: inline-block;
+    width: 161px;
+    height: 34px;
+    margin-top: 8px;
+}
+
+    .switchM input {
+        display: none;
+    }
+
+.mSlider {
+    position: absolute;
+    cursor: pointer;
+    top: 18px;
+    left: 0;
+    right: 0;
+    bottom: -18px;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .mSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 2px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+
+
+input:focus + .mSlider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .mSlider:before {
+    -webkit-transform: translateX(129px);
+    -ms-transform: translateX(129px);
+    transform: translateX(129px);
+}
+
+input:checked + .mSlider {
+    background-color: #5867dd;
+    border-color: #5867dd;
+}
+/*------ ADDED CSS ---------*/
+.on {
+    display: none;
+}
+
+.on,
+.off {
+    color: white;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 46%;
+    font-size: 11px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked + .mSlider .on {
+    display: block;
+}
+
+input:checked + .mSlider .off {
+    display: none;
+}
+
+/*--------- END --------*/
+/* Rounded sliders */
+.mSlider.round {
+    border-radius: 34px;
+}
+
+    .mSlider.round:before {
+        border-radius: 50%;
+    }
+/*--------Added styles-------*/
+.textAllign {
+    width: 80%;
+    margin-left: 25px;
+}
+
+.textAllignM {
+    width: 80%;
+    margin-left: 20px;
+}
+
+.textAllignL {
+    width: 80%;
+    margin-left: 22px;
+}
+
+.marginTop {
+    margin-top: -5px;
+}
+
+
+.marginLeft5 {
+    margin-left: 5px;
+}
+
+.marginLeftN5 {
+    margin-left: -5px;
+}
+

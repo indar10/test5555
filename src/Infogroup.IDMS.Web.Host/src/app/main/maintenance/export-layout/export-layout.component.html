@@ -1,0 +1,278 @@
+<div [@routerTransition]>
+    <div class="m-subheader">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto col-xs-6">
+
+                <label>Select Database </label>
+                &nbsp;
+                <div class="btn-group" dropdown>
+                    <p-dropdown [options]="databaseList" [filter]="true"
+                                [style]="{'width':'100%'}" name="selectedDatabase"
+                                [(ngModel)]="selectedDatabase" (onChange)="getExportLayouts()">
+                    </p-dropdown>
+                </div>
+
+                &nbsp;
+
+                <label>Select Build </label>
+                &nbsp;
+                <div class="btn-group" dropdown>
+                    <p-dropdown [options]="buildsList" [filter]="true"
+                                [style]="{'width':'100%'}" name="selectedBuild"
+                                [(ngModel)]="selectedBuild">
+                    </p-dropdown>
+                </div>
+
+            </div>
+            <div class="kt-subheader__toolbar">
+                <div class="kt-subheader__wrapper">
+                    <button (click)="copyAllExportLayout()" *ngIf="isGranted('Pages.AdminExportLayouts.Copy')" class="btn btn-success" type="button"><i class="fa fa-copy"></i> {{l('CopyExportLayoutScreen')}}</button>
+                    <button *ngIf="isGranted('Pages.AdminExportLayouts.Create')"
+                            class="btn btn-primary" (click)="createExportLayout()" style="float:right">
+                        <i class="fa fa-plus fa-lg"></i> {{l("CreateLayoutTitle")}}
+                    </button>                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid'">
+
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__body">
+                <form class="kt-form" autocomplete="off">
+                    <div class="row align-items-center mb-4">
+
+                        <div class="col-xl-12">
+
+                            <div class="form-group m-form__group align-items-center">
+                                <div class="input-group">
+                                    <input [(ngModel)]="filterText" name="filterText" autoFocus
+                                           class="form-control m-input" [placeholder]="l('SearchWithThreeDot')"
+                                           type="text">
+                                    <span class="input-group-btn">
+                                        <button (click)="getExportLayouts()" class="btn btn-primary" type="submit">
+                                            <i class="flaticon-search-1"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row m--margin-bottom-10" [hidden]="!advancedFiltersAreShown">
+
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l('FieldDescriptionLabel')}}</label>
+                                        <input [(ngModel)]="fieldDescription" name="fieldDescription"
+                                               class="form-control m-input"
+                                               type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l('OutputCaseLabel')}}</label>
+                                        <p-dropdown [options]="oututCaseValues"
+                                                    [style]="{'width':'100%','padding-bottom':'6px'}"
+                                                    name="searchOutputCase"
+                                                    [(ngModel)]="selectedOutputCase">
+                                        </p-dropdown>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row margin-bottom-10">
+                                <div class="mr-auto mr-3">
+                                    <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown" [hidden]="campaignQueueGridShown"
+                                          (click)="advancedFiltersAreShown=!advancedFiltersAreShown">
+                                        <i class="fa fa-angle-down"></i>
+                                        {{l("ShowAdvancedFilters")}}
+                                    </span>
+                                    <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" [hidden]="campaignQueueGridShown"
+                                          (click)="advancedFiltersAreShown=!advancedFiltersAreShown">
+                                        <i class="fa fa-angle-up"></i>
+                                        {{l("HideAdvancedFilters")}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="row align-items-lg-center">
+                    <!--<Primeng-TurboTable-Start>-->
+                    <div class="primeng-datatable-container"
+                         [busyIf]="primengTableHelper.isLoading">
+                        <p-table #dataTable (onLazyLoad)="getExportLayouts($event)" [lazy]="true"
+                                 [value]="primengTableHelper.records"
+                                 [busyIf]="primengTableHelper.isLoading"
+                                 [scrollable]="true"
+                                 [responsive]="primengTableHelper.isResponsive"
+                                 dataKey="id"
+                                 [resizableColumns]="primengTableHelper.resizableColumns"
+                                 [paginator]="false"
+                                 stateStorage="local">
+
+                            <ng-template pTemplate="header">
+                                <tr>
+
+                                    <th style="width:3%" pSortableColumn="id">
+                                        {{l('ID')}}
+                                        <p-sortIcon field="id"></p-sortIcon>
+                                    </th>
+                                    <th style="width:1%"></th>
+                                    <th style="width: 11%" pSortableColumn="cDescription">
+                                        {{l('DescriptionHeader')}}
+                                        <p-sortIcon field="cDescription"></p-sortIcon>
+                                    </th>
+                                    <th style="width:0.7%"></th>
+                                    <th style="width:13%" pSortableColumn="cGroupName">
+                                        {{l('GroupNameHeader')}}
+                                        <p-sortIcon field="cGroupName"></p-sortIcon>
+                                    </th>
+                                    <th style="width:1%"></th>
+                                    <th style="width:8%;text-align:center">
+                                        {{l('TelemarketingHeader')}}
+                                    </th>
+                                    <th style="width:1.7%"></th>
+                                    <th style="width:10%" pSortableColumn="cOutputCase">
+                                        {{l('CaseHeader')}}
+                                        <p-sortIcon field="cOutputCase"></p-sortIcon>
+                                    </th>
+
+                                    <th style="width:5%;text-align:center">
+                                        {{l('KeyCodeHeader')}}
+
+                                    </th>
+                                    <th style="width:1.5%"></th>
+                                    <th style="width:3.5%;text-align:left" [hidden]="!isGrantedAny('Pages.AdminExportLayouts.Copy', 'Pages.AdminExportLayouts.Export','Pages.AdminExportLayouts.Delete')">
+                                        {{l('Actions')}}</th>
+
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                                <tr [pSelectableRow]="record" *ngIf="record.action!=3">
+
+                                    <td style="width:2%">
+                                        <a href="javascript:;"
+                                           (click)="openAddFieldsPopUp(record,permission.isGranted('Pages.AdminExportLayouts.Edit'))">{{record.id}}</a>
+
+                                    </td>
+
+                                    <td style="width:6%" pEditableColumn>
+                                        <p-cellEditor>
+                                            <ng-template pTemplate="input">
+                                                <input pInputText [disabled]="!permission.isGranted('Pages.AdminExportLayouts.Edit')" #description="ngModel" type="text" style="width:100%" [(ngModel)]="record.cDescription" name="description" (blur)="updateExportLayoutTableFields(record,description.dirty)" noSpaceValidator="{{cDescription}}" maxlength="50">
+                                                <div *ngIf="description.errors && (description.dirty || description.touched)"
+                                                     class="form-control-feedback">
+                                                    <div [hidden]="!description.errors.noSpaceValidator">
+                                                        {{l("RequiredField","Description")}}
+                                                    </div>
+                                                </div>
+                                                <validation-messages [formCtrl]="description"></validation-messages>
+                                            </ng-template>
+                                            <ng-template pTemplate="output">
+                                                {{record.cDescription}}
+                                            </ng-template>
+                                        </p-cellEditor>
+                                    </td>
+                                    <td style="width:7%;" pEditableColumn>
+                                        <p-cellEditor>
+                                            <ng-template pTemplate="input">
+                                                <p-dropdown #cGroupName [options]="groupNameValues"
+                                                            name="cGroupName"
+                                                            filter="true"
+                                                            [disabled]="!permission.isGranted('Pages.AdminExportLayouts.Edit')"
+                                                            [(ngModel)]="record.groupID"
+                                                            (onChange)="onGroupNameChange($event,i)" appendTo="body">
+                                                </p-dropdown>
+                                            </ng-template>
+                                            <ng-template pTemplate="output">
+                                                {{record.cGroupName}}
+                                            </ng-template>
+                                        </p-cellEditor>
+                                    </td>
+
+
+                                    <td pEditableColumn style="width:5%;text-align:center">
+                                        <p-checkbox #iHasPhone [style]="{'padding-right':'40px'}" name="iHasPhone" binary="true" [disabled]="!permission.isGranted('Pages.AdminExportLayouts.Edit')"
+                                                    [(ngModel)]="record.iHasPhone" inputId="iHasPhone" (onChange)="onHasPhoneChange($event,i)">
+                                        </p-checkbox>
+                                    </td>
+                                    <td pEditableColumn style="width:5.2%">
+                                        <p-cellEditor>
+                                            <ng-template pTemplate="input">
+                                                <p-dropdown #cOutputCase [options]="oututCaseValuesForGrid"
+                                                            name="cOutputCase"
+                                                            [disabled]="!permission.isGranted('Pages.AdminExportLayouts.Edit')"
+                                                            [(ngModel)]="record.cOutputCaseCode"
+                                                            (onChange)="onOutputCaseChange($event,i)" appendTo="body">
+                                                </p-dropdown>
+                                            </ng-template>
+                                            <ng-template pTemplate="output">
+                                                {{record.cOutputCase}}
+                                            </ng-template>
+                                        </p-cellEditor>
+                                    </td>
+
+                                    <td pEditableColumn style="width:3%;text-align:center">
+                                        <p-checkbox #iHasKeyCode [style]="{'padding-right':'30px'}" name="iHasKeyCode" binary="true" [disabled]="!permission.isGranted('Pages.AdminExportLayouts.Edit')"
+                                                    [(ngModel)]="record.iHasKeyCode" inputId="iHasKeyCode" (onChange)="onHasKeyCodeChange($event,i)">
+                                        </p-checkbox>
+                                    </td>
+
+                                    
+                                    <td style="width:2.1%" [hidden]="!isGrantedAny('Pages.AdminExportLayouts.Copy', 'Pages.AdminExportLayouts.Export','Pages.AdminExportLayouts.Delete')">
+                                        <div class="btn-group dropdown" dropdown container="body">
+                                            <button class="dropdown-toggle btn btn-sm btn-primary"  [hidden]="!isGrantedAny('Pages.AdminExportLayouts.Copy', 'Pages.AdminExportLayouts.Export','Pages.AdminExportLayouts.Delete')" dropdownToggle>
+                                                <i class="fa fa-cog"></i><span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" *dropdownMenu>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="permission.isGranted('Pages.AdminExportLayouts.Copy')"
+                                                       (click)="copyExporyLayout(record)">{{l('Copy')}}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="permission.isGranted('Pages.AdminExportLayouts.Delete')"
+                                                       (click)="deleteExportLayout(record.id)">{{l('Delete')}}</a>
+
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="permission.isGranted('Pages.AdminExportLayouts.Export')"
+                                                       (click)="ExportToExcel(record)">{{l('Export To Excel')}}</a>
+
+                                                </li>
+
+                                            </ul>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{l('NoData')}}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator rows="{{primengTableHelper.defaultRecordsCountPerPage}}" #paginator
+                                         (onPageChange)="getExportLayouts($event)"
+                                         [totalRecords]="primengTableHelper.totalRecordsCount"
+                                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                            </p-paginator>
+                            <span class="total-records-count">
+                                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+

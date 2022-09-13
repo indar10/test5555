@@ -1,0 +1,10 @@
+﻿
+.help-notes {
+    padding: 1px;
+    padding-left:10px;
+    font-size: 0.95rem;
+}
+
+#statusHover {
+    cursor: pointer;
+}

@@ -1,0 +1,34 @@
+<div class="modal-content" [busyIf]="isLoading">
+    <form autocomplete="off" #saveCountForm="ngForm" (ngSubmit)="save()">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span>Save Count</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="isLoading">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="Description">{{ l("Description") }} *</label>
+                <input id="Description" maxlength="50" type="text" class="form-control" name="cDescription"
+                    [(ngModel)]="campaign.generalData.cDescription" #descriptionInput="ngModel" required />
+                <validation-messages [formCtrl]="descriptionInput"></validation-messages>
+            </div>
+            <div class="form-group">
+                <label>{{ l("FileNotesLabel") }}</label><br />
+                <textarea name="fileNotes" class="form-control" [style]="{ width: '100%' }" [(ngModel)]="campaign.getOutputData.fileNotes">
+                </textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="isLoading" type="button" class="btn btn-default" (click)="close()">
+                {{ l("Cancel") }}
+            </button>
+            <button type="submit" class="btn btn-primary blue"
+                [buttonBusy]="isLoading" [busyText]="l('SavingWithThreeDot')">
+                <i class="fa fa-save"></i> <span>{{ l("Save") }}</span>
+            </button>
+        </div>
+    </form>
+</div>

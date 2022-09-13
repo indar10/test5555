@@ -1,0 +1,181 @@
+   <div class="modal-content">
+            <form *ngIf="active" #decoyForm="ngForm" novalidate (ngSubmit)="save(decoyForm)" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="decoy.id">{{l("EditDecoy")}}</span>
+                        <span *ngIf="!decoy.id">{{l("CreateDecoy")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_MailerCompany">{{l("Company")}} </label>
+                            <input type="text" id="Decoy_MailerCompany" class="form-control" [(ngModel)]="mailerCompany" name="mailerCompany" disabled />
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_ID">{{l("ID")}} </label>
+                            <input type="text" id="Decoy_ID" class="form-control" [(ngModel)]="decoy.id" name="id" [(hidden)]="!decoy.id" [disabled]="decoy.id" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">                            
+                            <label for="Owner_Group">{{l('Group')}}</label>
+                            <p-dropdown [options]="groupList" [(ngModel)]="selectedGroup"
+                                        [style]="{'width':'100%'}" 
+                                        name="cGroup"></p-dropdown>
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cFirstName">{{l("cFirstName")}} *</label>
+                            <input type="text" id="Decoy_cFirstName" class="form-control" #firstName="ngModel" MaxLength="30" 
+                                   [(ngModel)]="decoy.cFirstName" name="cFirstName" noSpaceValidator="{{decoy.cFirstName}}"  />
+                            <div *ngIf="firstName.errors && (firstName.dirty || firstName.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!firstName.errors.noSpaceValidator">
+                                    {{l("EnterFirstName")}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cLastName">{{l("cLastName")}} *</label>
+                            <input type="text" id="Decoy_cLastName" MaxLength="30" #lastName="ngModel" class="form-control" [(ngModel)]="decoy.cLastName" name="cLastName" noSpaceValidator="{{decoy.cLastName}}"/>
+                            <div *ngIf="lastName.errors && (lastName.dirty || lastName.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!lastName.errors.noSpaceValidator">
+                                    {{l("EnterLastName")}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cTitle">{{l("Title")}} </label>
+                            <input type="text" id="Decoy_cTitle" maxlength="50"  class="form-control" [(ngModel)]="decoy.cTitle" name="cTitle" />
+
+                        </div>                        
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cCompany">{{l("cCompany")}}</label>
+                            <input type="text" id="Decoy_cCompany" maxlength="50" class="form-control"  [(ngModel)]="decoy.cCompany" name="cCompany" />
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cAddress1">{{l("cAddress1")}} *</label>
+                            <input type="text" id="Decoy_cAddress1" #addressline1="ngModel" maxlength="50" class="form-control" 
+                                   [(ngModel)]="decoy.cAddress1" name="cAddress1" noSpaceValidator="{{decoy.cAddress1}}"/>
+                            <div *ngIf="addressline1.errors && (addressline1.dirty || addressline1.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!addressline1.errors.noSpaceValidator">
+                                    {{l("AddressLine1ReuiredMsg")}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cAddress2">{{l("cAddress2")}}</label>
+                            <input type="text" id="Decoy_cAddress2" maxlength="50" class="form-control"  [(ngModel)]="decoy.cAddress2" name="cAddress2" />
+                        </div>
+
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cCity">{{l("cCity")}} *</label>
+                            <input type="text" id="Decoy_cCity" #city="ngModel" class="form-control" [(ngModel)]="decoy.cCity" maxlength="30" name="cCity" noSpaceValidator="{{decoy.cCity}}"/>
+                            <div *ngIf="city.errors && (city.dirty || city.touched)"
+                            class="form-control-feedback">
+                            <div [hidden]="!city.errors.noSpaceValidator">
+                                {{l("CityReuiredMsg")}}
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cState">{{l("cState")}} *</label>
+                            <input type="text" id="Decoy_cState" class="form-control" #stateInput="ngModel" maxlength="2" [(ngModel)]="decoy.cState" name="cState" noSpaceValidator="{{decoy.cState}}"/>
+                            <div *ngIf="stateInput.errors && (stateInput.dirty || stateInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!stateInput.errors.noSpaceValidator">
+                                    {{l("StateReuiredMsg")}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cZip">{{l("cZip")}} *</label>
+                            <div style="display:flex">
+                                <input type="text" id="Decoy_cZip" #zip="ngModel" maxlength="10" style="width:60%;" class="form-control" [(ngModel)]="decoy.cZip"
+                                       name="cZip" pattern="^\d{5}(?:-\d{4})?$|^[a-zA-Z]\d[a-zA-Z]\s?\d[a-zA-Z]\d$" required/>
+                                &nbsp;
+                                <label style="margin-top:2.5%">{{('-')}}</label>
+                                &nbsp;
+                                <input type="text" id="Decoy_cZip4" #zip4="ngModel" maxlength="4" class="form-control" [(ngModel)]="decoy.cZip4" name="cZip4"
+                                       style="width:35%;" pattern="^\d{4}(?:-\d{4})?$|^[a-zA-Z]\d[a-zA-Z]\s?\d[a-zA-Z]\d$"/>
+                            </div>
+                            <div *ngIf="zip.errors && (zip.dirty || zip.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!zip.errors.required">
+                                    {{l("ZipReuiredMsg")}}
+                                </div>
+                                <div [hidden]="!zip.errors.pattern">
+                                    {{l("InvalidZip")}}
+                                </div>
+                            </div>
+                            <div *ngIf="zip4.errors && (zip4.dirty || zip4.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!zip4.errors.pattern">
+                                    {{l("InvalidZip4")}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cPhone">{{l("cPhone")}}</label>
+                            <input type="text" id="Decoy_cPhone" class="form-control" #phoneInput="ngModel" maxlength="20" [(ngModel)]="decoy.cPhone" name="cPhone" pattern="\d{3}\-\d{3}\-\d{4}" />
+                            <div *ngIf="phoneInput.errors && (phoneInput.dirty || phoneInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!phoneInput.errors.pattern">
+                                    {{l("InvalidPhone")}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cFax">{{l("cFax")}}</label>
+                            <input type="text" id="Decoy_cFax" class="form-control" #faxInput="ngModel" maxlength="20" [(ngModel)]="decoy.cFax" name="cFax" pattern="\d{3}\-\d{3}\-\d{4}" />
+                            <div *ngIf="faxInput.errors && (faxInput.dirty || faxInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!faxInput.errors.pattern">
+                                    {{l("InvalidFax")}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cEmail">{{l("cEmail")}}</label>
+                            <input type="text" id="Decoy_cEmail" #emailTest="ngModel" maxlength="80" class="form-control" 
+                                   [(ngModel)]="decoy.cEmail" name="cEmail" pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"/>
+                            <div *ngIf="emailTest.errors && (emailTest.dirty || emailTest.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!emailTest.errors.pattern">
+                                    {{l("InvalidEmailAddress")}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label for="Decoy_cKeyCode1">{{l("KeyCode1Label")}}</label>
+                            <input type="text" id="Decoy_cKeyCode1" maxlength="50" class="form-control" [(ngModel)]="decoy.cKeyCode1" name="cKeyCode1" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!decoyForm.form.valid || (!permission.isGranted('Pages.Decoy.Edit') && decoy.id)" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+

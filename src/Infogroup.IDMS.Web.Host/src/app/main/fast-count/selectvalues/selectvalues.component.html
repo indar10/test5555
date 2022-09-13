@@ -1,0 +1,45 @@
+<div class="modal-content" >
+            <div [class]="containerClass">
+                                    
+                <div class="kt-subheader__main">
+                    <h3 class="kt-subheader__title">
+                        <span>{{selectedDBAttribute.label}}</span>
+                    </h3>
+
+                </div>                
+            </div>                    
+    <div *ngIf="selectedDBAttribute.input =='textarea' else elseBlock">
+        <h5>Enter text</h5>
+    <textarea type="text" class="form-control" name="textforinput" ></textarea>     
+    <div style="height: 300px; width:300px; margin-top: 100px;">
+        <div class="kt-subheader__toolbar">
+            <div class="kt-subheader__wrapper">
+                <button class="btn btn-success" type="button">Save</button>                           
+            </div>                    
+        </div>
+
+    </div>                                   
+    </div>
+    <ng-template #elseBlock>
+    
+  <h6>Select from List Options</h6>
+    <p-listbox [options]="optionValues" [(ngModel)]="selectedOptions" [metaKeySelection]="false" [checkbox]="true" [multiple]="true"
+    [filter]="true" optionLabel="cDescription"  [listStyle]="{'max-height':'300px'}" [style]="{'width':'15rem'}">
+    <ng-template *ngFor="let hero of optionValues">
+
+         <div>{{hero.cDescription}}</div> 
+
+    </ng-template>
+    </p-listbox>
+    <div style="height: 300px; width:300px; margin-top: 50px;">
+        <div class="kt-subheader__toolbar">
+            <div class="kt-subheader__wrapper">
+                <button class="btn btn-success" type="button">Save</button>                           
+            </div>                    
+        </div>
+
+    </div>
+  </ng-template>
+</div>
+
+

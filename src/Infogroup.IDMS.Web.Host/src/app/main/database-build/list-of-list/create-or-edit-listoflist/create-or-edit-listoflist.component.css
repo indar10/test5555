@@ -1,0 +1,53 @@
+.formCss{
+    display: flex;
+}
+.label-listname{
+    display: flex;
+    align-items: flex-end;
+}
+.error-listname{
+    margin-left: 40%;
+}
+.input-listname{
+    width: 70%;
+}
+.label-left-fields-38{
+    width: 38%;
+}
+.label-left-fields-36{
+    width: 36%;
+}
+.label-left-fields-42{
+    width: 42%;
+}
+.label-left-fields-37{
+    width: 37%;
+}
+.label-left-fields-28{
+    width: 28%;
+}
+.label-left-fields-35{
+    width: 35%;
+}
+.label-left-fields-39{
+    width: 39%;
+}
+.label-left-fields-40{
+    width: 40%;
+}
+.col-dropdown-field{
+    display: flex;
+    align-items: center;
+}
+.permission-label{
+    display: flex;
+    height: 100%;
+    align-items: flex-end;
+}
+
+.padding-10{
+    padding-left: 8.5px;
+}
+.padding-14{
+    padding-left: 12.7px;
+}

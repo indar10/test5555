@@ -1,0 +1,293 @@
+<div class="modal-content" [busyIf]="isLoading">
+    <form #listoflistForm="ngForm" novalidate (ngSubmit)="save(listoflistForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="ID && checkIfEdit=='Edit'">{{ l("Edit") }}</span>
+                <span *ngIf="!ID">{{ l("Create") }}</span>
+                <span *ngIf="checkIfEdit=='Copy'">Copy List</span>
+            </h4>
+        </div>
+        <div class="modal-body">
+            <tabset>
+                <tab heading="General">
+                <div class="row">
+                    <div class="form-group m-form__group col-xs-7 col-sm-7 col-md-7">
+                    
+                        <label>List Name* </label> &nbsp;
+                        <input type="text" [(ngModel)]="listOfList.cListName" name="ListName" class="form-control" #listNameInput="ngModel"
+                            noSpaceValidator="{{ listOfList.cListName }}" required />
+                        <div *ngIf="listNameInput.errors &&(listNameInput.dirty || listNameInput.touched)"
+                                 class="form-control-feedback error-listname">
+                            <div [hidden]=" !listNameInput.errors.noSpaceValidator && !listNameInput.errors.required">
+                                Enter List name
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-5 col-sm-5 col-md-5">
+                        <label class="label-left-fields-38">Code  </label> &nbsp;
+                        <input type="text" [(ngModel)]="listOfList.cCode" name="code" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-7 col-sm-7 col-md-7">
+                        <label>Owner </label> &nbsp;
+                        <p-dropdown [options]="dropdownForOwner" [(ngModel)]="owners" name="owner" [style]="{'width':'100%'}"
+                            placeholder="Select Owner" filter="true" (onChange)="selectContactsByOwner($event)">
+                        </p-dropdown>
+                    </div>
+                    <div class="form-group col-xs-5 col-sm-5 col-md-5">
+                        <label>List Type* </label> &nbsp;
+                        <p-dropdown [options]="valuesOfDropdownForListType" [(ngModel)]="ListTypes" [style]="{'width':'100%'}"
+                            placeholder="Select List Type" filter="true" name="ListType" [required]="true">
+                        </p-dropdown>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-7 col-sm-7 col-md-7">
+                        <label class="label-left-fields-35">Manager* </label> &nbsp;
+                        <p-dropdown [options]="dropdownForManagers" [(ngModel)]="managers" name="manager" [style]="{'width':'100%'}"
+                            placeholder="Select Manager" filter="true" (onChange)="selectContactsByManger($event)"
+                            [required]="true" #managerInput="ngModel"></p-dropdown>
+                    </div>
+                    <div class="form-group col-xs-5 col-sm-5 col-md-5">
+                        <label>Product Code* </label>&nbsp;
+                        <p-dropdown [options]="valuesOfDropdownForProductCode" [(ngModel)]="ProductCodes"
+                        [style]="{'width':'100%'}"   placeholder="Select Product Code" filter="true" name="ProductCode" [required]="true">
+                        </p-dropdown>
+                </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-7 col-sm-7 col-md-7">
+                        <label>Permission Type* 
+                        </label>
+                        &nbsp;
+                        <div>
+                        <p-radioButton name="permissionType" value="R" label="Rental"
+                            [(ngModel)]="listOfList.lK_PermissionType" [style]="{ margin: '8px' }"
+                            inputId="permissionType1" (onClick)="ChkPermissionType($event)" [disabled]="ifedit"
+                            [required]="true">
+                        </p-radioButton>
+                        <p-radioButton name="permissionType" [style]="{ margin: '8px' }" value="H" label="House"
+                            [(ngModel)]="listOfList.lK_PermissionType" inputId="permissionType2"
+                            (onClick)="ChkPermissionType($event)" [disabled]="ifedit" [required]="true">
+                        </p-radioButton>
+                        <p-radioButton name="permissionType" [style]="{ margin: '8px' }" value="P" label="Private "
+                            [(ngModel)]="listOfList.lK_PermissionType" inputId="permissionType3"
+                            (onClick)="ChkPermissionType($event)" [disabled]="ifedit" [required]="true">
+                        </p-radioButton>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-5 col-sm-5 col-md-5">
+                        <label>Send order To* </label> &nbsp;
+                        <p-dropdown [options]="sendOrderTo" [(ngModel)]="listOfList.iOrderContactID"
+                        [style]="{'width':'100%'}"   placeholder="Select Send Order To" filetr="true" name="sendOrder" [required]="true">
+                        </p-dropdown>
+                    </div>
+                </div>
+               
+                <div class="row">
+                    <div class="form-group col-xs-7 col-sm-7 col-md-7">
+                        <label>Available To Mailer </label>
+                        &nbsp;
+                        <p-multiSelect [options]="AvailableMailer" [(ngModel)]="availableToMailers" filter="true"
+                            (onChange)="onChangeAvailableMailer($event)" name="availableToMailer"
+                            [style]="{'width':'100%'}"   [disabled]="!permissionType" defaultLabel="Select Mailers"></p-multiSelect>
+                    </div> 
+                    <div class="form-group col-xs-5 col-sm-5 col-md-5">
+                        <label>Desicion Group </label> &nbsp;
+                        <p-dropdown [options]="valuesOfDropdownForDecisionGroup" [(ngModel)]="DecisionGroups"
+                        [style]="{'width':'100%'}"  placeholder="Select Desicion Group" filter="true" name="DecisionGroup"></p-dropdown>
+                    </div> 
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-7 col-sm-7 col-md-7">
+                        <label class="label-left-fields-40">Requested by Mailer </label> &nbsp;
+                        <p-multiSelect [options]="mailers" [(ngModel)]="requestedByMailers" filter="true"
+                        [style]="{'width':'100%'}"   (onChange)="onChangeReqMailer($event)" name="requestedBymailer" defaultLabel="Select Mailers"></p-multiSelect>
+                    </div>
+                    
+                    
+                    <div class="form-group col-xs-5 col-sm-5 col-md-5"><br><br>
+                        <label>Appear Date </label>&nbsp;&nbsp;
+                        <span *ngIf="listOfList.cAppearDate">{{
+                            listOfList.cAppearDate
+                            }}</span>
+                    </div>
+                   
+                   </div>
+                <div class="row">
+                    <div class="form-group col-xs-7 col-sm-7 col-md-7">
+                        
+                        <label >Send DWAP Approval.? </label>
+                        &nbsp;
+                        <p-checkbox [(ngModel)]="DWAPApproval" name="DWAP" binary="true" [disabled]="permissionType" (onChange)="OnDwapApproval($event)">
+                        </p-checkbox>
+                        </div>
+                   
+                    <div class="form-group col-xs-5 col-sm-5 col-md-5">
+                        <!-- <p-dropdown [style]="{'width':'100%'}"  ></p-dropdown> -->
+                        <div>
+                        <label>Update Date </label>&nbsp;&nbsp;
+                        <span *ngIf="listOfList.cLastUpdateDate">{{
+                            listOfList.cLastUpdateDate
+                            }}</span>
+                    </div>
+                </div>     
+                </div>
+            <div>
+                <div class="row">
+                    <div class="form-group col-xs-7 col-sm-7 col-md-7">
+
+                    </div>
+                    <div class="form-group col-xs-5 col-sm-5 col-md-5"> 
+                        <label>Remove Date </label>&nbsp;&nbsp;
+                        <span *ngIf="listOfList.cRemoveDate">{{
+                            listOfList.cRemoveDate
+                            }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-7 col-sm-7 col-md-7">
+                        <label>DWAP Contacts* </label> &nbsp;
+                        <p-multiSelect [options]="sendOrderTo" [(ngModel)]="dwapContacts" name="dwapContact"
+                            (onChange)="onChangeDwapContacts($event)" filter="true"
+                            [disabled]="!DWAPApproval || permissionType" [required]="DWAPApproval && !permissionType"
+                            defaultLabel="Select Contacts" [style]="{'width':'100%'}" >
+                        </p-multiSelect>
+                    </div>
+                    
+                <div class="form-group col-xs-5 col-sm-5 col-md-5">
+                    <label class="switchPopup">
+                        <input type="checkbox" id="isActive_list" [(ngModel)]="isActive" name="iIsActive"
+                            checked />
+                        <span class="slider round">
+                            <span class="on">Active</span><span class="off">Inactive</span>
+                        </span>
+                    </label>
+                </div> 
+               </div>
+               <div class="row">
+                
+            </div>
+            </div>
+                </tab>
+                <tab heading="Other">&nbsp;
+                    <div class="row">    
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label>Base Price-Postal </label>
+                            &nbsp;
+                            <input type="text" [(ngModel)]="listOfList.nBasePrice_Postal" name="BasePricePostal"
+                            class="form-control"  [disabled]="ifedit" />
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label>Min Id </label> &nbsp;
+                            <input type="text" [(ngModel)]="listOfList.cMINDatacardCode" name="minId" class="form-control"/>
+                        </div>
+                    </div>
+                   
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label>Base Price-TMktg </label> &nbsp;
+                            <input type="text" [(ngModel)]="listOfList.nBasePrice_Telemarketing" name="BasePrice-Tmktg"
+                            class="form-control" [disabled]="ifedit" />
+                        </div>
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                            <label>NextMark Id </label> &nbsp;
+                            <input type="text" [(ngModel)]="listOfList.cNextMarkID" name="nextMarkID"  class="form-control" />
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-6 col-sm-6 col-md-6 col-dropdown-field">
+                            <label>Multi-Buyer Calc.? </label>
+                            &nbsp;&nbsp;
+                            <p-checkbox [(ngModel)]="listOfList.iIsMultibuyer" name="isMultibuyer" binary="true">
+                            </p-checkbox>
+                           
+                        </div>
+                        <div class="form-group col-xs-4 col-sm-4 col-md-4">
+                            <label>Drop intra-file Dups.? </label>&nbsp;
+                            <p-checkbox [(ngModel)]="listOfList.iDropDuplicates" name="isDropFile" binary="true" 
+                           >
+                            </p-checkbox>
+                        </div>
+                    </div>
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label>Profanity Check </label> &nbsp;
+                        <p-checkbox [(ngModel)]="listOfList.iIsProfanityCheckRequired" name="isProfanityCheck"
+                        class="padding-10"   binary="true"></p-checkbox>
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label>Is NCOA required.? </label>
+                        &nbsp;
+                        <p-checkbox [(ngModel)]="listOfList.iIsNCOARequired" name="isNcoaRequired" binary="true"
+                        class="padding-14">
+                        </p-checkbox>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label>Commissions</label> &nbsp;
+                        <input type="text" [(ngModel)]="listOfList.cCustomText1" name="commission" class="form-control" />
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label>CAP1 Offer1 </label> &nbsp;
+                        <input type="text" [(ngModel)]="listOfList.cCustomText5" name="cap1" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label>A/R Fee </label> &nbsp;
+                        <input type="text" [(ngModel)]="listOfList.cCustomText2" name="A/RFee" class="form-control"/>
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label>CAP1 Offer2 </label> &nbsp;
+                        <input type="text" [(ngModel)]="listOfList.cCustomText6" name="cap2" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label>Legacy No </label> &nbsp;
+                        <input type="text" [(ngModel)]="listOfList.cCustomText3" name="legacyno" class="form-control"/>
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label>CAP1 Offer3 </label> &nbsp;
+                        <input type="text" [(ngModel)]="listOfList.cCustomText7" name="cap3" class="form-control"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label>Reason code </label> &nbsp;
+                        <input type="text" [(ngModel)]="listOfList.cCustomText4" name="reasonCode" class="form-control" />
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label>CAP1 Offer4 </label> &nbsp;
+                        <input type="text" [(ngModel)]="listOfList.cCustomText8" name="cap4" class="form-control"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label>Number </label> &nbsp;
+                        <input type="text" [(ngModel)]="listOfList.cCustomText9" name="number" class="form-control"/>
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                        <label>Basic Selects </label> &nbsp;
+                        <input type="text" [(ngModel)]="listOfList.cCustomText10" name="basicSelects" class="form-control" />
+                    </div>
+                </div>
+                </tab>
+            </tabset>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="close()">
+                    {{ l("Cancel") }}
+                </button>
+                <button type="submit" class="btn btn-primary blue" [disabled]="!listoflistForm.form.valid">
+                    <i class="fa fa-save"></i> <span>{{ l("Save") }}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

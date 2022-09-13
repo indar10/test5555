@@ -1,0 +1,172 @@
+﻿<div [@routerTransition]>
+    <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+        <div class="kt-subheader kt-grid__item">
+            <div [class]="containerClass">
+                <div class="kt-subheader__main">
+                    <h3 class="kt-subheader__title">
+                        <span>{{l("SecurityGroups")}}</span>
+                    </h3>
+                    <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                    <span class="kt-subheader__desc">
+                        &nbsp;
+                        &nbsp;
+                        <label>{{l("SelectDatabase")}}</label>
+                        &nbsp;
+                        <div class="btn-group" dropdown>
+                            <p-dropdown [options]="databaseList" [filter]="true"
+                                        [style]="{'width':'200%'}" name="selectedDatabase"
+                                        [(ngModel)]="selectedDatabase" (onChange)="getSecurityGroups()">
+                            </p-dropdown>
+                        </div>
+                    </span>
+                </div>
+                <div class="kt-subheader__toolbar">
+                    <div class="kt-subheader__wrapper">
+                        <button (click)="allExportToExcel(0)" *ngIf="isGranted('Pages.SecurityGroups.Print')" class="btn btn-success" type="button"><i class="far fa-file-excel"></i> {{l('ExportToExcel')}}</button>
+                        <button *ngIf="isGranted('Pages.SecurityGroups.Create')" (click)="createSecurityGroup()"
+                                class="btn btn-primary blue">
+                            <i class="fa fa-plus"></i> {{l("CreateNewGroupLabel")}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid'">
+            <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__body">
+                    <form class="kt-form" autocomplete="off">
+                        <div>
+                            <div class="row align-items-center">
+                                <div class="col-xl-12">
+                                    <div class="form-group m-form__group align-items-center">
+                                        <div class="input-group">
+                                            <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                            <span class="input-group-btn">
+                                                <button (click)="getSecurityGroups()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row align-items-center">
+                        <!--<Primeng-Datatable-Start>-->
+                        <div class="primeng-datatable-container col-12"
+                             [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable
+                                     (onLazyLoad)="getSecurityGroups($event)"
+                                     [value]="primengTableHelper.records"
+                                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                     [paginator]="false"
+                                     [lazy]="true"
+                                     [scrollable]="true"
+                                     ScrollWidth="100%"
+                                     [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns"
+                                     dataKey="id">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width:2%"></th>
+                                        <th style="width: 10%" pSortableColumn="id">
+                                            {{l('ID')}}
+                                            <p-sortIcon field="id"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 25%" pSortableColumn="cGroupName">
+                                            {{l('cGroupName')}}
+                                            <p-sortIcon field="cGroupName"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 30%" pSortableColumn="cGroupDescription">
+                                            {{l('cGroupDescription')}}
+                                            <p-sortIcon field="cGroupDescription"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 10%" pSortableColumn="USERCOUNT">
+                                            {{l('USERCOUNT')}}
+                                            <p-sortIcon field="USERCOUNT"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 7%" pSortableColumn="iIsActive">
+                                            {{l('iIsActive')}}
+                                            <p-sortIcon field="iIsActive"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 10%" >{{l('Actions')}}</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit" let-expanded="expanded">
+                                    <tr>
+                                        <td style="width:2%">
+                                            <a href="javascript:;" [pRowToggler]="record"
+                                               [hidden]="!permission.isGranted('Pages.OwnerContacts')">
+                                                <i [ngClass]="expanded ? 'fa  fa-chevron-down' : 'fa fa-chevron-right'"
+                                                   style="font-size: 1.25em"></i>
+                                            </a>
+                                        </td>
+                                        <td style="width:10%">
+                                            <span class="ui-column-title"> {{l('ID')}}</span>
+                                            {{record.id}}
+                                        </td>
+                                        <td style="width:25%">
+                                            <span class="ui-column-title"> {{l('cGroupName')}}</span>
+                                            <a href="javascript:;" (click)="createSecurityGroup(record.id)">{{record.cGroupName}}</a>
+                                        </td>
+                                        <td style="width:30%">
+                                            <span class="ui-column-title"> {{l('cGroupDescription')}}</span>
+                                            {{record.cGroupDescription}}
+                                        </td>
+                                        <td style="width:10%; text-align:center">
+                                            <span class="ui-column-title"> {{l('USERCOUNT')}}</span>
+                                            <a href="javascript:;" (click)="getUserCountData(record)">{{record.userCount}}</a>
+                                        </td>
+                                        <td style="width:7%;  text-align:center">
+                                            <span class="ui-column-title"> {{l('iIsActive')}}</span>
+                                            <span class="kt-badge kt-badge--success kt-badge--inline"
+                                                  *ngIf="record.iIsActive">{{'Yes' | localize}}</span>
+                                            <span class="kt-badge kt-badge--dark kt-badge--inline"
+                                                  *ngIf="!record.iIsActive">{{'No' | localize}}</span>
+                                        </td>
+                                        <td style="width: 10%">
+                                            <div class="btn-group dropdown" dropdown container="body" [isDisabled]="!isGrantedAny('Pages.SecurityGroups.Create', 'Pages.SecurityGroups.Edit')">
+                                                <button class="dropdown-toggle btn btn-sm btn-primary"  dropdownToggle>
+                                                    <i class="fa fa-cog"></i><span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" style="min-width:10rem;" *dropdownMenu>
+                                                    <li>
+                                                        <a href="javascript:;"
+                                                           (click)="selectBroker(record.id)">{{l('SelectBroker')}}</a>
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="rowexpansion" let-record="$implicit" let-columns="columns">
+                                    <tr>
+                                        <td [attr.colspan]="7">
+                                            <groupbroker [groupId]="record.id" [databaseId]="selectedDatabase"></groupbroker>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                                {{l('NoData')}}
+                            </div>
+                            <div class="primeng-paging-container">
+                                <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                                             #paginator
+                                             (onPageChange)="getSecurityGroups($event)"
+                                             [totalRecords]="primengTableHelper.totalRecordsCount"
+                                             [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                                </p-paginator>
+                                <span class="total-records-count">
+                                    {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                                </span>
+                            </div>
+                        </div>
+                        <!--<Primeng-Datatable-End>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,430 @@
+<div [@routerTransition] class="modal-content">
+    
+    <div class="kt-content grid-content" style="background-color:white;box-shadow:none;">
+        <div class="kt-portlet kt-portlet--mobile" style="background-color:white;box-shadow:none;">
+            <div class="kt-portlet__body" style="padding:20px">
+                <form class="kt-form" autocomplete="off" (ngSubmit)="getCampaigns()">
+                    <div>
+                        <div class="row">
+                            <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                                
+                                    <label class="switch" (onclick)="getCampaigns()" [hidden]="campaignQueueGridShown" style="margin-top:2px;margin-left:-1px">
+                                        <input type="checkbox" id="togBtn" checked (click)="getCampaigns()" />
+                                        <div class="slider round" style="margin-top:-30px;margin-bottom:30px">
+                                            <span class="on">My Campaigns</span><span class="off">All Campaigns</span>
+                                        </div>
+                                    </label>
+                               
+                            </div>
+                                <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                                    <div class="row align-items-center mb-4" style="display:flex;justify-content:flex-end">
+                                        <div class="btn-group mr-3">
+                                            <div class="btn-group dropdown" dropdown container="body"
+                                                 *ngIf="isGranted('Pages.Campaigns.Create')">
+                                                <button (click)="openCreateOrEditCampaign()" class="btn btn-primary blue" type="button">
+                                                    <i class="fa fa-plus"></i> {{l("NewCampaign")}}
+                                                </button>
+                                                <div class="btn-group" ngbDropdown role="group"
+                                                     aria-label="Button group with nested dropdown">
+                                                    <button type="button" [disabled]="favouritesDisabled" class="btn btn-primary dropdown-toggle-split"
+                                                            data-toggle="tooltip" title="{{'CampaignFavoritesTooltip' | localize}}"
+                                                            ngbDropdownToggle></button>
+                                                    <div class="dropdown-menu" ngbDropdownMenu>
+                                                        <button *ngFor="let favourite of favouriteCampaigns" ngbDropdownItem>
+                                                            <div class="fav-row" (click)="copyCampaign(favourite.campaignId)">
+                                                                <div class="fav-column">
+                                                                    {{favourite.campaignId}}
+                                                                </div>
+                                                                <div class="fav-column">
+                                                                    {{'&nbsp; : &nbsp;' + favourite.campaignDescription}}
+                                                                </div>
+                                                                <div class="fav-column">
+                                                                    {{'&nbsp; : &nbsp;' + favourite.databaseName}}
+                                                                </div>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-4">
+                                <div class="col-xl-12">
+                                    <div class="form-group m-form__group align-items-center">
+                                        <div class="input-group">
+                                            <span class="input-group-btn" style="margin-right: 2px;">
+                                                <button [disabled]="isHelpDisabled" class="btn btn-primary help-button"
+                                                        type="button" [popover]="notesTemplate" [popoverTitle]="helpData.header"
+                                                        triggers="mouseenter:mouseleave">
+                                                    <i class="fa fa-question-circle"></i>
+                                                </button>
+                                            </span>
+                                            <input [(ngModel)]="filterText" name="filterText" autoFocus
+                                                   [disabled]="campaignQueueGridShown" class="form-control m-input"
+                                                   [placeholder]="l('SearchWithThreeDot')" type="text">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary" type="submit">
+                                                    <i class="flaticon-search-1"></i>
+                                                </button>
+                                            </span>
+                                            <span style="margin-left: 2px;" class="input-group-btn"
+                                                  [hidden]="campaignQueueGridShown">
+                                                <button (click)="clearFilters()" class="btn btn-primary"
+                                                        [popover]="'Clear Search'" triggers="mouseenter:mouseleave"
+                                                        type="button">
+                                                    <i class="fas fa-search-minus"></i>
+                                                </button>
+                                            </span>
+                                            <ng-template #notesTemplate>
+                                                <ol class="help-notes">
+                                                    <ol class="help-notes" type="1">
+                                                        <ul style="padding-left: 2px;">
+                                                            <li *ngFor="let example of helpData.examples">{{example}}</li>
+                                                        </ul>
+                                                    </ol>
+                                                </ol>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m--margin-bottom-10" [hidden]="!advancedFiltersAreShown">
+                                <div class="col-md-12">
+                                    <div class="m-separator m-separator--dashed"></div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l("ID")}}</label>
+                                        <input type="text" class="form-control" name="idFilter" [(ngModel)]="idFilter"
+                                               digitOnly maxlength="18">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("cDescription")}}</label>
+                                        <input type="text" class="form-control" name="descriptionFilterText"
+                                               [(ngModel)]="descriptionFilterText">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-auto">
+                                    <div class="form-group">
+                                        <label>{{l("Status")}}</label>
+                                        <p-dropdown [options]="statusdrop" [filter]="true" placeholder="Select"
+                                                    [style]="{'width':'100%'}" name="statusFilterValue"
+                                                    [(ngModel)]="statusFilterValue">
+                                        </p-dropdown>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-auto">
+                                    <div class="form-group">
+                                        <label>{{l("statusDate")}}</label>
+                                        <input class="form-control" #drp="bsDaterangepicker" bsDaterangepicker
+                                               name="selectedDateRange" [(ngModel)]="selectedDateRange">
+                                    </div>
+                                </div>
+                                <div class="col-md-auto" style="padding-top: 25px;">
+                                    <div class="form-group">
+                                        <div class="custom-date btn-group dropdown" dropdown container="body"
+                                             [hidden]="campaignQueueGridShown">
+                                            <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                                                <span class="caret"></span> Campaigns {{customDateHeader}}
+                                            </button>
+                                            <ul style="margin-left:20px;" class="dropdown-menu" *dropdownMenu>
+                                                <li *ngFor="let dateRange of dateRanges">
+                                                    <a href="javascript:;"
+                                                       (click)="onCustomDateRangeSelect(l(dateRange))">{{l(dateRange)}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" [hidden]="!advancedFiltersAreShown ">
+                                <div class="col-md-2">
+                                    <div class="form-group" *ngIf="advancedSerachVisible">
+                                        <label>{{l("Database")}}</label>
+                                        <input type="text" class="form-control" name="databaseNameFilterText"
+                                               [(ngModel)]="databaseNameFilterText">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group" *ngIf="advancedSerachVisible">
+                                        <label>{{l("Build")}}</label>
+                                        <input type="text" class="form-control" name="buildNameFilterText"
+                                               [(ngModel)]="buildNameFilterText">
+                                    </div>
+                                </div>
+                                <div class="col-md-auto">
+                                    <div class="form-group" *ngIf="advancedSerachVisible">
+                                        <label>{{l("Customer")}}</label>
+                                        <input type="text" class="form-control customer-input" name="customerNameFilterText"
+                                               [(ngModel)]="customerNameFilterText">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row margin-bottom-10">
+                                <div class="mr-auto mr-3" *ngIf="!campaignQueueGridShown">
+                                    <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown"
+                                          (click)="advancedFiltersAreShown=!advancedFiltersAreShown">
+                                        <i class="fa fa-angle-down"></i>
+                                        {{l("ShowAdvancedFilters")}}
+                                    </span>
+                                    <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown"
+                                          (click)="advancedFiltersAreShown=!advancedFiltersAreShown">
+                                        <i class="fa fa-angle-up"></i>
+                                        {{l("HideAdvancedFilters")}}
+                                    </span>
+                                </div>
+                                <div class="ml-auto mr-3" *ngIf="permission.isGranted('Pages.Queue')">
+                                    <span class="clickable-item text-muted" *ngIf="!campaignQueueGridShown"
+                                          (click)="campaignQueueGridShown=!campaignQueueGridShown">
+                                        {{l("showQueue")}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+</form>
+                <div class="row align-items-center" [hidden]="campaignQueueGridShown">
+                    <!--<Primeng-Datatable-Start>-->
+                    <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+                        <p-table #dataTable (onLazyLoad)="getCampaigns($event)" [value]="primengTableHelper.records"
+                            rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="false" [lazy]="true"
+                            [scrollable]="true" ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive"
+                            dataKey="campaignId" [resizableColumns]="primengTableHelper.resizableColumns">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th class="expander_column">
+                                    </th>
+                                    <th class="id__column" pSortableColumn="campaignId">
+                                        {{l('ID')}}
+                                        <p-sortIcon field="campaignId"></p-sortIcon>
+                                    </th>
+                                    <th class="description__column" pSortableColumn="campaignDescription">
+                                        {{l('cDescription')}}
+                                        <p-sortIcon field="campaignDescription"></p-sortIcon>
+                                    </th>
+                                    <th *ngIf="customerVisible" class="customer__column"
+                                        pSortableColumn="customerDescription">
+                                        {{l('Customer')}}
+                                        <p-sortIcon field="customerDescription"></p-sortIcon>
+                                    </th>
+                                    <th style="width:0.1%"></th>
+                                    <th *ngIf="databaseVisible" class="database__column" pSortableColumn="databaseName">
+                                        {{l('Database')}}
+                                        <p-sortIcon field="databaseName"></p-sortIcon>
+                                    </th>
+                                    <th style="padding-right: 0.7rem !important;" class="quantity__header"
+                                        pSortableColumn="providedQty">
+                                        <p-sortIcon field="providedQty"></p-sortIcon>
+                                        <span>{{l('iProvidedQty')}}</span>
+                                    </th>
+                                    <th style="padding-right: 0.75rem !important;" class="quantity__header"
+                                        pSortableColumn="iAvailableQty">
+                                        <p-sortIcon field="iAvailableQty"></p-sortIcon>
+                                        <span>{{l('iAvailableQty')}}</span>
+                                    </th>
+                                    <th class="status__column" pSortableColumn="status">
+                                        {{l('Status')}}
+                                        <p-sortIcon field="status"></p-sortIcon>
+                                    </th>
+                                    <th class="created-date__column" pSortableColumn="dOrderCreatedDate">
+                                        {{l('dOrderCreatedDate')}}
+                                        <p-sortIcon field="dOrderCreatedDate"></p-sortIcon>
+                                    </th>
+                                    <th class="action__column"
+                                        [hidden]="!isGrantedAny('Pages.Campaigns.Edit', 'Pages.Campaigns.Delete')">
+                                        {{l('Actions')}}
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-record="$implicit" let-expanded="expanded"
+                                let-columns="columns">
+                                <tr>
+                                    <td class="expander_record">
+                                        <a href="javascript:;" [pRowToggler]="record"
+                                            [hidden]="!permission.isGranted('Pages.Segments') || record.isLocked">
+                                            <i [ngClass]="expanded ? 'fa  fa-chevron-down' : 'fa fa-chevron-right'"
+                                                style="font-size: 1.25em" ></i>
+                                        </a>
+                                    </td>
+                                    <td class="id__column">
+                                        <span class="ui-column-title"> {{l('CampaignID')}}</span>
+                                        <a href="javascript:;" data-toggle="tooltip" data-placement="right" title="{{l('EditCampaign')}}" (click)="openCreateOrEditCampaign(record.campaignId, record.databaseID, record.divisionId)" *ngIf="permission.isGranted('Pages.Campaigns.Edit') && !record.isLocked; else campaignID">
+                                            {{record.campaignId}}
+                                        </a>
+                                        <ng-template #campaignID>
+                                            <span>{{record.campaignId}}</span>
+                                        </ng-template>                                        
+                                    </td>
+
+                                    <td style="width:0.1%" *ngIf="!customerVisible && !databaseVisible"></td>
+                                    <td class="description__column">
+                                        <span class="ui-column-title"> {{l('CampaignDescription')}}</span>
+                                        <a href="javascript:;" (click)="openSelectionScreen(record)" [hidden]="record.isLocked">
+                                            {{record.campaignDescription}}
+                                        </a>
+                                        <span [hidden]="!record.isLocked">{{record.campaignDescription}}</span>
+                                        
+                                    </td>
+
+                                    <td style="width:0.1%" *ngIf="!customerVisible && !databaseVisible"></td>
+                                    <td *ngIf="customerVisible" class="customer__column">
+                                        <span class="ui-column-title"> {{l('Customer')}}</span>
+                                        {{record.customerDescription}}
+                                    </td>
+                                    <td style="width:0.1%" *ngIf="rowCount>1"></td>
+                                    <td *ngIf="databaseVisible" data-container="body" data-toggle="tooltip"
+                                        data-placement="bottom" title="Build: {{record.buildDescription}}"
+                                        data-original-title="999" class="database__column">
+                                        <span class="ui-column-title"> {{l('Database')}}</span>
+                                        {{record.databaseName}}
+                                    </td>
+                                    <td class="quantity__column">
+                                        <span class="ui-column-title"> {{l('iProvidedQty')}}</span>
+                                        {{record.providedQty | number}}
+                                    </td>
+                                    <td class="quantity__column">
+                                        <span class="ui-column-title"> {{l('iAvailableQty')}}</span>
+                                        {{record.iAvailableQty | number}}
+                                    </td>
+                                    <td class="status__column">
+                                        <span class="ui-column-title"> {{l('Status')}}</span>                                       
+                                        <span [popover]="popover"
+                                            popoverTitle="Campaign Status (Id: {{record.campaignId}} , Description: {{record.campaignDescription}})"
+                                            container="body" [outsideClick]="true" data-toggle="popover"
+                                            placement="auto" id="statusHover">{{record.statusDescription}}</span>
+                                        <ng-template #popover placement="auto">
+                                            <popover [campaignId]="record.campaignId" [databaseID]="record.databaseID" [campaignStatus]="record.status"></popover>
+                                        </ng-template>
+                                    </td>
+                                    <td class="created-date__column">
+                                        <span class="ui-column-title"> {{l('dOrderCreatedDate')}}</span>
+                                        {{record.orderCreatedDate}}
+                                    </td>
+                                    <td class="action__column">
+                                        <div class="btn-group dropdown" dropdown container="body"
+                                            placement="bottom left">
+                                            <button class="dropdown-toggle btn btn-sm btn-primary"
+                                                aria-controls="dropdown-alignment" dropdownToggle>
+                                                <i class="fa fa-cog"></i><span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu left-dropdown" *dropdownMenu>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="permission.isGranted('Pages.Segments.Create') && !record.isLocked"
+                                                       (click)="createSegment(record)">{{l('NewSegment')}}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="permission.isGranted('Pages.Campaigns.Create')"
+                                                       (click)="copyCampaign(record.campaignId)">{{l('CopyCampaign')}}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" *ngIf="isCancelVisible(record) && !record.isLocked"
+                                                       (click)="cancelCampaign(record.campaignId)">{{l('CancelCampaign')}}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" *ngIf="isDeleteVisible(record) && !record.isLocked"
+                                                       (click)="deleteCampaign(record.campaignId)">{{l('DeleteCampaign')}}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="permission.isGranted('Pages.Campaigns.Edit') && !record.isLocked"
+                                                       (click)="openCreateOrEditCampaign(record.campaignId, record.databaseID, record.divisionId)">{{l('EditCampaign')}}</a>
+
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="isShown(actionType.SubmitOrder,record.status) && !record.isLocked"
+                                                       (click)="executeCampaign(record)">
+                                                        {{ (record.status==statusType.CampaignCreated || record.status==statusType.CampaignFailed || record.status==statusType.CampaignCompleted)  ? l('Execute') : l('Cancel') }}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="isShown(actionType.SubmitOutput,record.status) && !record.isLocked"
+                                                       (click)="onCampaignAction(record)">
+                                                        {{record.status==statusType.CampaignCompleted ? l('Output') : l('Cancel') }}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="isShown(actionType.ScheduleCampaign,record.status) && !record.isLocked"
+                                                       (click)="onScheduleCampaignActionClick(record)">
+                                                        {{record.status==statusType.CampaignCreated ? l('ScheduleCampaign') : l('ScheduleOutput') }}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="isShown(actionType.Reship,record.status) && permission.isGranted('Pages.Campaigns.Reship') && !record.isLocked"
+                                                       (click)="openReship(record)">
+                                                        {{l('Reship')}}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="isShown(actionType.Ship,record.status) && permission.isGranted('Pages.Campaigns.Ship') && !record.isLocked"
+                                                       (click)="onCampaignAction(record)">
+                                                        {{l('Ship')}}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="isShown(actionType.ResetShip,record.status) && permission.isGranted('Pages.Campaigns.Reset') && !record.isLocked"
+                                                       (click)="resetCampaign(record.campaignId)">
+                                                        {{l('Reset')}}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       *ngIf="permission.isGranted('Pages.Campaigns.Print')"
+                                                       (click)="printCampaign(record.campaignId,record.databaseID)">{{l('Print')}}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" *ngIf="record.cExportLayout!='' && isGranted('Pages.CampaignExportLayouts') && isShown(actionType.OutputLayout,record.status)"
+                                                       (click)="openCreateOrEditExportLayout(record.campaignId,record.status,record.databaseID)">{{l('EditOutputLayout')}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="rowexpansion" let-record="$implicit" let-columns="columns">
+                                <tr>
+                                    <td [attr.colspan]="10">
+                                        <segments (openSegmentLevelSelection)="openSelectionScreen(record,$event)"
+                                            (statusUpdated)="onStatusUpdate($event)"
+                                            [campaign]="record"
+                                            [campaignDescription]="record.campaignDescription"
+                                            [orderId]="record.campaignId" [splitType]="record.splitType">
+                                        </segments>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{l('NoData')}}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator rows="{{primengTableHelper.defaultRecordsCountPerPage}}" #paginator
+                                (onPageChange)="getCampaigns($event)"
+                                [totalRecords]="primengTableHelper.totalRecordsCount"
+                                [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                            </p-paginator>
+                            <span class="total-records-count">
+                                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center" *ngIf="campaignQueueGridShown">
+                    <campaigns-queue #campaignsQueue (switchToCampaign)="onCampaignInvoked($event)"></campaigns-queue>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

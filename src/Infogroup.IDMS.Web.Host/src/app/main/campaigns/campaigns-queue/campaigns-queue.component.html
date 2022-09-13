@@ -1,0 +1,117 @@
+<div class="row margin-bottom-10">   
+    <div class="mr-auto mr-3">
+        <span class="clickable-item text-muted"
+              (click)="getCampaignsQueue()">
+            &nbsp;&nbsp;&nbsp;{{l("RefreshCampaignQueue")}}
+        </span>
+    </div>
+    <div class="ml-auto mr-3">
+        <span class="clickable-item text-muted"
+              (click)="getCampaigns()">
+            {{l("showCampaign")}}
+        </span>
+    </div>
+</div>
+    <!--<Primeng-Datatable-Start>-->
+<div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+    <p-table #dataTable [value]="primengTableHelper.records"
+             rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="false"
+             [scrollable]="true" ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive"
+             dataKey="id" [resizableColumns]="primengTableHelper.resizableColumns">
+        <ng-template pTemplate="header">
+            <tr>
+
+                <th style="width: 9%" pSortableColumn="id">
+                    {{l('ID')}}
+                    <p-sortIcon field="id"></p-sortIcon>
+                </th>
+                <th style="width: 25%" pSortableColumn="cdescription">
+                    {{l('cDescription')}}
+                    <p-sortIcon field="cdescription"></p-sortIcon>
+                </th>
+                <th style="width: 20%" pSortableColumn="cDatabaseName">
+                    {{l('Database')}}
+                    <p-sortIcon field="cDatabaseName"></p-sortIcon>
+                </th>
+                <th style="width:20%" pSortableColumn="cCreatedBy">
+                    {{l('ScheduledBy')}}
+                    <p-sortIcon field="cCreatedBy"></p-sortIcon>
+                </th>
+                <th style="width: 20%" pSortableColumn="dcreateddate">
+                    {{l('StartDate')}}
+                    <p-sortIcon field="dcreateddate"></p-sortIcon>
+                </th>
+                <th style="width: 20%" pSortableColumn="iStatus">
+                    {{l('Status')}}
+                    <p-sortIcon field="iStatus"></p-sortIcon>
+                </th>
+                <th style="width: 10%" pSortableColumn="iStopRequested" data-toggle="tooltip" title="Is Stop Requested?">
+                    {{l('StopRequestedQueue')}}
+                    <p-sortIcon field="iStopRequested"></p-sortIcon>
+                </th>
+                <th style="width:5%" *ngIf="permission.isGranted('Pages.Queue.Stop')"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-record="$implicit" let-expanded="expanded">
+
+            <tr>
+                <td style="width:9%">
+                    <span class="ui-column-title"> {{l('id')}}</span>
+                    {{record.id}}
+                </td>
+                <td style="width:25%">
+                    <span class="ui-column-title"> {{l('cdescription')}}</span>
+                    {{record.cdescription}}
+                </td>
+                <td style="width:20%">
+                    <span class="ui-column-title"> {{l('cDatabaseName')}}</span>
+                    {{record.cDatabaseName}}
+                </td>
+
+                <td style="width:20%">
+                    <span class="ui-column-title"> {{l('cCreatedBy')}}</span>
+                    {{record.cCreatedBy}}
+                </td>
+                <td style="width:20%">
+                    <span class="ui-column-title"> {{l('dcreateddate')}}</span>
+                    {{record.dcreateddate}}
+                </td>
+                <td style="width:20%">
+                    <span class="ui-column-title"> {{l('iStatus')}}</span>
+
+                    <span [popover]="popover"
+                          popoverTitle="Campaign Status"
+                          container="body"
+                          [outsideClick]="true"
+                          data-toggle="popover"
+                          placement="auto"
+                          id="statusHover">{{record.iStatus}}</span>
+                    <ng-template #popover placement="auto">
+                        <popover [campaignId]="record.id" [databaseID]="record.databaseId" [campaignStatus]="record.statusNumber"></popover>
+                    </ng-template>
+
+                </td>
+                <td style="width:10%">
+                    <span class="ui-column-title"> {{l('iStopRequested')}}</span>
+                    {{record.iStopRequested}}
+
+                </td>
+                <td style="width:5%" *ngIf="permission.isGranted('Pages.Queue.Stop')">
+                    <button type="button" class="btn btn-sm btn-dangerous" data-toggle="tooltip" title="Click to Cancel" [disabled]="record.isLocked"
+                            style="float: right" (click)="stopCampaignQueue(record.id)">
+                        <i class="fa fa-stop-circle fa-lg"></i>
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+        {{l('NoData')}}
+    </div>
+    <div class="primeng-paging-container" style="margin-top:3%">
+        <span class="total-records-count">
+            {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+        </span>
+    </div>
+</div>
+

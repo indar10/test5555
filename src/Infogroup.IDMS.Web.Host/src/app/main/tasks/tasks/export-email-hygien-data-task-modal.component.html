@@ -1,0 +1,50 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #ExportEmailHygienDataForm="ngForm" novalidate (ngSubmit)="save(ExportEmailHygienDataForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="taskId">{{l("ExportEmailHygienDataForm")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <general-database-build (taskGeneral)="storeTaskGeneral($event)" [taskID]="taskId"></general-database-build>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="exportField">{{l("exportField")}} *</label>
+                    <div class="ui-fluid">
+                        <p-dropdown [required]="true" [options]="exportField" (onChange)="onExportFieldChange($event)"
+                                    [filter]="true" [(ngModel)]="task.exportField" name="exportField"></p-dropdown>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="exportFlagField">{{l("exportFlagField")}} *</label>
+                    <div class="ui-fluid">
+                        <p-dropdown [required]="true" [options]="exportFlagField" (onChange)="onExportFlagFieldChange($event)"
+                                    [filter]="true" [(ngModel)]="task.exportFlagField" name="exportFlagField"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="flagValue">{{l("flagValue")}} *</label>
+                    <div class="ui-fluid">
+                        <input type="text" class="form-control" [(ngModel)]="task.flagValue" name="flagValue" required/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                <button type="submit" class="btn btn-primary blue"
+                        [disabled]="!ExportEmailHygienDataForm.form.valid" [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')">
+                    <i class="fa fa-save"></i>
+                    <span>{{l("Save")}}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

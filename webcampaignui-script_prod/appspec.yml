@@ -1,0 +1,12 @@
+version: 0.0
+os: windows
+files:
+  - source: \artifact2.zip
+    destination: D:\vsts-filedrop\artifact_drop\
+hooks:
+  BeforeInstall:
+    - location: \scripts\before-install.bat
+      timeout: 300
+  AfterInstall:
+    - location: \scripts\after-install.bat
+      timeout: 300

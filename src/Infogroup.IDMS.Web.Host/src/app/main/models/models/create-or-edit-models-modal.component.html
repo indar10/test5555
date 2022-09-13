@@ -1,0 +1,332 @@
+﻿<div class="modal-content">
+  <form
+    *ngIf="active"
+    #modelScoringForm="ngForm"
+    novalidate
+    (ngSubmit)="save(modelScoringForm)"
+    autocomplete="off"
+  >
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <span *ngIf="!modelScoring.isCopyModel && modelScoring.id"
+          >{{ l("EditModel") }} | {{ l("Model ID - ")
+          }}{{ modelScoring.id }}</span
+        >
+        <span *ngIf="modelScoring.id && modelScoring.isCopyModel">{{
+          l("CopyModelScoring")
+        }}</span>
+        <span *ngIf="!modelScoring.id">{{ l("CreateNewModel") }}</span>
+      </h4>
+      <button
+        type="button"
+        class="close"
+        (click)="close()"
+        aria-label="Close"
+        [disabled]="saving"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <tabset>
+        <tab heading="Summary">
+          <fieldset>
+            <div class="row">
+              <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                <label for="Database">{{ l("Database") }} *</label>
+                <div class="ui-fluid">
+                  <p-dropdown
+                    [required]="true"
+                    (onChange)="onDatabaseChange($event)"
+                    [options]="databases"
+                    [disabled]="modelScoring.id"
+                    [filter]="true"
+                    [(ngModel)]="modelScoring.modelSummaryData.databaseId"
+                    name="databaseID"
+                  >
+                  </p-dropdown>
+                </div>
+              </div>
+              <div class="form-group col-xs-6 col-sm-6 col-md-6 mt-3">
+                <label for="Build">{{ l("cBuildDescription") }} *</label>
+                <div class="ui-fluid">
+                  <p-dropdown
+                    [required]="true"
+                    [options]="builds"
+                    [disabled]="!modelScoring.isCopyModel && modelScoring.id"
+                    [filter]="true"
+                    [(ngModel)]="modelScoring.modelDetailData.buildID"
+                    name="buildID"
+                  ></p-dropdown>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label for="modelScoring_cModelName"
+                  >{{ l("cModelName") }} *</label
+                >
+                <input
+                  type="text"
+                  id="modelScoring_cModelName"
+                  maxlength="100"
+                  #modelNameInput="ngModel"
+                  class="form-control"
+                  [(ngModel)]="modelScoring.modelSummaryData.cModelName"
+                  name="cModelName"
+                  noSpaceValidator="{{ modelScoring.modelSummaryData.cModelName }}"
+                  required
+                />
+                <div
+                  *ngIf="
+                    modelNameInput.errors &&
+                    (modelNameInput.dirty || modelNameInput.touched)
+                  "
+                  class="form-control-feedback"
+                >
+                  <div
+                    [hidden]="
+                      !modelNameInput.errors.noSpaceValidator &&
+                      !modelNameInput.errors.required
+                    "
+                  >
+                    {{ l("EnterModelName") }}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label for="modelScoring_iIntercept"
+                  >{{ l("iIntercept") }} *</label
+                >
+                <input
+                  type="text"
+                  id="modelScoring_iIntercept"
+                  #interceptInput="ngModel"
+                  maxlength="10"
+                  class="form-control"
+                  [(ngModel)]="modelScoring.modelSummaryData.iIntercept"
+                  name="iIntercept"
+                  pattern="^\-?[1-9]\d{0,9}$"
+                  required
+                />
+                <div
+                  *ngIf="
+                    interceptInput.errors &&
+                    (interceptInput.dirty || interceptInput.touched)
+                  "
+                  class="form-control-feedback"
+                >
+                  <div [hidden]="!interceptInput.errors.pattern">
+                    {{ l("InvalidIntercept") }}
+                  </div>
+                  <div [hidden]="!interceptInput.errors.required">
+                    {{ l("EnterIntercept") }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label for="modelScoring_lK_ModelType"
+                  >{{ l("Model Type") }} *</label
+                >
+                <div class="ui-fluid">
+                  <p-dropdown
+                    [required]="true"
+                    [options]="this.dropdownData.modelType"
+                    placeholder="Select..."
+                    [filter]="true"
+                    [(ngModel)]="modelScoring.modelSummaryData.lK_ModelType"
+                    name="lK_ModelType"
+                    id="modelScoring_lK_ModelType"
+                  >
+                  </p-dropdown>
+                </div>
+              </div>
+              <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label for="modelScoring_lK_GiftWeight"
+                  >{{ l("Gift Weight") }} *</label
+                >
+                <div class="ui-fluid">
+                  <p-dropdown
+                    [required]="true"
+                    [options]="this.dropdownData.modelGiftWeight"
+                    placeholder="Select..."
+                    [filter]="true"
+                    [(ngModel)]="modelScoring.modelSummaryData.lK_GiftWeight"
+                    name="lK_GiftWeight"
+                    id="modelScoring_lK_GiftWeight"
+                  >
+                  </p-dropdown>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label for="modelScoring_cDescription">{{
+                  l("cDescription")
+                }}</label>
+                <textarea
+                  id="modelScoring_cDescription"
+                  class="form-control"
+                  style="height: 70%; font-size: 1rem"
+                  [(ngModel)]="modelScoring.modelSummaryData.cDescription"
+                  maxlength="200"
+                  name="cDescription"
+                >
+                </textarea>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label for="modelScoring_cClientName">{{
+                  l("ClientName")
+                }}</label>
+                <input
+                  type="text"
+                  id="modelScoring_cClientName"
+                  maxlength="50"
+                  class="form-control"
+                  [(ngModel)]="modelScoring.modelSummaryData.cClientName"
+                  name="cClientName"
+                />
+              </div>
+              <div class="form-group col-xs-3 col-sm-3 col-md-3">
+                <label for="modelScoring_cModelNumber">{{
+                  l("ModelNumber")
+                }}</label>
+                <input
+                  type="text"
+                  id="modelScoring_cModelNumber"
+                  maxlength="20"
+                  class="form-control"
+                  [(ngModel)]="modelScoring.modelSummaryData.cModelNumber"
+                  name="cModelNumber"
+                />
+              </div>
+              <div class="form-group col-xs-3 col-sm-3 col-md-3">
+                <label for="modelScoring_nChildTableNumber">{{
+                  l("ChildTableNumber")
+                }}</label>
+                <input
+                  type="text"
+                  id="modelScoring_nChildTableNumber"
+                  class="form-control"
+                  [(ngModel)]="modelScoring.modelSummaryData.nChildTableNumber"
+                  [disabled]="modelScoring.modelSummaryData.nChildTableNumber"
+                  readonly
+                  name="nChildTableNumber"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label for="cSAS_ScoreRealFileName">{{ l("ScoreFile") }}</label>
+                <input
+                  type="file"
+                  id="cSAS_ScoreRealFileName"
+                  class="form-control"
+                  accept=".txt"
+                  (change)="handleFileInput($event.target.files)"
+                />
+              </div>
+              <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                <label class="switchL">
+                  <input
+                    type="checkbox"
+                    id="modelScoring_iIsScoreForEveryBuild"
+                    [(ngModel)]="
+                      modelScoring.modelSummaryData.iIsScoredForEveryBuild
+                    "
+                    name="iIsScoredForEveryBuild"
+                  />
+                  <span class="sliderl round">
+                    <span class="on textAllignL">
+                      {{ l("iIsScoredForEveryBuild") }}</span
+                    ><span class="off textAllignL">
+                      {{ l("iIsScoredForEveryBuild") }}</span
+                    >
+                  </span>
+                </label>
+                <label class="switchPopup">
+                  <input
+                    type="checkbox"
+                    id="modelScoring_iIsActive"
+                    [(ngModel)]="modelScoring.modelSummaryData.iIsActive"
+                    name="iIsActive"
+                    checked
+                  />
+                  <span class="slider round">
+                    <span class="on">Active</span
+                    ><span class="off">Inactive</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </fieldset>
+        </tab>
+        <tab heading="Score SQL">
+          <fieldset>
+            <div class="form-group mt-3">
+              <textarea
+                id="modelScoring_SQLScore"
+                [(ngModel)]="modelScoring.modelDetailData.cSQL_Score"
+                name="SQLScore"
+              >
+              </textarea>
+            </div>
+          </fieldset>
+        </tab>
+        <tab heading="Deciles SQL">
+          <fieldset>
+            <div class="form-group mt-3">
+              <textarea
+                id="modelScoring_SQLDeciles"
+                #DecilesInput="ngModel"
+                [(ngModel)]="modelScoring.modelDetailData.cSQL_Deciles"
+                name="SQLDeciles"
+              >
+              </textarea>
+            </div>
+          </fieldset>
+        </tab>
+        <tab heading="Pre-Select SQL">
+          <fieldset>
+            <div class="form-group mt-3">
+              <textarea
+                id="modelScoring_SQLPreSelect"
+                [(ngModel)]="modelScoring.modelDetailData.cSQL_Preselect"
+                name="SQLPreSelect"
+              >
+              </textarea>
+            </div>
+          </fieldset>
+        </tab>
+      </tabset>
+    </div>
+    <div class="modal-footer">
+      <button
+        [disabled]="saving"
+        type="button"
+        class="btn btn-default"
+        (click)="close()"
+      >
+        {{ l("Cancel") }}
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary blue"
+        [disabled]="
+          !modelScoringForm.form.valid ||
+          (!permission.isGranted('Pages.Models.Edit') && modelScoring.id) ||
+          isDisabled
+        "
+        [buttonBusy]="saving"
+        [busyText]="l('SavingWithThreeDot')"
+      >
+        <i class="fa fa-save"></i> <span>{{ l("Save") }}</span>
+      </button>
+    </div>
+  </form>
+</div>

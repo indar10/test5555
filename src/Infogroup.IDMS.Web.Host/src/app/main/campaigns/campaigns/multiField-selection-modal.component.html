@@ -1,0 +1,147 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h1 class="modal-title">
+            <span>{{l('MultiFieldTitle')}}</span>
+        </h1>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div id="AdvanceSelectionGrids" class="modal-body" style="padding-top:0px">
+        <form class="kt-form">
+            <div class="search-container__input">
+                <div style="width: 99%;" class="form-group m-form__group align-items-center search-margin">
+                    <div class="input-group" style="margin-top: 8px;">
+                        <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input"
+                               type="text">
+                        <span class="input-group-btn">
+                            <button (click)="getMultiFields()" class="btn btn-primary" type="submit">
+                                <i class="flaticon-search-1" [attr.aria-label]="l('Search')"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="multiField-container">
+                <div class="kt-portlet kt-portlet--height-fluid ">
+                    <div class="kt-portlet__body" [ngClass]="{'portlet-body__grey': multiFields.length > 0 }">
+                        <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+                            <p-table #multiFieldTable [value]="multiFields" [scrollable]="true" scrollHeight="200px"
+                                     [busyIf]="primengTableHelper.isLoading" [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns"
+                                     [(selection)]="selectedRows">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 5%; text-align:left">
+                                            <p-tableHeaderCheckbox>
+                                            </p-tableHeaderCheckbox>
+                                        </th>
+                                        <th style="width: 32%">
+                                            {{'Field' | localize}}
+                                        </th>
+                                        <th style="width: 20%">
+                                            {{'Value' | localize}}
+                                        </th>
+                                        <th style="width: 43%">
+                                            {{'Description' | localize}}
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr [pSelectableRow]="rowData">
+                                        <td style="width: 5% ;text-align:left">
+                                            <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                                        </td>
+                                        <td style="width: 32%">
+                                            {{record.cFieldDescription}}
+                                        </td>
+                                        <td style="width: 20%">
+                                            {{record.cValue}}
+                                        </td>
+                                        <td style="width: 43%">
+                                            {{record.cDescription}}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="primeng-no-data" *ngIf="multiFields.length == 0">
+                                {{'NoData' | localize}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom:20px">
+            <div>
+                <span style="margin-right:10px;margin-left: 10px;color: #000;">{{l("SelectOperation")}}</span>
+                <div style="margin-right:20px;" class="btn-group" dropdown>
+                    <p-dropdown id="operationDropdown" [options]="operationTypes" [filter]="true" [style]="{'width':'100%'}"
+                                name="operation" [(ngModel)]="operation">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div id="MultiFieldSelect" style="margin-left: 50px;width:39%">
+                <p-selectButton [options]="relationTypes" [disabled]="(this.selectedMultiFields?.length > 0)" [(ngModel)]="relation"></p-selectButton>
+            </div>
+            
+            <div>
+                <button (click)="addSelection()" [disabled]="getDisabled" style="padding-top: 5.02px;
+                            padding-bottom: 5px;float:right;" class="btn btn-primary blue">
+                    <i class="fa fa-plus"></i>
+                    <span>{{l("Add")}}</span>
+                </button>
+            </div>
+        </div>
+        <div class="primeng-datatable-container">
+            <p-table #SelectionTable [value]="selectedMultiFields" [scrollable]="true" scrollHeight="200px"
+                     [resizableColumns]="primengTableHelper.resizableColumns">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 23%;">
+                            {{'Field' | localize}}
+                        </th>
+                        <th style="width: 8%">
+                            {{'Operation' | localize}}
+                        </th>
+                        <th style="width: 28%">
+                            {{'Values' | localize}}
+                        </th>
+                        <th style="width:5%"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                    <tr>
+                        <td style="width: 23%;vertical-align:top">
+                            {{record.cFieldDescription}}
+                        </td>
+                        <td style="width: 8%; vertical-align:top">
+                            {{record.cValueOperator}}
+                        </td>
+                        <td style="width: 28%; vertical-align:top">
+                            {{record.cValues}}
+                        </td>
+                        <td style="width:5%; text-align:right">
+                            <button type="button" class="btn btn-sm btn-dangerous">
+                                <i class="fa fa-trash fa-lg" (click)="delete(i)"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <div class="primeng-no-data" *ngIf="selectedMultiFields.length == 0">
+                {{'NoData' | localize}}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="savingAND" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button class="btn btn-primary blue" [disabled]="savingAND || getSaveDisabled"
+                    [buttonBusy]="savingAND" (click)="saveWithAND()" [busyText]="l('SavingWithThreeDot')">
+                <i class="fa fa-save"></i>
+                <span>{{l("Save")}}</span>
+            </button>
+        </div>
+    </div>
+</div>

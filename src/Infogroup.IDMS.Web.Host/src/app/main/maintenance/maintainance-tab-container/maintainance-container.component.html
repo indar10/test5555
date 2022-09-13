@@ -1,0 +1,20 @@
+<tabset>
+    <tab #campaign heading="Output Layout">
+        <ExportLayout (editExportLayout)="onEditMaintainanceExportLayout($event)"
+                   >
+        </ExportLayout>
+       
+    </tab>
+
+   
+    <tab #exportLayout *ngFor="let tabzExportLayout of tabsExportLayout" [heading]="tabzExportLayout.title" [active]="tabzExportLayout.active"
+         (select)="tabzExportLayout.active = true" (deselect)="tabzExportLayout.active = false" [disabled]="tabzExportLayout.disabled"
+         [removable]="tabzExportLayout.removable" (removed)="removeTabHandlerExportLayout(tabzExportLayout)" [customClass]="tabzExportLayout.customClass">
+        <CreateOrEditExportLayout [isCampaign]="tabzExportLayout.isCampaign"  [exportLayoutId]="tabzExportLayout.exportLayoutId" 
+                                  [maintainanceBuildId]="tabzExportLayout.maintainanceBuildId"
+                                  [databaseId]="tabzExportLayout.databaseId"
+                                  [layoutName]="tabzExportLayout.layoutName"
+                                  (closeExportLayout)="onCancelSelectionExportLayout()">
+        </CreateOrEditExportLayout>
+    </tab>
+</tabset>

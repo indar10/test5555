@@ -1,0 +1,43 @@
+﻿<div class="row" *ngIf="databaseBuild">
+<div class="form-group col-xs-6 col-sm-6 col-md-6">
+    <label for="Database">{{l("Database")}} *</label>
+    <div class="ui-fluid">
+        <p-dropdown [required]="true" (onChange)="onDatabaseChange($event)" [options]="databaseList"
+                    [filter]="true" [(ngModel)]="task.databaseID" name="databaseID">
+        </p-dropdown>
+    </div>
+</div>
+<div class="form-group col-xs-6 col-sm-6 col-md-6">
+    <label for="Build">{{l("cBuildDescription")}} *</label>
+    <div class="ui-fluid">
+        <p-dropdown (onChange)="onBuildChange($event)" [required]="true" [options]="buildList"
+                    [filter]="true" [(ngModel)]="task.buildID" name="buildID"></p-dropdown>
+    </div>
+</div>
+</div>
+<div *ngIf="onlyDatabaseBuild">
+    <div class="row">
+        <div class="form-group col">
+            <label for="Database">{{l("Database")}} *</label>
+            <div class="ui-fluid">
+                <p-dropdown [required]="true" (onChange)="onDatabaseChange($event)" [options]="databaseList"
+                            [filter]="true" [(ngModel)]="task.databaseID" name="databaseID">
+                </p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="row" >
+        <div class="form-group col">
+            <label for="Build">{{l("cBuildDescription")}} *</label>
+            <div class="ui-fluid">
+                <p-dropdown (onChange)="onBuildChange($event)" [required]="true" [options]="buildList"
+                            [filter]="true" [(ngModel)]="task.buildID" name="buildID"></p-dropdown>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

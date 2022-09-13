@@ -1,0 +1,121 @@
+﻿
+.help-notes {
+    padding: 1px;
+    padding-left:10px;
+    font-size: 0.95rem;
+}
+
+#statusHover {
+    cursor: pointer;
+}
+.switchPopup {
+    position: relative;
+    display: inline-block;
+    width: 211px;
+    height: 34px;
+    
+}
+
+    .switchPopup input {
+        display: none;
+    }
+
+
+/* For small switch and sliders */
+
+.sswitch {
+    position: relative;
+    display: inline-block;
+    width: 121px;
+    height: 34px;
+    
+}
+
+    .sswitch input {
+        display: none;
+    }
+
+
+
+/*--------- END --------*/
+
+.sSlider {
+    position: absolute;
+    cursor: pointer;
+    top: 18px;
+    left: 0;
+    right: 0;
+    bottom: -18px;
+    height:110%;
+    background-color: #5867dd;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .sSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 2px;
+        bottom: 5px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+
+
+input:focus + .sSlider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .sSlider:before {
+    -webkit-transform: translateX(89px);
+    -ms-transform: translateX(89px);
+    transform: translateX(89px);
+}
+
+
+/*------ ADDED CSS ---------*/
+.on {
+    display: none;
+}
+
+.on,
+.off {
+    color: white;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 46%;
+    font-size: 11px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked + .sSlider .on {
+    display: block;
+}
+
+input:checked + .sSlider .off {
+    display: none;
+}
+
+/*--------- END --------*/
+/* Rounded sliders */
+.sSlider.round {
+    border-radius: 34px;
+}
+
+    .sSlider.round:before {
+        border-radius: 50%;
+    }
+
+input:checked + .sSlider {
+    background-color: #5867dd;
+    border-color: #5867dd;
+}
+
+/*--------- END --------*/
+/* For medium switch and sliders */
+

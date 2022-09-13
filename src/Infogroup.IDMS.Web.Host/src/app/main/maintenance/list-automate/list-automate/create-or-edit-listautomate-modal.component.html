@@ -1,0 +1,99 @@
+<div class="modal-content">
+    <form *ngIf="active" #listAutomateForm="ngForm" novalidate (ngSubmit)="save(listAutomateForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                 <span *ngIf="listAutomateDto.id">{{l('EditListAutomate')}}</span>
+                <span *ngIf="!listAutomateDto.id">{{l('CreateListAutomate')}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="ListAutomate_listid">{{l('ListId')}} *</label>
+                    <input type="text" id="ListAutomate_listid" tabindex="1" class="form-control" #ListIDInput="ngModel" maxlength="15" [(ngModel)]="listAutomateDto.listId" name="listId" noSpaceValidator="{{listAutomateDto.listId}}" [required]="true" pattern="^[0-9]*$"/>
+                    <div *ngIf="ListIDInput.errors && (ListIDInput.dirty || ListIDInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!ListIDInput.errors.noSpaceValidator">
+                                    {{l('EnterListID')}}
+                                </div>
+                                <div [hidden]="!ListIDInput.errors.pattern">
+                                    {{l('EnterNumber')}}
+                                </div>
+                            </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="ListAutomate_buildid">{{l("BuildId")}} *</label>
+                    <input type="text" id="ListAutomate_buildid" class="form-control" #BuildIDInput="ngModel" maxlength="15" [(ngModel)]="listAutomateDto.buildId" name="buildId" 
+                      [required]="true" pattern="^[0-9]*$" />
+                     <div *ngIf="BuildIDInput.errors"
+                                 class="form-control-feedback"> 
+                                 <div [hidden]="!BuildIDInput.errors.pattern">
+                                    {{l('EnterNumber')}}
+                                </div>
+                                <!-- <div [hidden]="!BuildIDInput.errors.noSpaceValidator">
+                                    {{l('EnterBuildID')}}
+                                </div> -->
+
+                             </div> 
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label> {{l('lk_ListConversionFrequency')}} *</label>
+                    <p-dropdown [options]="frequency" [filter]="true" tabindex="2"
+                                [(ngModel)]="listAutomateDto.lK_ListConversionFrequency" placeholder="Select Frequency" 
+                                [style]="{'width':'100%'}" name="lK_ListConversionFrequency"  (onChange)="getValidInterval(listAutomateDto.lK_ListConversionFrequency)" [required]="true"></p-dropdown>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="ListAutomate_iInterval">{{l('iInterval')}} *</label>                
+                    <input type="text" [disabled]="isIntervalDisabled" id="ListAutomate_iInterval" class="form-control" maxlength="15" #IntervalInput="ngModel" [(ngModel)]="listAutomateDto.iInterval" name="iInterval" noSpaceValidator="{{listAutomateDto.iInterval}}" [required]="true" pattern="^[0-9]*$"/>                    
+                    <div *ngIf="IntervalInput.errors && (IntervalInput.dirty || IntervalInput.touched)"
+                                 class="form-control-feedback">
+                                 <div [hidden]="!IntervalInput.errors.pattern">
+                                    {{l('EnterNumber')}}
+                                </div>
+                                <div [hidden]="!IntervalInput.errors.noSpaceValidator">
+                                    {{l('EnterInterval')}}
+                                </div>
+                            </div>                                 
+                  </div>                                                                  
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="ListAutomate_cScheduleTime">{{l('cScheduleTime')}} *</label>
+                    <div class="ui-fluid">
+                        <p-inputMask [(ngModel)]="listAutomateDto.cScheduleTime" #timeInput="ngModel" mask="99:99" name="cScheduleTime" [required]="true"
+                                     placeholder="HH:MM" slotChar="HH:MM" pattern="^(([0-1][0-9])|([1-2][0-3])):([0-5][0-9])$"></p-inputMask>
+                        <div *ngIf="timeInput.errors && (timeInput.dirty || timeInput.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!timeInput.errors.pattern">
+                                {{l("InvalidTime")}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="ListAutomate_cSystemFileNameReadyToLoad">{{l('cSystemFileNameReadyToLoad')}} *</label>                    
+                    <textarea type="text" id="ListAutomate_cSystemFileNameReadyToLoad" class="form-control" #FileNameInput="ngModel" [(ngModel)]="listAutomateDto.cSystemFileNameReadyToLoad" name="cSystemFileNameReadyToLoad" noSpaceValidator="{{listAutomateDto.cSystemFileNameReadyToLoad}}" [required]="true"></textarea>                                        
+                    <div *ngIf="FileNameInput.errors && (FileNameInput.dirty || FileNameInput.touched)"
+                                 class="form-control-feedback">
+                                <div [hidden]="!FileNameInput.errors.noSpaceValidator">
+                                    {{l('EnterFileName')}}
+                                </div>
+                            </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label class="switchPopup">
+                        <input type="checkbox" id="ListAutomate_iIsActive" [(ngModel)]="listAutomateDto.iIsActive" name="iIsActive" checked />
+                        <span class="slider round">
+                            <span class="on">Active</span><span class="off">Inactive</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+            <button type="submit" class="btn btn-primary blue" [disabled]="!listAutomateForm.form.valid || (!permission.isGranted('Pages.ListAutomates.Edit') && listAutomateDto.listId)" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>            
+        </div>
+    </form>
+</div>

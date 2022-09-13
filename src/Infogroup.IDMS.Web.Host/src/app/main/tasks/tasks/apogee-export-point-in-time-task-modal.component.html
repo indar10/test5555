@@ -1,0 +1,46 @@
+﻿<div class="modal-content">
+    <form *ngIf="active" #ApogeeExportPointInTimeTaskForm="ngForm" novalidate (ngSubmit)="save(ApogeeExportPointInTimeTaskForm)" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span *ngIf="taskId">{{l("ApogeeExportPointInTimeTaskForm")}}</span>
+            </h4>
+            <button type="button" class="close" (click)="close()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <general-database-build (taskGeneral)="storeTaskGeneral($event)" [IsDatabaseIdDefined]="true"></general-database-build>
+            <div class="row">
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="fileLocation">{{l("fileLocation")}}</label>
+                    <div class="ui-fluid">
+                        <input type="text" class="form-control" [(ngModel)]="task.fileLocation" name="fileLocation" disabled/>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-6 col-md-6">
+                    <label for="inputFileName">{{l("inputFileName")}} *</label>
+                    <div class="ui-fluid">
+                        <input type="text" class="form-control" [(ngModel)]="task.inputFileName" #InputFileName="ngModel" name="inputFileName" pattern="([a-zA-Z0-9\s_\\.\-\(\):])+(.txt|.xlsx|.xls)$" required />
+                        <div *ngIf="InputFileName.errors && (InputFileName.dirty || InputFileName.touched)"
+                             class="form-control-feedback">
+                            <div [hidden]="!InputFileName.errors.pattern">
+                                {{l("InvalidFileName")}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                <button type="submit" class="btn btn-primary blue"
+                        [disabled]="!ApogeeExportPointInTimeTaskForm.valid" [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')">
+                    <i class="fa fa-save"></i>
+                    <span>{{l("Save")}}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
