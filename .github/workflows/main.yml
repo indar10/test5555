@@ -1,7 +1,7 @@
 name: CampaingUI DEV and Stage CICD
 on:
   push:
-    branches: [ main ]
+    branches: [ main123 ]
 jobs:
   build:
     strategy:
