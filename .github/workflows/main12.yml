@@ -30,10 +30,9 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
-    - name: install yarn
-      run: |
-         npm install --global yarn
     
+    - name: Setup Yarn
+      uses: mskelton/setup-yarn@v1.2.1
     
     - name: buid nodejs code test 1211
       run: |
