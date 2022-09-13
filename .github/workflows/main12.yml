@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-    runs-on: windows-2016
+    runs-on: windows-2022
     env:
       Solution_Name: Infogroup.IDMS.Web.sln
       TargetFramework: netcoreapp2.2        # Replace with your solution name, i.e. MyWpfApp.sln.
