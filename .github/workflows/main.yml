@@ -37,12 +37,12 @@ jobs:
     - name: buid nodejs code test 1211
       run: |
          npm i --location=global @angular/cli@8.3.24
-         cd "D:\a\test5555\test5555\src\Infogroup.IDMS.Web.Host\"
+         cd "C:\actions-runner\work\test5555\test5555\src\Infogroup.IDMS.Web.Host\"
          yarn
          node --max_old_space_size=8192
          ng build --build-optimizer=false --aot=true --output-hashing=all
          dir
     - name: angular code artifact path
       run: |
-         cd "D:\a\test5555\test5555\src\Infogroup.IDMS.Web.Host\dist\assets\metronic\themes\theme2\css"
+         cd "C:\actions-runner\work\test5555\test5555\src\Infogroup.IDMS.Web.Host\dist\assets\metronic\themes\theme2\css"
          dir
