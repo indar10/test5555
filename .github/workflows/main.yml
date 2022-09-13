@@ -1,7 +1,7 @@
 name: CampaingUI DEV and Stage CICD
 on:
   push:
-    branches: [ main123 ]
+    branches: [ main ]
 jobs:
   build:
     strategy:
@@ -17,13 +17,21 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+    
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+   
+    - name: NPM-Version
+      uses: Reedyuk/NPM-Version@1.1.1
+    
+    - name: Install Dependencies
+      run: npm install
+      
     - name: action-yarn
-      run: |
-         node --version
-         npm --version
-    - name: install yarn
-      run: |
-         npm install --global yarn
+      uses: comchangs/action-yarn@v0.1-beta
+
     - name: see the current heap mem
       run: |
         node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))'
