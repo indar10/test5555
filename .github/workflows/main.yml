@@ -30,9 +30,8 @@ jobs:
       run: npm install
 
     - name: install yarn
-      uses: mskelton/setup-yarn@v1
-      with:
-          flags: --immutable-cache
+      run: |
+         npm install --global yarn
     
     
     - name: buid nodejs code test 1211
